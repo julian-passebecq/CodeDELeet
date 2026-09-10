@@ -23,8 +23,11 @@ def open_app(page,exercise='sql-paid-revenue',store=None):
     if os.getenv('UI_MODE')=='http':
         if store is not None:
             page.add_init_script('localStorage.setItem("data-practice-studio.v1",'+json.dumps(json.dumps(store))+');')
-        page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#exercise='+exercise,wait_until='networkidle')
-        page.locator('#question-body').wait_for(state='attached')
+        # Do not wait for networkidle: the real app can legitimately keep CDN/runtime
+        # requests active. Navigation success is established by DOMContentLoaded plus
+        # the application shell attaching below.
+        page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#exercise='+exercise,wait_until='domcontentloaded',timeout=15000)
+        page.locator('#question-body').wait_for(state='attached',timeout=10000)
         return
     css=(DIST/'styles.css').read_text()+'\n'+(DIST/'vendor/codemirror/lib/codemirror.css').read_text()+'\n'+(DIST/'vendor/codemirror/addon/dialog/dialog.css').read_text()
     page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
