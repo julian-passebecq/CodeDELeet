@@ -1,4 +1,4 @@
-export const RUNTIME_VERSIONS = { duckdb: '1.29.0', pyodide: '0.27.7', mermaid: '11.4.1' };
+export const RUNTIME_VERSIONS = { duckdb: '1.29.0', pyodide: '0.27.7', mermaid: '11.16.1' };
 /** Remove comments and literal contents before enforcing a read-only teaching contract. */
 export function sqlTokens(sql) {
     let out = '', quote = '', line = false, block = false;
