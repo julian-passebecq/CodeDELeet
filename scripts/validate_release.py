@@ -30,9 +30,9 @@ def docs():
 check('Local documentation and screenshot links resolve',docs)
 
 def archives():
-    for file in [ROOT/'public/companion/Deepnote_Interview_Suite_v1_4.zip',ROOT/'reference/legacy-trainer/leetcodedataeng-main.zip']:
+    for file in [ROOT/'reference/legacy-trainer/leetcodedataeng-main.zip']:
         with zipfile.ZipFile(file) as z: require(z.testzip() is None,str(file))
-check('Retained supplied companion/reference ZIPs pass CRC checks',archives)
+check('Retained repository reference ZIP passes CRC checks',archives)
 check('Pinned package and lockfile agree',lambda: require(get('package.json')['devDependencies']['typescript']==get('package-lock.json')['packages']['node_modules/typescript']['version']=='5.8.3','compiler mismatch'))
 check('Bundled CodeMirror license and editor source exist',lambda:require((ROOT/'dist/vendor/codemirror/LICENSE').is_file() and '5.58.3' in (ROOT/'dist/vendor/codemirror/lib/codemirror.js').read_text(),'missing version/license'))
 check('No node_modules, environment secrets or font files in release',lambda:require(not any(f.name in ['.env','.env.local','node_modules'] or f.suffix in ['.woff','.woff2','.ttf','.otf'] for f in ROOT.rglob('*')),'unexpected sensitive/bulk file'))
