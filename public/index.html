@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="./styles.css">
 <link rel="stylesheet" href="./vendor/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="./vendor/codemirror/addon/dialog/dialog.css">
+<!-- Deepnote is link-only in the release candidate. Hide the legacy bundled-suite action until app.ts is modularized in V2.1. -->
+<style>.download-companion{display:none!important}</style>
 </head>
 <body><div id="app"><div class="boot-screen"><div class="boot-logo">&lt;/&gt;</div><h1>CodeDELeet</h1><p>Opening your interview workstation...</p></div></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog><script type="module" src="./app/app.js"></script><noscript>This application needs JavaScript. It does not need a server-side code runner.</noscript></body>
 </html>
