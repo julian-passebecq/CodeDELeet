@@ -1,0 +1,40 @@
+{
+  "checks": [
+    "home has four workspace cards",
+    "wrong SQL starter produces failing checks",
+    "editing code removes stale checks",
+    "SQL reference passes three real HTTP fixture suites",
+    "draft and notes survive navigation",
+    "review queue includes tagged exercise",
+    "Python requires explicit download consent",
+    "DAX teaching measure returns 410",
+    "country slicer filters teaching revenue to 300",
+    "inactive relationship returns unfiltered revenue 410",
+    "model structure and fixture checks pass",
+    "editing DAX clears old KPI",
+    "faulty DAG simulates before repair",
+    "quality failure blocks repaired publish",
+    "one retry recovers failed quality task",
+    "diagram-as-code updates actual canvas",
+    "architecture structure passes limited graph checks",
+    "invalid diagram preserves previous canvas",
+    "Spark panel explicitly explains synthetic work",
+    "all 27 exercise routes render with distinct metadata",
+    "pack import previews before writing",
+    "custom pack applied",
+    "focus mode hides sidebar",
+    "five principal pages avoid horizontal overflow at 768px",
+    "five principal pages avoid horizontal overflow at 390px",
+    "no uncaught JavaScript errors",
+    "unreadable original storage is not overwritten",
+    "explicit recovery replaces storage with valid current state",
+    "single-file edition renders working DAX without resources",
+    "single-file SQL clearly requests local launcher"
+  ],
+  "count": 30,
+  "limitations": [
+    "Embedded harness, not native navigation",
+    "Memory storage stand-in, not native persistence",
+    "Remote Pyodide not loaded"
+  ]
+}

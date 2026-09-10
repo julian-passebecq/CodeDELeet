@@ -1,0 +1,9 @@
+[build]
+  publish = "public"
+  command = "echo Using committed dependency-free build"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "DENY"

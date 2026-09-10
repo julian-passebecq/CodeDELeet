@@ -1,0 +1,219 @@
+[
+  {
+    "archive": "airflow-main (1).zip",
+    "entryCount": 15743,
+    "root": "airflow-main",
+    "rootLicensePaths": [
+      "airflow-main/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "DAG, retries and state concepts; no scheduler/executor bundled.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "airflow-ui-main.zip",
+    "entryCount": 87,
+    "root": "airflow-ui-main",
+    "rootLicensePaths": [
+      "airflow-ui-main/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Graph/task inspector visual pattern; original renderer and simulator.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "algo-bytes-main(1).zip",
+    "entryCount": 201,
+    "root": "algo-bytes-main",
+    "rootLicensePaths": [],
+    "observedLicense": "No root license found in inspected archive entries; no reuse permission assumed.",
+    "use": "Algorithm-practice organization reference only.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "Bravo-main (1).zip",
+    "entryCount": 547,
+    "root": "Bravo-main",
+    "rootLicensePaths": [
+      "Bravo-main/LICENSE"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Measure/model inspection workflow; no Power BI engine embedded.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "dashboard-master.zip",
+    "entryCount": 1660,
+    "root": "dashboard-master",
+    "rootLicensePaths": [
+      "dashboard-master/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Kubernetes dashboard context; no live cluster metrics reused.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "DaxFormatter-master (4).zip",
+    "entryCount": 93,
+    "root": "DaxFormatter-master",
+    "rootLicensePaths": [
+      "DaxFormatter-master/LICENSE.md"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Formatting/editor UX context; no formatter or remote formatting service copied/called.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "DaxStudio-master (2).zip",
+    "entryCount": 1759,
+    "root": "DaxStudio-master",
+    "rootLicensePaths": [
+      "DaxStudio-master/license.rtf"
+    ],
+    "observedLicense": "Microsoft Reciprocal License (root RTF)",
+    "use": "Query/measure editor plus output panels; no desktop code reused.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "dbt-core-main(1).zip",
+    "entryCount": 5087,
+    "root": "dbt-core-main",
+    "rootLicensePaths": [
+      "dbt-core-main/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Lineage/testing concepts; no dbt compiler/runtime bundled.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "dbt-core-main.zip",
+    "entryCount": 5087,
+    "root": "dbt-core-main",
+    "rootLicensePaths": [
+      "dbt-core-main/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Lineage/testing concepts; no dbt compiler/runtime bundled.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "diagrams-js-main.zip",
+    "entryCount": 3232,
+    "root": "diagrams-js-main",
+    "rootLicensePaths": [
+      "diagrams-js-main/LICENSE"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Diagram-as-code context; original narrow DSL/SVG implementation, no icon library copied.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "ducklake-main.zip",
+    "entryCount": 894,
+    "root": "ducklake-main",
+    "rootLicensePaths": [
+      "ducklake-main/LICENSE"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Catalog/table-format learning topic; no DuckLake engine/catalog instantiated.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "FireCode-main(1).zip",
+    "entryCount": 74,
+    "root": "FireCode-main",
+    "rootLicensePaths": [
+      "FireCode-main/LICENSE.md"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Exercise/editor presentation reference only.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "leetcode-clone-main (4)(1).zip",
+    "entryCount": 136,
+    "root": "leetcode-clone-main",
+    "rootLicensePaths": [],
+    "observedLicense": "No root license found in inspected archive entries; no reuse permission assumed.",
+    "use": "Code editor / task split reference only.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "LeetPrep-master (1)(1).zip",
+    "entryCount": 742,
+    "root": "LeetPrep-master",
+    "rootLicensePaths": [
+      "LeetPrep-master/LICENSE"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Question/progress organization, not a copied question bank.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "motherduck-cookbook-main (1).zip",
+    "entryCount": 863,
+    "root": "motherduck-cookbook-main",
+    "rootLicensePaths": [
+      "motherduck-cookbook-main/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Lightweight SQL example context; no MotherDuck service connection.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "open-solve-main (1)(1).zip",
+    "entryCount": 695,
+    "root": "open-solve-main",
+    "rootLicensePaths": [],
+    "observedLicense": "No root license found in inspected archive entries; no reuse permission assumed.",
+    "use": "Code-practice layout reference only.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "opentofu-main.zip",
+    "entryCount": 7217,
+    "root": "opentofu-main",
+    "rootLicensePaths": [
+      "opentofu-main/LICENSE"
+    ],
+    "observedLicense": "MPL-2.0",
+    "use": "Infrastructure plan/review topic; no resource provisioning.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "SQLBI-Whiteboard-main (2).zip",
+    "entryCount": 327,
+    "root": "SQLBI-Whiteboard-main",
+    "rootLicensePaths": [
+      "SQLBI-Whiteboard-main/LICENSE"
+    ],
+    "observedLicense": "MIT-style root license",
+    "use": "Model/diagram canvas context; original SVG canvas implemented instead.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "TabularEditor-master (2).zip",
+    "entryCount": 730,
+    "root": "TabularEditor-master",
+    "rootLicensePaths": [
+      "TabularEditor-master/LICENSE",
+      "TabularEditor-master/license-FastColoredTextbox.txt",
+      "TabularEditor-master/license-FastWildcardMatching.txt",
+      "TabularEditor-master/license-TreeViewAdv.txt"
+    ],
+    "observedLicense": "MIT-style root license; separate component licenses also present",
+    "use": "Semantic-model object and C# scripting workflow; no desktop/.NET code reused.",
+    "sourceCopied": false
+  },
+  {
+    "archive": "zillacode-master (3)(1).zip",
+    "entryCount": 130,
+    "root": "zillacode-master",
+    "rootLicensePaths": [
+      "zillacode-master/LICENSE"
+    ],
+    "observedLicense": "Apache-2.0",
+    "use": "Split instructions, editor and tests; backend microservices deliberately not adopted.",
+    "sourceCopied": false
+  }
+]

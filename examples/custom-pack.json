@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "my-pack",
+  "title": "My personal questions",
+  "version": 1,
+  "questions": [
+    {
+      "id": "my-first-exercise",
+      "version": 1,
+      "title": "My first custom SQL exercise",
+      "workspace": "code",
+      "topic": "SQL",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "sql",
+      "language": "SQL",
+      "summary": "A tiny example showing how to add a repository-first content pack.",
+      "concept": [
+        "The grain of the output is one row per customer. A LEFT JOIN preserves a customer even when no order matches.",
+        "A filter in WHERE can remove the null-extended rows from a LEFT JOIN. Put the paid-status condition inside the join or inside a conditional SUM."
+      ],
+      "task": "Return all customer names, ordered by customer_id.",
+      "requirements": [
+        "Return one column named name."
+      ],
+      "starter": "SELECT name FROM customers ORDER BY customer_id;",
+      "solution": "SELECT name FROM customers ORDER BY customer_id;",
+      "explanation": "Filter the right-hand table inside ON. An unmatched customer still exists in the result, and COALESCE converts their null sum into zero. Tests also include empty orders and repeated amounts.",
+      "hints": [
+        "Start with customers, not orders.",
+        "A filter inside ON and one in WHERE do not have the same effect on a LEFT JOIN."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "dataset": "retail",
+      "ordered": true
+    }
+  ]
+}

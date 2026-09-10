@@ -1,0 +1,23 @@
+{
+  "name": "data-practice-studio",
+  "version": "0.1.0",
+  "description": "A local-first, open-source practice workbench for data engineering and BI.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/build-preview.mjs",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "start": "python server/app.py",
+    "test:server": "python -m unittest discover -s tests -p test_*.py",
+    "preview:build": "node scripts/build-preview.mjs",
+    "test:ui": "python tests/ui_smoke.py"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,1200 @@
+{
+  "schemaVersion": 1,
+  "id": "studio-starter",
+  "title": "Data engineering foundations",
+  "version": 1,
+  "questions": [
+    {
+      "id": "sql-paid-revenue",
+      "version": 1,
+      "title": "Revenue without losing customers",
+      "workspace": "code",
+      "topic": "SQL",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "sql",
+      "language": "SQL",
+      "summary": "LEFT JOIN, conditional aggregation and a zero-revenue customer.",
+      "concept": [
+        "The grain of the output is one row per customer. A LEFT JOIN preserves a customer even when no order matches.",
+        "A filter in WHERE can remove the null-extended rows from a LEFT JOIN. Put the paid-status condition inside the join or inside a conditional SUM."
+      ],
+      "task": "Return customer_id, name and revenue for every customer. Sum only orders with status paid. Customers with no paid orders must have revenue 0. Sort by customer_id.",
+      "requirements": [
+        "Keep all customers, including customers without orders.",
+        "Exclude cancelled and pending orders.",
+        "Use the exact column names customer_id, name, revenue."
+      ],
+      "starter": "SELECT c.customer_id, c.name,\n       -- Your aggregate here\n       0 AS revenue\nFROM customers AS c\nORDER BY c.customer_id;",
+      "solution": "SELECT c.customer_id, c.name,\n       COALESCE(SUM(o.amount), 0) AS revenue\nFROM customers AS c\nLEFT JOIN orders AS o\n  ON c.customer_id = o.customer_id\n AND o.status = 'paid'\nGROUP BY c.customer_id, c.name\nORDER BY c.customer_id;",
+      "explanation": "Filter the right-hand table inside ON. An unmatched customer still exists in the result, and COALESCE converts their null sum into zero. Tests also include empty orders and repeated amounts.",
+      "hints": [
+        "Start with customers, not orders.",
+        "A filter inside ON and one in WHERE do not have the same effect on a LEFT JOIN."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "dataset": "retail",
+      "ordered": true
+    },
+    {
+      "id": "sql-latest-order",
+      "version": 1,
+      "title": "The latest order, with a tie-breaker",
+      "workspace": "code",
+      "topic": "SQL",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "sql",
+      "language": "SQL",
+      "summary": "Use a window function to keep one deterministic row per customer.",
+      "concept": [
+        "ROW_NUMBER numbers rows within each partition. The window ORDER BY decides which row comes first.",
+        "A timestamp alone is not deterministic when two rows share it. Add a stable tie-breaker."
+      ],
+      "task": "For each customer with an order, return customer_id, order_id and order_date for the latest order. Break same-date ties with the greatest order_id. Sort by customer_id.",
+      "requirements": [
+        "One row per customer with an order.",
+        "Use descending order_date and then descending order_id.",
+        "No rows for customers with no orders."
+      ],
+      "starter": "WITH ranked AS (\n  SELECT *,\n         ROW_NUMBER() OVER (\n           PARTITION BY customer_id\n           ORDER BY order_date DESC\n         ) AS rn\n  FROM orders\n)\nSELECT customer_id, order_id, order_date\nFROM ranked\nWHERE rn = 1\nORDER BY customer_id;",
+      "solution": "WITH ranked AS (\n  SELECT *, ROW_NUMBER() OVER (\n    PARTITION BY customer_id\n    ORDER BY order_date DESC, order_id DESC\n  ) AS rn\n  FROM orders\n)\nSELECT customer_id, order_id, order_date\nFROM ranked\nWHERE rn = 1\nORDER BY customer_id;",
+      "explanation": "The extra order_id sort resolves ties explicitly. A grouped MAX(order_date) cannot by itself choose the other columns from that same row.",
+      "hints": [
+        "There is already one missing detail in the starter query.",
+        "Imagine two orders made on the same day."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "dataset": "retail",
+      "ordered": true
+    },
+    {
+      "id": "python-aggregate",
+      "version": 1,
+      "title": "Turn event rows into a dictionary",
+      "workspace": "code",
+      "topic": "Python",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "python",
+      "language": "Python",
+      "summary": "Practice loops, dictionaries and a practical aggregation.",
+      "concept": [
+        "A dictionary maps a key to a value. A running total is a useful first data-engineering algorithm.",
+        "Using dict.get(key, 0) gives a starting value for a key that has not appeared before."
+      ],
+      "task": "Implement solve(events). Each event has country and amount. Return a dictionary containing the sum of amounts for each country. Empty input must return {}.",
+      "requirements": [
+        "Do not mutate the input.",
+        "Include zero and negative amounts.",
+        "Use a simple loop; no external package is required."
+      ],
+      "starter": "def solve(events):\n    totals = {}\n    for event in events:\n        # Update the correct country\n        pass\n    return totals",
+      "solution": "def solve(events):\n    totals = {}\n    for event in events:\n        key = event[\"country\"]\n        totals[key] = totals.get(key, 0) + event[\"amount\"]\n    return totals",
+      "explanation": "Each event is visited once: O(n) time. The dictionary stores one entry per distinct country: O(k) space.",
+      "hints": [
+        "Use the country as the dictionary key.",
+        "totals.get(key, 0) handles the first event for each country."
+      ],
+      "sources": [
+        {
+          "label": "Python tutorial: data structures",
+          "url": "https://docs.python.org/3/tutorial/datastructures.html"
+        }
+      ],
+      "entrypoint": "solve",
+      "pythonTests": [
+        {
+          "label": "Two countries",
+          "args": [
+            [
+              {
+                "country": "NO",
+                "amount": 10
+              },
+              {
+                "country": "SE",
+                "amount": 5
+              },
+              {
+                "country": "NO",
+                "amount": 7
+              }
+            ]
+          ],
+          "expected": {
+            "NO": 17,
+            "SE": 5
+          }
+        },
+        {
+          "label": "Empty input",
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "label": "Refund and zero",
+          "args": [
+            [
+              {
+                "country": "NO",
+                "amount": 0
+              },
+              {
+                "country": "NO",
+                "amount": -2
+              }
+            ]
+          ],
+          "expected": {
+            "NO": -2
+          }
+        }
+      ]
+    },
+    {
+      "id": "python-two-sum",
+      "version": 1,
+      "title": "Find the matching pair",
+      "workspace": "code",
+      "topic": "Python algorithms",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "python",
+      "language": "Python",
+      "summary": "A classic hash-map algorithm, without unnecessary complexity.",
+      "concept": [
+        "A hash map lets you remember numbers seen previously. For the current number x, the missing value is target - x.",
+        "Checking before inserting prevents using the same element twice."
+      ],
+      "task": "Implement solve(numbers, target). Return the two zero-based indices in increasing order when a pair exists, otherwise return []. The fixtures have at most one valid pair.",
+      "requirements": [
+        "Do not reuse an index.",
+        "Handle duplicate values and negative numbers.",
+        "Aim for one pass."
+      ],
+      "starter": "def solve(numbers, target):\n    seen = {}\n    for index, value in enumerate(numbers):\n        # Look for the complement\n        pass\n    return []",
+      "solution": "def solve(numbers, target):\n    seen = {}\n    for index, value in enumerate(numbers):\n        other = target - value\n        if other in seen:\n            return [seen[other], index]\n        seen[value] = index\n    return []",
+      "explanation": "Expected O(n) time and O(n) extra space for a hash map. A nested loop would need O(n squared) comparisons in the worst case.",
+      "hints": [
+        "What value must accompany the current value?",
+        "Store the index, not only whether a value exists."
+      ],
+      "sources": [
+        {
+          "label": "Python tutorial: data structures",
+          "url": "https://docs.python.org/3/tutorial/datastructures.html"
+        }
+      ],
+      "entrypoint": "solve",
+      "pythonTests": [
+        {
+          "label": "Basic pair",
+          "args": [
+            [
+              2,
+              7,
+              11,
+              15
+            ],
+            9
+          ],
+          "expected": [
+            0,
+            1
+          ]
+        },
+        {
+          "label": "Duplicate numbers",
+          "args": [
+            [
+              3,
+              3
+            ],
+            6
+          ],
+          "expected": [
+            0,
+            1
+          ]
+        },
+        {
+          "label": "Negative values",
+          "args": [
+            [
+              -2,
+              5,
+              3
+            ],
+            1
+          ],
+          "expected": [
+            0,
+            2
+          ]
+        },
+        {
+          "label": "No match",
+          "args": [
+            [
+              1,
+              2
+            ],
+            10
+          ],
+          "expected": []
+        }
+      ]
+    },
+    {
+      "id": "spark-dedup",
+      "version": 1,
+      "title": "Deduplicate events deterministically",
+      "workspace": "code",
+      "topic": "PySpark",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PySpark",
+      "summary": "Write a window transformation; reason about rows before running Spark.",
+      "concept": [
+        "dropDuplicates on a key does not express which row to retain. A window can define a latest-record rule.",
+        "A Spark transformation builds a plan. An action triggers computation. This workspace does not run a Spark cluster."
+      ],
+      "task": "Given events(customer_id, event_time, event_id), keep the latest row per customer. Break event_time ties with event_id. Explain why dropDuplicates([\"customer_id\"]) is insufficient.",
+      "requirements": [
+        "Partition by customer_id.",
+        "Sort both tie-breaker columns descending.",
+        "Remove the helper column after filtering."
+      ],
+      "starter": "from pyspark.sql import functions as F, Window\n\nwindow = Window.partitionBy(\"customer_id\")\n# Add ordering, row_number and the filter.",
+      "solution": "from pyspark.sql import functions as F, Window\n\nwindow = Window.partitionBy(\"customer_id\").orderBy(\n    F.col(\"event_time\").desc(), F.col(\"event_id\").desc()\n)\nlatest = (events.withColumn(\"rn\", F.row_number().over(window))\n          .filter(F.col(\"rn\") == 1)\n          .drop(\"rn\"))",
+      "explanation": "The window records the business rule explicitly. The plan will generally redistribute and sort data by the window key. Export the code to an actual Spark environment to validate runtime behavior.",
+      "hints": [
+        "Reuse the idea from the SQL ROW_NUMBER exercise.",
+        "A DataFrame has no implicit reliable row order."
+      ],
+      "sources": [
+        {
+          "label": "Spark DataFrame API",
+          "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html"
+        }
+      ],
+      "rubric": [
+        "The partition key is customer_id.",
+        "Both tie-breakers are descending.",
+        "Only rn = 1 is kept.",
+        "I can explain why unordered deduplication is not enough."
+      ]
+    },
+    {
+      "id": "tsql-running-total",
+      "version": 1,
+      "title": "A running total in T-SQL",
+      "workspace": "code",
+      "topic": "T-SQL",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "T-SQL",
+      "summary": "Understand ROWS versus RANGE with a concrete window frame.",
+      "concept": [
+        "A running total depends on partition, order and frame. ROWS is a physical-row frame.",
+        "Ordering only by a nonunique date can create peers. Include a stable key when you want a row-by-row total."
+      ],
+      "task": "Write a T-SQL query returning order_id, customer_id and running_amount by customer, ordered by order_date then order_id. Use an explicit ROWS frame.",
+      "requirements": [
+        "Partition by customer_id.",
+        "Use ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.",
+        "Discuss duplicate order dates."
+      ],
+      "starter": "SELECT order_id, customer_id,\n       SUM(amount) OVER (\n         PARTITION BY customer_id\n         -- Ordering and frame\n       ) AS running_amount\nFROM orders;",
+      "solution": "SELECT order_id, customer_id,\n       SUM(amount) OVER (\n         PARTITION BY customer_id\n         ORDER BY order_date, order_id\n         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n       ) AS running_amount\nFROM orders;",
+      "explanation": "The frame includes prior rows plus the current row in the declared order. This is T-SQL review, not SQL Server execution; the app does not silently translate it into DuckDB.",
+      "hints": [
+        "The order inside OVER is distinct from the final display order.",
+        "Add order_id to break date ties."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "rubric": [
+        "Correct partition.",
+        "Stable ordering.",
+        "Explicit ROWS frame.",
+        "I distinguish a frame from a partition."
+      ]
+    },
+    {
+      "id": "bigquery-qualify",
+      "version": 1,
+      "title": "Latest events with QUALIFY",
+      "workspace": "code",
+      "topic": "BigQuery SQL",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "BigQuery SQL",
+      "summary": "Practice a GoogleSQL pattern without provisioning BigQuery.",
+      "concept": [
+        "QUALIFY filters after window calculations in GoogleSQL.",
+        "A partition filter can reduce scanned data, but filtering history before deduplication can change the business meaning of latest."
+      ],
+      "task": "Select the latest event for every customer from analytics.events using QUALIFY. Use event_time DESC and event_id DESC. Explain the scope of any time filter you introduce.",
+      "requirements": [
+        "Use ROW_NUMBER and QUALIFY.",
+        "State whether latest means all time or inside a date range."
+      ],
+      "starter": "SELECT *\nFROM `analytics.events`\nQUALIFY -- Window condition",
+      "solution": "SELECT *\nFROM `analytics.events`\nQUALIFY ROW_NUMBER() OVER (\n  PARTITION BY customer_id\n  ORDER BY event_time DESC, event_id DESC\n) = 1;",
+      "explanation": "QUALIFY avoids a wrapper query for filtering the window result. A last-seven-days WHERE clause changes the candidate rows and must match the requirement.",
+      "hints": [
+        "The ROW_NUMBER expression can appear directly after QUALIFY.",
+        "Do not claim pruning without a suitable partition filter."
+      ],
+      "sources": [
+        {
+          "label": "BigQuery: query syntax",
+          "url": "https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax"
+        }
+      ],
+      "rubric": [
+        "QUALIFY filters row_number = 1.",
+        "The order is deterministic.",
+        "I described the date-scope tradeoff."
+      ]
+    },
+    {
+      "id": "pandas-grain",
+      "version": 1,
+      "title": "Group a DataFrame without losing its meaning",
+      "workspace": "code",
+      "topic": "pandas",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Python / pandas",
+      "summary": "Groupby, named aggregation and output grain.",
+      "concept": [
+        "Aggregation changes the grain: line items become one row per group.",
+        "Named aggregation makes output column names explicit and reviewable."
+      ],
+      "task": "Given a pandas DataFrame lines with customer_id and amount, return one row per customer with total_amount and line_count. Use as_index=False.",
+      "requirements": [
+        "Sum amount.",
+        "Count rows rather than only non-null amounts."
+      ],
+      "starter": "summary = lines.groupby(\"customer_id\", as_index=False).agg(\n    # Named aggregations\n)",
+      "solution": "summary = lines.groupby(\"customer_id\", as_index=False).agg(\n    total_amount=(\"amount\", \"sum\"),\n    line_count=(\"amount\", \"size\")\n)",
+      "explanation": "size counts rows, including rows whose amount is missing. count counts non-null values in the chosen column. Check null grouping-key behavior separately.",
+      "hints": [
+        "size and count differ on missing values."
+      ],
+      "sources": [
+        {
+          "label": "pandas: group by",
+          "url": "https://pandas.pydata.org/docs/user_guide/groupby.html"
+        }
+      ],
+      "rubric": [
+        "The output grain is customer.",
+        "I used size for row count.",
+        "I understand missing-value behavior."
+      ]
+    },
+    {
+      "id": "git-safe-undo",
+      "version": 1,
+      "title": "Undo a shared commit safely",
+      "workspace": "code",
+      "topic": "Git",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Choose revert rather than rewriting a shared history.",
+      "concept": [
+        "A commit records a snapshot and parent reference. Shared history is an agreement between collaborators.",
+        "git revert creates a new inverse commit; reset moves a reference and can rewrite local history."
+      ],
+      "task": "Commit abc123 introduced a bug and has already been pushed to a shared branch. Write commands to inspect and safely undo it, then explain why a force push is not the default.",
+      "requirements": [
+        "Inspect status before making changes.",
+        "Use revert on the shared commit.",
+        "Do not execute a force push."
+      ],
+      "starter": "git status\n# Inspect and safely undo the shared commit",
+      "solution": "git status\ngit show abc123\ngit revert abc123\ngit log --oneline -3\n# Review, test, then push according to your team workflow.",
+      "explanation": "Revert preserves history and adds an explicit reversal. Conflicts may still need resolution. Commands here are text only; nothing touches a real repository.",
+      "hints": [
+        "The goal is a new commit, not removing an old one."
+      ],
+      "sources": [
+        {
+          "label": "Git book: undoing things",
+          "url": "https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things"
+        }
+      ],
+      "rubric": [
+        "I inspect first.",
+        "I use revert.",
+        "I can distinguish revert, restore and reset."
+      ]
+    },
+    {
+      "id": "linux-log-triage",
+      "version": 1,
+      "title": "Find failures in a pipeline log",
+      "workspace": "code",
+      "topic": "Linux",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Build a readable, non-destructive log-inspection command.",
+      "concept": [
+        "Pipes send one command output to the next. Quoting prevents unintended shell interpretation.",
+        "Exit code 1 from grep means no match, which is not the same as an execution error."
+      ],
+      "task": "Write a command that shows the last 20 case-insensitive occurrences of error in pipeline.log, with line numbers. Explain what happens when there are no matches.",
+      "requirements": [
+        "Keep the file unchanged.",
+        "Use case-insensitive matching and line numbers."
+      ],
+      "starter": "# Show the last 20 matching log lines",
+      "solution": "grep -in 'error' pipeline.log | tail -n 20",
+      "explanation": "grep -i ignores case, -n prefixes line numbers, and tail chooses the last matches. In scripts, pipefail changes how the pipeline exit status is reported.",
+      "hints": [
+        "Filter before taking the last 20 matches."
+      ],
+      "sources": [
+        {
+          "label": "GNU grep manual",
+          "url": "https://www.gnu.org/software/grep/manual/grep.html"
+        }
+      ],
+      "rubric": [
+        "Correct flags and quoted pattern.",
+        "No destructive commands.",
+        "I can explain no-match exit status."
+      ]
+    },
+    {
+      "id": "bi-star-schema",
+      "version": 1,
+      "title": "Design the sales star schema",
+      "workspace": "model",
+      "topic": "Data modeling",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "Model design",
+      "summary": "Connect dimensions to a sales fact at a consistent grain.",
+      "concept": [
+        "The grain describes one row of the fact table. Define it before choosing relationships or measures.",
+        "The dimension key on the one side must be unique. A typical star filters from a dimension toward the fact."
+      ],
+      "task": "Choose the grain of Sales and inspect the customer and product relationships. The sample Sales table contains one row per order line. Use the model check to find broken or missing relationships.",
+      "requirements": [
+        "Choose order line as the fact grain.",
+        "DimCustomer and DimProduct must each filter Sales.",
+        "Keep dimension keys unique."
+      ],
+      "starter": "Model notes:\n- Grain:\n- Dimension keys:\n- Filter direction:",
+      "solution": "Grain: one order line.\nDimCustomer[CustomerKey] 1 -> * Sales[CustomerKey]\nDimProduct[ProductKey] 1 -> * Sales[ProductKey]\nUse single-direction filters from each dimension to Sales.",
+      "explanation": "An order can contain several lines. Joining two facts at different grains can multiply rows and overstate revenue. Keep the grain and filter direction visible when checking measures.",
+      "hints": [
+        "Read the SaleKey and OrderKey values in Data preview.",
+        "The fact key is a line key, not the order key."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: star schema guidance",
+          "url": "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+        }
+      ],
+      "template": "model",
+      "expectedGrain": "order-line",
+      "rubric": [
+        "I stated the fact grain.",
+        "Both dimension relationships are active.",
+        "I checked key uniqueness."
+      ]
+    },
+    {
+      "id": "bi-revenue",
+      "version": 1,
+      "title": "Write a revenue measure",
+      "workspace": "model",
+      "topic": "Power BI / DAX",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "dax-subset",
+      "language": "DAX",
+      "summary": "See the model, rows and KPI while writing a row iterator.",
+      "concept": [
+        "SUM adds values from one column. SUMX evaluates an expression for each row of a table and sums those results.",
+        "A measure responds to filter context. The preview uses only the explicit teaching subset listed beside the editor."
+      ],
+      "task": "Write Revenue as quantity multiplied by unit price, summed across visible Sales rows. Change the country slicer and inspect how the active customer relationship changes the KPI.",
+      "requirements": [
+        "Use SUMX over Sales.",
+        "Multiply Quantity by UnitPrice.",
+        "Check both All countries and Norway."
+      ],
+      "starter": "Revenue = SUM(Sales[UnitPrice])",
+      "solution": "Revenue = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])",
+      "explanation": "Summing unit prices ignores quantities. SUMX supplies a row context for the multiplication and the active dimension filters decide which sales rows are visible.",
+      "hints": [
+        "Use an iterator when the expression multiplies two columns.",
+        "The row expression is Sales[Quantity] * Sales[UnitPrice]."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: DAX reference",
+          "url": "https://learn.microsoft.com/en-us/dax/"
+        },
+        {
+          "label": "Microsoft: star schema guidance",
+          "url": "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+        }
+      ],
+      "template": "model"
+    },
+    {
+      "id": "bi-margin",
+      "version": 1,
+      "title": "Gross margin that handles zero revenue",
+      "workspace": "model",
+      "topic": "Power BI / DAX",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "dax-subset",
+      "language": "DAX",
+      "summary": "Build a ratio safely and distinguish a ratio of sums from a mean of ratios.",
+      "concept": [
+        "Margin is total profit divided by total revenue, not the unweighted average of row margins.",
+        "DIVIDE returns blank by default when the denominator is zero."
+      ],
+      "task": "Write Margin using the built-in [Gross Profit] and [Revenue] measures. Select Denmark, which has no fixture sales, to observe a blank instead of an exception.",
+      "requirements": [
+        "Use DIVIDE.",
+        "Do not average individual row percentages."
+      ],
+      "starter": "Margin = [Gross Profit] / [Revenue]",
+      "solution": "Margin = DIVIDE([Gross Profit], [Revenue])",
+      "explanation": "Revenue is the sum of quantity times unit price. Gross Profit subtracts quantity times unit cost. The ratio uses the same current filter context for both measures.",
+      "hints": [
+        "The preview includes built-in Revenue, Cost and Gross Profit measures."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: DAX reference",
+          "url": "https://learn.microsoft.com/en-us/dax/"
+        }
+      ],
+      "template": "model"
+    },
+    {
+      "id": "bi-filter-context",
+      "version": 1,
+      "title": "Replace a country filter with CALCULATE",
+      "workspace": "model",
+      "topic": "Power BI / DAX",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "dax-subset",
+      "language": "DAX",
+      "summary": "Understand filter replacement using a small, visible model.",
+      "concept": [
+        "CALCULATE evaluates an expression in modified filter context.",
+        "A simple same-column filter in CALCULATE replaces that column filter unless a modifier such as KEEPFILTERS changes the behavior. This teaching subset supports only simple equality filters."
+      ],
+      "task": "Write Norway Revenue with CALCULATE and DimCustomer[Country] = \"Norway\". Set the country slicer to Sweden. Explain why the measure still returns Norway revenue when the customer relationship is active.",
+      "requirements": [
+        "Use CALCULATE around [Revenue].",
+        "Filter DimCustomer[Country].",
+        "Explain replacement versus intersection."
+      ],
+      "starter": "Norway Revenue = CALCULATE(\n    [Revenue]\n    -- Add a country filter\n)",
+      "solution": "Norway Revenue = CALCULATE(\n    [Revenue],\n    DimCustomer[Country] = \"Norway\"\n)",
+      "explanation": "The measure replaces the current country filter with Norway, while unrelated filters such as product category remain. This is a limited model, not a general DAX engine.",
+      "hints": [
+        "The filter is on a dimension column.",
+        "The product-category slicer should still affect the result."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: DAX reference",
+          "url": "https://learn.microsoft.com/en-us/dax/"
+        }
+      ],
+      "template": "model"
+    },
+    {
+      "id": "bi-csharp",
+      "version": 1,
+      "title": "Organize measures with a C# script",
+      "workspace": "model",
+      "topic": "C# / Tabular Editor",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "C#",
+      "summary": "Practice model metadata automation without changing a real Power BI model.",
+      "concept": [
+        "Tabular Editor scripting can automate model metadata such as names, format strings and display folders.",
+        "Metadata changes are different from evaluating DAX. They require review before applying them to a real model."
+      ],
+      "task": "Write a Tabular Editor 2 script that puts the selected measures in the Revenue display folder. Explain how you would review the selection and save a backup first.",
+      "requirements": [
+        "Iterate only selected measures.",
+        "Set DisplayFolder to Revenue.",
+        "Do not change every measure in the model."
+      ],
+      "starter": "foreach (var measure in Selected.Measures)\n{\n    // Set the display folder\n}",
+      "solution": "foreach (var measure in Selected.Measures)\n{\n    measure.DisplayFolder = \"Revenue\";\n}",
+      "explanation": "Selected.Measures limits the scope. The browser does not execute .NET, connect to XMLA, or modify Power BI. Export this script and test on a copy in Tabular Editor.",
+      "hints": [
+        "Use Selected.Measures rather than Model.AllMeasures."
+      ],
+      "sources": [
+        {
+          "label": "Tabular Editor: advanced scripting",
+          "url": "https://docs.tabulareditor.com/te2/Advanced-Scripting.html"
+        }
+      ],
+      "template": "model",
+      "rubric": [
+        "The script scopes to selected measures.",
+        "The display folder is correct.",
+        "I would inspect changes on a copy."
+      ]
+    },
+    {
+      "id": "bi-scd",
+      "version": 1,
+      "title": "Preserve customer history with SCD Type 2",
+      "workspace": "model",
+      "topic": "Data modeling",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Model design",
+      "summary": "Reason about business keys, surrogate keys and effective dates.",
+      "concept": [
+        "A business key identifies the customer; a surrogate key can identify one version of that customer.",
+        "Type 2 history keeps old versions rather than overwriting them. Facts must resolve to the correct version."
+      ],
+      "task": "A customer changes country. Describe a Type 2 dimension and the date-range lookup needed when loading Sales. Explain how historical revenue keeps the old country.",
+      "requirements": [
+        "Use a surrogate key per version.",
+        "Specify effective-from and effective-to bounds.",
+        "Define a rule for late-arriving facts."
+      ],
+      "starter": "DimCustomerVersion\n- CustomerVersionKey\n- CustomerBusinessKey\n- Country\n# Add the validity fields and lookup rule",
+      "solution": "DimCustomerVersion(CustomerVersionKey, CustomerBusinessKey, Country, ValidFrom, ValidTo, IsCurrent).\nResolve the fact using its event date:\nValidFrom <= event_date AND event_date < ValidTo.\nStore CustomerVersionKey on Sales. Use non-overlapping ranges and an explicit unknown-member policy.",
+      "explanation": "An exclusive upper bound makes adjacent versions unambiguous. A fact linked only to the current business-key row would reclassify historical revenue after a change.",
+      "hints": [
+        "Two customer versions share a business key but not a surrogate key."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: star schema guidance",
+          "url": "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+        }
+      ],
+      "template": "model",
+      "rubric": [
+        "Surrogate key per version.",
+        "Non-overlapping validity ranges.",
+        "Event-time lookup.",
+        "Explicit late-arrival policy."
+      ]
+    },
+    {
+      "id": "dag-data-quality",
+      "version": 1,
+      "title": "Put quality checks before publication",
+      "workspace": "pipeline",
+      "topic": "Airflow",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "Python / Airflow",
+      "summary": "Repair a dependency graph and follow a failed run.",
+      "concept": [
+        "A DAG describes dependencies, not just the visual left-to-right order.",
+        "Under an all-success rule, a failed task blocks dependent tasks. This simulator supports only this explicit simplified rule and one transient failure."
+      ],
+      "task": "The publish task is incorrectly dependent on transform rather than quality. Remove that edge and connect quality to publish. Simulate the transient quality failure with zero retries, then allow one retry.",
+      "requirements": [
+        "Required chain: extract -> transform -> quality -> publish.",
+        "No cycles or direct bypass to publish.",
+        "Explain why a failed check must block publication."
+      ],
+      "starter": "# Illustrative Airflow task dependencies\nextract >> transform\ntransform >> quality\ntransform >> publish  # Fix the dependency",
+      "solution": "extract >> transform >> quality >> publish",
+      "explanation": "The graph editor, not this code textbox, is the simulator source of truth. A transient quality failure is recovered when the allowed retry count is at least one. This does not execute Airflow.",
+      "hints": [
+        "Remove the transform-to-publish edge.",
+        "Select quality and change allowed retries after the failed simulation."
+      ],
+      "sources": [
+        {
+          "label": "Apache Airflow: DAGs",
+          "url": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"
+        }
+      ],
+      "template": "pipeline",
+      "rubric": [
+        "Publication depends on quality.",
+        "The graph has no cycle.",
+        "I inspected failure propagation and retries."
+      ]
+    },
+    {
+      "id": "adf-watermark",
+      "version": 1,
+      "title": "Advance a watermark only after success",
+      "workspace": "pipeline",
+      "topic": "Azure Data Factory",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "ADF design",
+      "summary": "Practice incremental ingestion and failure-safe control flow.",
+      "concept": [
+        "A watermark records an ingestion boundary. Updating it too early can permanently skip rows after a failure.",
+        "A robust flow captures a high watermark, copies a bounded interval, validates, then persists the new boundary after success."
+      ],
+      "task": "Repair the graph so that persist_watermark follows validate, not copy. Describe the replay strategy when copying succeeds but persistence fails.",
+      "requirements": [
+        "Control order: read_watermark -> copy -> validate -> persist_watermark.",
+        "Persist only after successful validation.",
+        "Use an idempotent destination or deduplication on retry."
+      ],
+      "starter": "{\n  \"activity\": \"persist_watermark\",\n  \"dependsOn\": [{ \"activity\": \"copy\", \"dependencyConditions\": [\"Succeeded\"] }]\n}",
+      "solution": "{\n  \"activity\": \"persist_watermark\",\n  \"dependsOn\": [{ \"activity\": \"validate\", \"dependencyConditions\": [\"Succeeded\"] }]\n}",
+      "explanation": "Replaying the same interval must not duplicate business records. A watermark alone does not guarantee exactly-once behavior. This is an ADF-style exercise, not an ADF JSON validator.",
+      "hints": [
+        "The success boundary should include validation, not only copying."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: pipelines and activities",
+          "url": "https://learn.microsoft.com/en-us/azure/data-factory/concepts-pipelines-activities"
+        }
+      ],
+      "template": "watermark",
+      "rubric": [
+        "Persist follows validation.",
+        "Replay is idempotent.",
+        "I described a bounded extraction interval."
+      ]
+    },
+    {
+      "id": "dbt-lineage",
+      "version": 1,
+      "title": "Test the model before its consumer",
+      "workspace": "pipeline",
+      "topic": "dbt",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "SQL / dbt",
+      "summary": "See model dependencies and quality gates without running dbt.",
+      "concept": [
+        "ref() records a model dependency and resolves a relation name during compilation.",
+        "A visual quality gate here is a teaching abstraction. Actual dbt build selection and indirect test selection should be verified in your project."
+      ],
+      "task": "Repair the graph so the mart is downstream of quality. Write a model that aggregates amount by customer from stg_orders with ref(). Explain where uniqueness and not-null tests belong.",
+      "requirements": [
+        "Use ref(\"stg_orders\").",
+        "Declare the output grain as one customer.",
+        "Inspect the quality gate in the graph."
+      ],
+      "starter": "SELECT customer_id, SUM(amount) AS revenue\nFROM {{ ref(\"stg_orders\") }}\nGROUP BY customer_id",
+      "solution": "SELECT customer_id, SUM(amount) AS revenue\nFROM {{ ref(\"stg_orders\") }}\nGROUP BY customer_id\n-- Add not_null and unique tests on the customer key of the customer-grain mart.",
+      "explanation": "The graph simulator does not compile Jinja or execute dbt. It trains dependency reasoning. Actual incremental behavior depends on materialization, adapter and merge-key configuration.",
+      "hints": [
+        "A customer-grain mart should have one unique non-null customer key."
+      ],
+      "sources": [
+        {
+          "label": "dbt: incremental models",
+          "url": "https://docs.getdbt.com/docs/build/incremental-models"
+        }
+      ],
+      "template": "dbt",
+      "rubric": [
+        "The output grain is stated.",
+        "ref defines the model dependency.",
+        "The quality gate precedes publication."
+      ]
+    },
+    {
+      "id": "dag-idempotency",
+      "version": 1,
+      "title": "Rerun a daily partition safely",
+      "workspace": "pipeline",
+      "topic": "Pipeline design",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Python / pseudocode",
+      "summary": "Design a task so retries do not double your data.",
+      "concept": [
+        "An idempotent operation produces the same intended result when repeated for the same input.",
+        "A data interval is not necessarily the wall-clock time at which a task happens to run."
+      ],
+      "task": "A daily sales task currently appends its whole day on every retry. Propose a partition-replacement or key-based merge strategy and explain how it supports a backfill.",
+      "requirements": [
+        "Use the explicit processing date or interval.",
+        "Avoid now() as the only partition selector.",
+        "Address partial failures."
+      ],
+      "starter": "def load_sales(processing_date):\n    # Read a bounded interval\n    # Make the write retry-safe\n    pass",
+      "solution": "Read the requested date interval. Write to staging, validate, then atomically replace that destination partition where supported. Alternatively MERGE on a stable business key after deduplicating the source. Retry the same interval without generating new business keys.",
+      "explanation": "Idempotency is a property of the complete read/write design. A retry count cannot make a non-idempotent append safe by itself.",
+      "hints": [
+        "What happens if the same day is processed twice?"
+      ],
+      "sources": [
+        {
+          "label": "Apache Airflow: DAGs",
+          "url": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"
+        },
+        {
+          "label": "Microsoft: pipelines and activities",
+          "url": "https://learn.microsoft.com/en-us/azure/data-factory/concepts-pipelines-activities"
+        }
+      ],
+      "template": "pipeline",
+      "rubric": [
+        "Bounded interval.",
+        "Stable business key or atomic partition replacement.",
+        "Partial-failure recovery.",
+        "Backfill uses the same logic."
+      ]
+    },
+    {
+      "id": "arch-fabric",
+      "version": 1,
+      "title": "Design a Fabric analytics path",
+      "workspace": "architecture",
+      "topic": "Microsoft Fabric",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "Architecture",
+      "summary": "Choose a small ingestion-to-reporting design and explain each boundary.",
+      "concept": [
+        "Separate ingestion, refinement and business-ready consumption. Medallion names describe quality layers, not a requirement to triple all data.",
+        "A semantic model adds business relationships and measures; a report should not invent an inconsistent grain."
+      ],
+      "task": "Create a source -> ingestion -> lakehouse -> semantic model -> report path. Explain refresh/freshness, access boundaries and a quality check before publishing the curated layer.",
+      "requirements": [
+        "Include ingestion, storage, semantic and report roles.",
+        "Connect the end-to-end data path.",
+        "Describe permissions and freshness."
+      ],
+      "starter": "source[Operational source] -> ingest[Fabric pipeline]\ningest -> store[OneLake lakehouse]\nstore -> semantic[Semantic model]\nsemantic -> report[Power BI report]",
+      "solution": "source[Operational source] -> ingest[Fabric pipeline]\ningest -> store[OneLake lakehouse]\nstore -> semantic[Semantic model]\nsemantic -> report[Power BI report]",
+      "explanation": "This is a conceptual reference, not a production sizing recommendation. A structural check can find a disconnected report, but cannot prove licensing, security or freshness requirements are satisfied.",
+      "hints": [
+        "Start from the report requirement and work backwards."
+      ],
+      "sources": [
+        {
+          "label": "Microsoft: medallion lakehouse architecture",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture"
+        },
+        {
+          "label": "Microsoft: star schema guidance",
+          "url": "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+        }
+      ],
+      "template": "fabric",
+      "rubric": [
+        "Connected ingestion-to-report path.",
+        "Defined curated grain.",
+        "Quality checkpoint.",
+        "Refresh and access assumptions."
+      ]
+    },
+    {
+      "id": "arch-databricks",
+      "version": 1,
+      "title": "A small medallion pipeline",
+      "workspace": "architecture",
+      "topic": "Databricks",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "Architecture",
+      "summary": "Separate raw preservation, clean records and reporting aggregates.",
+      "concept": [
+        "Bronze preserves source-oriented data, silver refines and validates, and gold serves business needs.",
+        "The layers need explicit ownership, quality rules and a replay strategy. They are not merely folder names."
+      ],
+      "task": "Draw source -> bronze -> silver -> gold -> report. State where schema checks, deduplication and customer-level revenue are produced.",
+      "requirements": [
+        "Preserve a replayable input.",
+        "Deduplicate at a defined business grain.",
+        "Do not label raw data as a reporting contract."
+      ],
+      "starter": "source[Events] -> bronze[Bronze raw]\nbronze -> silver[Silver validated]\nsilver -> gold[Gold revenue]\ngold -> report[BI consumer]",
+      "solution": "source[Events] -> bronze[Bronze raw]\nbronze -> silver[Silver validated]\nsilver -> gold[Gold revenue]\ngold -> report[BI consumer]",
+      "explanation": "Keep the source replayable, deduplicate and validate before aggregating, and publish the gold contract at the requested grain. No Databricks workspace is created here.",
+      "hints": [
+        "Write one responsibility for every layer."
+      ],
+      "sources": [
+        {
+          "label": "Databricks: medallion architecture",
+          "url": "https://docs.databricks.com/aws/en/lakehouse/medallion"
+        }
+      ],
+      "template": "databricks",
+      "rubric": [
+        "Raw replay strategy.",
+        "Deduplication grain.",
+        "Quality checks.",
+        "Gold consumer contract."
+      ]
+    },
+    {
+      "id": "arch-bigquery",
+      "version": 1,
+      "title": "A partition-aware BigQuery design",
+      "workspace": "architecture",
+      "topic": "BigQuery architecture",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "Architecture",
+      "summary": "Reason about landing, transformation and query cost.",
+      "concept": [
+        "Partitioning can reduce scanned data when queries filter on suitable partition columns.",
+        "Clustering is an additional layout choice, not a guarantee of zero scanning or a substitute for a filter."
+      ],
+      "task": "Design ingestion into BigQuery, a curated model and a dashboard. Explain a date partition, a plausible clustering key and what you would measure before claiming lower cost.",
+      "requirements": [
+        "Connect source, ingestion, warehouse and report.",
+        "State the common access pattern.",
+        "Distinguish observed bytes from a cost prediction."
+      ],
+      "starter": "source[Application events] -> ingest[Batch ingestion]\ningest -> warehouse[BigQuery tables]\nwarehouse -> transform[Curated SQL models]\ntransform -> report[Dashboard]",
+      "solution": "source[Application events] -> ingest[Batch ingestion]\ningest -> warehouse[BigQuery partitioned tables]\nwarehouse -> transform[Curated SQL models]\ntransform -> report[Dashboard]",
+      "explanation": "The appropriate layout follows actual query filters and data distribution. The diagram is a reasoning aid, not a BigQuery billing simulator.",
+      "hints": [
+        "What date column do the most frequent queries filter?"
+      ],
+      "sources": [
+        {
+          "label": "BigQuery: query syntax",
+          "url": "https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax"
+        }
+      ],
+      "template": "bigquery",
+      "rubric": [
+        "Access pattern stated.",
+        "Partition key justified.",
+        "Clustering key justified.",
+        "Measured scan-size validation plan."
+      ]
+    },
+    {
+      "id": "arch-tofu",
+      "version": 1,
+      "title": "Keep state and secrets out of the wrong places",
+      "workspace": "architecture",
+      "topic": "Terraform / OpenTofu",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "HCL",
+      "summary": "Understand configuration, plan, state and a safe review workflow.",
+      "concept": [
+        "Configuration expresses intended resources. State tracks managed objects and can contain sensitive values.",
+        "A plan proposes changes; apply performs them. State locking and access control matter for collaboration."
+      ],
+      "task": "Explain init -> validate -> plan -> review -> apply. Propose a protected remote state location with locking support and state why secrets do not belong in committed tfvars.",
+      "requirements": [
+        "No cloud credentials are needed for this exercise.",
+        "Do not run apply automatically.",
+        "Distinguish configuration from state."
+      ],
+      "starter": "terraform {\n  # Describe the backend and security requirements here.\n}\n\n# Write the safe command sequence below.",
+      "solution": "tofu init\ntofu validate\ntofu plan -out=reviewed.plan\n# Review the plan and handle approval outside this exercise.\ntofu apply reviewed.plan\n\n# Use a supported protected state backend and locking;\n# restrict access, enable appropriate recovery, and keep secrets out of version control.",
+      "explanation": "The exact backend syntax depends on the chosen provider and backend. A lock prevents simultaneous writers where supported; it does not replace a backup or least-privilege access.",
+      "hints": [
+        "Treat state like sensitive operational data."
+      ],
+      "sources": [
+        {
+          "label": "OpenTofu: state",
+          "url": "https://opentofu.org/docs/language/state/"
+        }
+      ],
+      "template": "infrastructure",
+      "rubric": [
+        "Configuration versus state explained.",
+        "Protected backend and locking.",
+        "Plan review before apply.",
+        "Secret-handling policy."
+      ]
+    },
+    {
+      "id": "arch-kubernetes",
+      "version": 1,
+      "title": "Diagnose an OOMKilled data worker",
+      "workspace": "architecture",
+      "topic": "Docker / Kubernetes",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "YAML",
+      "summary": "Connect a resource symptom to requests, limits and an investigation.",
+      "concept": [
+        "A request is used for scheduling; a memory limit can lead to termination when exceeded.",
+        "Readiness determines whether a container is ready for traffic. It does not fix a memory leak."
+      ],
+      "task": "A data worker exceeds its 256Mi memory limit. Propose resource settings for a measured working set around 400Mi with headroom, and explain what else to investigate before merely increasing the limit.",
+      "requirements": [
+        "Distinguish request from limit.",
+        "Inspect data volume, concurrency and memory growth.",
+        "Use a small runtime image rather than copying build tools."
+      ],
+      "starter": "resources:\n  requests:\n    cpu: \"250m\"\n    memory: \"128Mi\"\n  limits:\n    memory: \"256Mi\"",
+      "solution": "resources:\n  requests:\n    cpu: \"250m\"\n    memory: \"512Mi\"\n  limits:\n    memory: \"768Mi\"\n# Illustrative only: validate with measured usage and node capacity.\n# Investigate leaks, batch size and concurrency before sizing permanently.",
+      "explanation": "These numbers are illustrative, not a deployment recommendation. Memory settings must fit measurements, node capacity and failure expectations. No Kubernetes API is contacted.",
+      "hints": [
+        "A request is not the same as a memory cap."
+      ],
+      "sources": [
+        {
+          "label": "Kubernetes: resource management",
+          "url": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+        },
+        {
+          "label": "Docker: multi-stage builds",
+          "url": "https://docs.docker.com/build/building/multi-stage/"
+        }
+      ],
+      "template": "infrastructure",
+      "rubric": [
+        "Requests and limits distinguished.",
+        "Investigation before permanent resizing.",
+        "Readiness not confused with memory control.",
+        "Lean runtime image plan."
+      ]
+    },
+    {
+      "id": "arch-spark-skew",
+      "version": 1,
+      "title": "Explain the slow task in a Spark stage",
+      "workspace": "architecture",
+      "topic": "Spark performance",
+      "difficulty": "Hard",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PySpark / architecture",
+      "summary": "Use a synthetic task chart to reason about skew, shuffle and broadcast.",
+      "concept": [
+        "Skew means uneven work distribution. More partitions can reduce average work while leaving a hot key problematic.",
+        "A broadcast join can avoid shuffling the large side only when the broadcast side is genuinely small enough and the plan supports it."
+      ],
+      "task": "Use the teaching sliders to compare task balance. Explain why one task can dominate completion time and when a broadcast strategy may help. Do not treat these artificial numbers as a benchmark.",
+      "requirements": [
+        "Distinguish data volume from key skew.",
+        "Discuss broadcast memory constraints.",
+        "Validate the real plan and task metrics externally."
+      ],
+      "starter": "# Review-only example\nfrom pyspark.sql import functions as F\nresult = fact.join(F.broadcast(small_dimension), \"customer_id\")",
+      "solution": "Inspect the physical plan, partition sizes, spill and task-duration distribution. Verify the dimension size before broadcasting. Consider skew-aware handling, pre-aggregation or key-specific treatment only after measuring the actual bottleneck.",
+      "explanation": "The toy chart uses declared formulas and unitless work values. It deliberately does not predict elapsed seconds, cluster costs, AQE behavior or real Spark performance.",
+      "hints": [
+        "Look at the slowest task, not only the average."
+      ],
+      "sources": [
+        {
+          "label": "Spark DataFrame API",
+          "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html"
+        },
+        {
+          "label": "Spark Connect overview",
+          "url": "https://spark.apache.org/docs/latest/spark-connect-overview.html"
+        }
+      ],
+      "template": "spark",
+      "rubric": [
+        "Skew explained.",
+        "Broadcast memory constraint.",
+        "Real metrics to inspect.",
+        "No benchmark claim from the toy chart."
+      ]
+    },
+    {
+      "id": "arch-table-formats",
+      "version": 1,
+      "title": "What does a lakehouse snapshot remember?",
+      "workspace": "architecture",
+      "topic": "Iceberg / DuckLake",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Architecture",
+      "summary": "Separate a query engine, table format, catalog and storage.",
+      "concept": [
+        "DuckDB is a query engine. Iceberg and DuckLake specify table-management structures. They are not interchangeable product names.",
+        "Iceberg snapshots track files through metadata; DuckLake represents its catalog metadata in SQL tables. Both can describe Parquet data."
+      ],
+      "task": "Draw query engine -> catalog/metadata -> Parquet data. Explain how a reader selects a consistent snapshot and why installing a table format does not create a Spark cluster.",
+      "requirements": [
+        "Separate compute from storage and metadata.",
+        "Explain snapshot consistency.",
+        "Do not present this app as a real Iceberg or DuckLake catalog."
+      ],
+      "starter": "engine[Query engine] -> catalog[Catalog / metadata]\ncatalog -> files[Parquet data files]",
+      "solution": "engine[Query engine] -> catalog[Catalog / snapshot metadata]\ncatalog -> files[Referenced Parquet files]\n# Readers resolve a committed snapshot rather than blindly listing every file.",
+      "explanation": "The platform simulates the concepts; it does not store fixtures in actual Iceberg or DuckLake tables. Add a native lab later only when catalog, snapshots and file lifecycle are themselves the learning objective.",
+      "hints": [
+        "Which component executes SQL, and which remembers table state?"
+      ],
+      "sources": [
+        {
+          "label": "Apache Iceberg: snapshots and reliability",
+          "url": "https://iceberg.apache.org/docs/latest/reliability/"
+        },
+        {
+          "label": "DuckLake: format specification",
+          "url": "https://ducklake.select/docs/stable/specification/introduction"
+        }
+      ],
+      "template": "lakehouse",
+      "rubric": [
+        "Engine and table format separated.",
+        "Catalog purpose explained.",
+        "Consistent snapshot described.",
+        "No managed-cluster assumption."
+      ]
+    }
+  ]
+}
