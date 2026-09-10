@@ -102,7 +102,9 @@ try:
                 go('arch-fabric'); page.locator('[data-lab-tab="Mermaid"]').click()
                 page.locator('#mermaid-source').fill(source)
                 page.locator('[data-action="render-mermaid"]').click()
-                page.locator('#mermaid-output svg').wait_for(timeout=35000)
+                # architecture-beta nests service-icon SVGs inside the rendered root SVG;
+                # wait for the single top-level diagram rather than every descendant SVG.
+                page.locator('#mermaid-output > svg').wait_for(timeout=35000)
             check('Real CDN Mermaid: ' + name, diagram)
         report['status'] = 'PASS' if all(x['passed'] for x in report['checks']) and not report['pageErrors'] else 'FAIL'
         browser.close()
