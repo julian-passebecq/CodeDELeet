@@ -1,2 +1,0 @@
-# Optional real DuckDB SQL runtime. The core app and SQLite fallback need no pip installs.
-duckdb>=1.4,<2
