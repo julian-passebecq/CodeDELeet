@@ -54,7 +54,7 @@ python tests/network_runtime_smoke.py
 | Systems / Cloud | Editable conceptual architecture, Mermaid source/optional renderer, supplied Spark task metrics, Terraform/OpenTofu plans, Kubernetes events/logs, Docker cache evidence |
 | Git | Virtual repository state, commit DAG, HEAD/branches/tracking, index and working files, diff, merge, linear rebase, fetch, conflicts, reset/revert/stash and predictions |
 | Terminal | Separate Bash text streams and PowerShell object pipelines over a virtual filesystem; no host terminal or network shell |
-| Deepnote | Supplied 3-project suite retained, 12 checked notebook references, URL mapping import/export, links hidden until configured |
+| Deepnote | Optional URL mapping/import-export; blank template examples; buttons remain hidden until the user configures real Deepnote URLs |
 
 ## Truthful execution boundaries
 
