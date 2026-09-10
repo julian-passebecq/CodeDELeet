@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Data Practice Studio content pack v1",
+  "title": "CodeDELeet portable content pack envelope",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -11,10 +11,14 @@
   ],
   "properties": {
     "schemaVersion": {
-      "const": 1
+      "enum": [
+        1,
+        2
+      ]
     },
     "id": {
-      "$ref": "#/$defs/id"
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
     },
     "title": {
       "type": "string",
@@ -30,179 +34,90 @@
       "minItems": 1,
       "maxItems": 500,
       "items": {
-        "$ref": "#/$defs/question"
-      }
-    }
-  },
-  "$defs": {
-    "id": {
-      "type": "string",
-      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,79}$"
-    },
-    "text": {
-      "type": "string",
-      "maxLength": 30000
-    },
-    "textList": {
-      "type": "array",
-      "maxItems": 100,
-      "items": {
-        "type": "string",
-        "maxLength": 15000
-      }
-    },
-    "question": {
-      "type": "object",
-      "required": [
-        "title",
-        "topic",
-        "language",
-        "summary",
-        "task",
-        "starter",
-        "solution",
-        "explanation",
-        "id",
-        "version",
-        "workspace",
-        "engine",
-        "difficulty",
-        "minutes",
-        "concept",
-        "requirements",
-        "hints",
-        "sources"
-      ],
-      "properties": {
-        "title": {
-          "$ref": "#/$defs/text"
-        },
-        "topic": {
-          "$ref": "#/$defs/text"
-        },
-        "language": {
-          "$ref": "#/$defs/text"
-        },
-        "summary": {
-          "$ref": "#/$defs/text"
-        },
-        "task": {
-          "$ref": "#/$defs/text"
-        },
-        "starter": {
-          "$ref": "#/$defs/text"
-        },
-        "solution": {
-          "$ref": "#/$defs/text"
-        },
-        "explanation": {
-          "$ref": "#/$defs/text"
-        },
-        "id": {
-          "$ref": "#/$defs/id"
-        },
-        "version": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "workspace": {
-          "enum": [
-            "code",
-            "model",
-            "pipeline",
-            "architecture"
-          ]
-        },
-        "engine": {
-          "enum": [
-            "sql",
-            "python",
-            "dax-subset",
-            "graph",
-            "review"
-          ]
-        },
-        "difficulty": {
-          "enum": [
-            "Easy",
-            "Medium",
-            "Hard"
-          ]
-        },
-        "minutes": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "maximum": 240
-        },
-        "concept": {
-          "$ref": "#/$defs/textList"
-        },
-        "requirements": {
-          "$ref": "#/$defs/textList"
-        },
-        "hints": {
-          "$ref": "#/$defs/textList"
-        },
-        "rubric": {
-          "$ref": "#/$defs/textList"
-        },
-        "sources": {
-          "type": "array",
-          "maxItems": 20,
-          "items": {
-            "type": "object",
-            "required": [
-              "label",
-              "url"
-            ],
-            "properties": {
-              "label": {
-                "type": "string",
-                "maxLength": 299
-              },
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "pattern": "^https://",
-                "maxLength": 1999
-              }
-            }
-          }
-        },
-        "template": {
-          "type": "string"
-        },
-        "dataset": {
-          "type": "string"
-        },
-        "entrypoint": {
-          "type": "string"
-        },
-        "expectedGrain": {
-          "type": "string"
-        },
-        "ordered": {
-          "type": "boolean"
-        },
-        "pythonTests": {
-          "type": "array",
-          "maxItems": 30,
-          "items": {
-            "type": "object",
-            "required": [
-              "args",
-              "expected",
-              "label"
-            ],
-            "properties": {
-              "args": {
-                "type": "array"
-              },
-              "expected": {},
-              "label": {
-                "type": "string"
-              }
-            }
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "title",
+          "workspace",
+          "topic",
+          "difficulty",
+          "minutes",
+          "engine",
+          "language",
+          "summary",
+          "concept",
+          "task",
+          "requirements",
+          "starter",
+          "solution",
+          "explanation",
+          "hints",
+          "sources"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "workspace": {
+            "enum": [
+              "code",
+              "model",
+              "pipeline",
+              "architecture"
+            ]
+          },
+          "engine": {
+            "enum": [
+              "sql",
+              "python",
+              "dax-subset",
+              "graph",
+              "review"
+            ]
+          },
+          "executionMode": {
+            "enum": [
+              "execute",
+              "analyze",
+              "simulate",
+              "review",
+              "external"
+            ]
+          },
+          "renderer": {
+            "enum": [
+              "architecture-editor",
+              "code-editor",
+              "concept-case",
+              "config-editor",
+              "dag-editor",
+              "git-visual",
+              "multi-choice-reasoning",
+              "performance-investigation",
+              "pipeline-investigation",
+              "pyspark-editor",
+              "semantic-model",
+              "sql-editor",
+              "terminal"
+            ]
+          },
+          "difficulty": {
+            "enum": [
+              "Easy",
+              "Medium",
+              "Hard"
+            ]
+          },
+          "minutes": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 240
           }
         }
       }

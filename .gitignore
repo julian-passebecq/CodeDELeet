@@ -1,9 +1,7 @@
 node_modules/
+.DS_Store
+.env
+.env.*
+!.env.example
 __pycache__/
 *.pyc
-.venv/
-.env
-.DS_Store
-test-results/
-
-.build/

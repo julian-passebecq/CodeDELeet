@@ -1,21 +1,23 @@
 {
-  "name": "data-practice-studio",
-  "version": "0.1.0",
-  "description": "A local-first, open-source practice workbench for data engineering and BI.",
+  "name": "codedeleet-v2",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "CodeDELeet - local-first data engineering interview workstation",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json && node scripts/build-preview.mjs",
+    "dev": "npm run build && node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/build.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "node --test tests/*.test.mjs",
-    "start": "python server/app.py",
-    "test:server": "python -m unittest discover -s tests -p test_*.py",
-    "preview:build": "node scripts/build-preview.mjs",
-    "test:ui": "python tests/ui_smoke.py"
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "test:ui": "python tests/ui_smoke.py",
+    "test:fixtures": "python tests/fixture_check.py",
+    "preview": "node scripts/serve.mjs dist",
+    "test:network": "python tests/network_runtime_smoke.py"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "5.8.3"
   },
   "engines": {
     "node": ">=20"

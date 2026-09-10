@@ -1,0 +1,86 @@
+[
+  {
+    "exerciseId": "sql-paid-revenue",
+    "notebook": "01 - SQL Interview Arena",
+    "section": "CSI-01 \u2014 Retail Orders",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/02_SQL_Pipeline/IPYNB_BACKUP/01_01_SQL_Screener_and_Onsite_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "sql-latest-order",
+    "notebook": "02 - SQL Patterns Optimization and Interview Playbook",
+    "section": "B3. Window functions are row-preserving analytics",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/02_SQL_Pipeline/IPYNB_BACKUP/02_02_SQL_Patterns_Optimization_Interview_Playbook.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "python-aggregate",
+    "notebook": "01 - Python Core Interview Arena",
+    "section": "B2. Count by key with a dictionary",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/01_01_Python_Core_Interview_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "spark-dedup",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "C2. Latest row per customer",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/03_03_PySpark_DataFrame_Interview_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "pandas-grain",
+    "notebook": "02 - Pandas and NumPy Data Wrangling Arena",
+    "section": "C1. Revenue and order count by country",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/02_02_Pandas_NumPy_Data_Wrangling_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "bi-revenue",
+    "notebook": "01 - BI Analytics Engineering - dbt DAX Power BI",
+    "section": "C1. Revenue",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/03_Hybrid_DE_BI/IPYNB_BACKUP/01_01_BI_Analytics_Engineering_dbt_DAX_Power_BI.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "bi-filter-context",
+    "notebook": "01 - BI Analytics Engineering - dbt DAX Power BI",
+    "section": "D1. Filter context",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/03_Hybrid_DE_BI/IPYNB_BACKUP/01_01_BI_Analytics_Engineering_dbt_DAX_Power_BI.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "adf-watermark",
+    "notebook": "03 - Airflow Pipeline and SQL Data Engineering Arena",
+    "section": "D1. Advance the watermark safely",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/02_SQL_Pipeline/IPYNB_BACKUP/03_03_Airflow_Pipeline_SQL_Data_Engineering_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "dag-idempotency",
+    "notebook": "03 - Airflow Pipeline and SQL Data Engineering Arena",
+    "section": "C2. Commit then retry",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/02_SQL_Pipeline/IPYNB_BACKUP/03_03_Airflow_Pipeline_SQL_Data_Engineering_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "v2-python-latest",
+    "notebook": "01 - Python Core Interview Arena",
+    "section": "C1. Latest record per key",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/01_01_Python_Core_Interview_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "v2-spark-aggregate",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "B2. groupBy + agg",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/03_03_PySpark_DataFrame_Interview_Arena.ipynb",
+    "url": ""
+  },
+  {
+    "exerciseId": "v2-spark-join",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "C1. Join a dimension",
+    "archivePath": "Deepnote_3_Project_Interview_Suite_v1_4/01_Python_Pandas_PySpark/IPYNB_BACKUP/03_03_PySpark_DataFrame_Interview_Arena.ipynb",
+    "url": ""
+  }
+]

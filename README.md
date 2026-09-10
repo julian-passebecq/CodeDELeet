@@ -1,43 +1,75 @@
-# CodeDELeet
+# CodeDELeet V2 - Interview Workstation
 
-**Open-source personal interview lab for data engineering, analytics engineering, BI and cloud systems.**
+A local-first data engineering practice app: one resizable workstation, four labs, 51 exercises, 13 specialist renderer types. This is the **complete source release candidate**, not a patch or design mockup. `dist/` contains the built static site from this delivery.
 
-Live site: https://leetdejul.netlify.app/
+![Actual V2 build: code workstation](evidence/01-code-workstation.png)
 
-The v0.1 prototype uses four specialist practice workspaces rather than forcing every topic into a single LeetCode-style code editor:
+## Start here
 
-- **Code Lab** — SQL, Python, pandas, PySpark syntax/review, T-SQL, BigQuery SQL, Git and Linux.
-- **Model Lab** — dimensional modeling, Power BI/DAX concepts, KPI/filter context and semantic-model reasoning.
-- **Pipeline Lab** — Airflow, Azure Data Factory, dbt, retries, dependencies, quality gates and idempotency.
-- **Systems Lab** — Fabric, Databricks, BigQuery, Terraform/OpenTofu, Kubernetes/Docker, Spark performance and table formats.
+For the person publishing the new branch: read **[00_START_HERE.md](00_START_HERE.md)** and **[docs/NEXT_AI_HANDOFF.md](docs/NEXT_AI_HANDOFF.md)**. No GitHub or Netlify changes were made while producing this ZIP.
 
-## Current status
+### Run the included build without npm dependencies
 
-The full v0.1 source is now committed on `main` and Netlify publishes the committed `public/` directory.
+With Node.js 22 installed, from this folder:
 
-Validation on the merged source:
+```sh
+node scripts/serve.mjs
+```
 
-- TypeScript type-check: **pass**
-- Build: **pass**
-- Node tests: **pass**
-- Python/server tests: **pass**
-- Chromium embedded UI smoke tests: **pass**
-- Netlify production deploy: **ready**
+Open `http://127.0.0.1:5173`. This serves the included `dist/`. Opening `index.html` through `file://` is not supported.
 
-The application intentionally distinguishes real execution from analysis/simulation. SQL has a local execution path; DAX, DAGs, Spark performance and cloud/system exercises are bounded teaching simulations or reasoning exercises unless a real engine is explicitly connected.
+### Rebuild from source
 
-## Project documents
+```sh
+npm ci --ignore-scripts
+npm run check
+npm run build
+npm start
+```
 
-- `docs/AUDIT_2026-09-10.md` — product/UX and workspace audit.
-- `docs/RESEARCH_SHORTLIST_2026-09-10.md` — open-source libraries worth considering.
-- `docs/PRO_MODEL_NEXT_PASS.md` — bounded implementation brief for the next coding pass.
-- `docs/RELEASE_STATUS_2026-09-10.md` — post-push GitHub/CI/Netlify status.
-- `docs/ARCHITECTURE.md` — current architecture.
-- `docs/CONTENT_PACKS.md` — exercise-pack format and extension path.
-- `.github/workflows/ci.yml` — automated core and UI validation.
+TypeScript **5.8.3** is the only npm build dependency and is pinned exactly. Node 22.16.0 / TypeScript 5.8.3 were used for this build. `package-lock.json` uses the exact tarball URL and integrity obtained from the npm registry. Cold dependency download was unavailable in this container; the build used the installed exact-version compiler. See `docs/BUILD_DEPENDENCY_PROVENANCE.json`.
 
-## Product direction
+### Test
 
-The next release should prioritize a **one-screen interview-lab shell** over adding hundreds of questions: question/data/schema on the left, editor or interactive canvas on the right, and a collapsible lower drawer for Results / Explanation / Visual / Notes / History. Each exercise should declare both a renderer and an execution contract so specialized labs can evolve without becoming four hard-coded page types.
+```sh
+npm test
+python tests/fixture_check.py
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
+python tests/ui_smoke.py
+# With npm start running in a second terminal, in a network-enabled environment:
+python tests/network_runtime_smoke.py
+```
 
-MIT-licensed original project code and exercises. Vendor names identify learning topics only; the project is not affiliated with Microsoft, Databricks, Google, dbt Labs, Apache Software Foundation, HashiCorp, OpenTofu or LeetCode.
+`tests/ui_smoke.py` defaults to a documented in-memory **delivery harness** that renders the actual built JavaScript, CSS, CodeMirror and DOM. Set `UI_MODE=http` and optionally `BASE_URL` to test a served origin instead. Default executable discovery prefers `CHROMIUM_PATH`, then a system Chromium, then Playwright's downloaded Chromium.
+
+## What is in V2
+
+| Area | Implemented |
+|---|---|
+| Shared workstation | Search/filter library; fixed desktop height; keyboard/pointer pane resize; collapsible results drawer; focus mode; mobile tabs; previous/next; timer; local notes/bookmarks/confidence/history |
+| Code | Bundled CodeMirror; DuckDB-Wasm adapter; disposable Pyodide worker; real result comparison when runtimes load; explicit cancellation and timeouts; PySpark schema/rows/plan review |
+| Model / BI | Editable teaching-model relationships; fact grain; country/category filters; bounded DAX interpreter and visible-row/KPI feedback |
+| Pipeline | Editable DAG/config/script; deterministic task states, retries, skip and selected trigger rules; ADF-style edge conditions; dbt manifest/run-results investigation |
+| Systems / Cloud | Editable conceptual architecture, Mermaid source/optional renderer, supplied Spark task metrics, Terraform/OpenTofu plans, Kubernetes events/logs, Docker cache evidence |
+| Git | Virtual repository state, commit DAG, HEAD/branches/tracking, index and working files, diff, merge, linear rebase, fetch, conflicts, reset/revert/stash and predictions |
+| Terminal | Separate Bash text streams and PowerShell object pipelines over a virtual filesystem; no host terminal or network shell |
+| Deepnote | Supplied 3-project suite retained, 12 checked notebook references, URL mapping import/export, links hidden until configured |
+
+## Truthful execution boundaries
+
+**Real execution adapters:** browser DuckDB SQL and browser Python, loaded only after explicit consent. **Important release gate:** their external downloads and worker startup could not be exercised here because the environment blocks browser URL navigation and external downloads. Adapter source is implemented; hosted runtime verification remains required before promoting the preview to production.
+
+**Simulations / bounded checks:** Git, shell, DAG, DAX teaching subset and configuration checks. **Guided review:** PySpark, vendor SQL, architecture and supplied infrastructure/performance evidence. No Spark cluster, Power BI service, Airflow scheduler, dbt process, Kubernetes API, Terraform apply, cloud account or backend runner is provisioned.
+
+SQL cases are small, public fixtures, not hidden secure interview grading. All answers ship to the browser. Only run code you trust; browser Python/JavaScript interoperability is not a hostile-code security boundary.
+
+## State and deployment
+
+V1's `data-practice-studio.v1` storage key, schema 1 and all 27 baseline exercise IDs are preserved. V2 adds fields and a one-time pre-upgrade snapshot. Export a backup **before switching domains**: a branch preview has a different localStorage origin. See [migration instructions](docs/MIGRATION_V1_TO_V2.md).
+
+Netlify configuration: build `npm run build`, publish `dist`, Node 22. No functions, keys or environment secrets are needed. For a manual static deploy, use the **contents** of `dist/`. Do not upload the ZIP itself as a source file and expect GitHub to unpack it.
+
+## Documentation
+
+[Audit](docs/V2_AUDIT.md) | [Tests](docs/V2_TEST_REPORT.md) | [Known limits](docs/KNOWN_LIMITATIONS.md) | [V2.1 backlog](docs/V2_1_BACKLOG.md) | [Exercise inventory](docs/EXERCISE_INVENTORY.md) | [Renderer contracts](docs/RENDERER_INVENTORY.md) | [Deepnote](docs/DEEPNOTE_INTEGRATION.md) | [Git](docs/GIT_VISUAL_LAB.md) | [Terminal](docs/TERMINAL_LAB.md) | [Third-party notices](THIRD_PARTY_NOTICES.md)

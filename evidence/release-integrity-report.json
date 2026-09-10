@@ -1,0 +1,55 @@
+{
+  "checks": [
+    {
+      "name": "Every public asset equals its built dist counterpart",
+      "passed": true
+    },
+    {
+      "name": "Compiled relative ES module imports resolve",
+      "passed": true
+    },
+    {
+      "name": "Local documentation and screenshot links resolve",
+      "passed": true
+    },
+    {
+      "name": "Retained supplied companion/reference ZIPs pass CRC checks",
+      "passed": true
+    },
+    {
+      "name": "Pinned package and lockfile agree",
+      "passed": true
+    },
+    {
+      "name": "Bundled CodeMirror license and editor source exist",
+      "passed": true
+    },
+    {
+      "name": "No node_modules, environment secrets or font files in release",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: index.html",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: app/app.js",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: workers/python.js",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: packs/starter.json",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: vendor/codemirror/lib/codemirror.js",
+      "passed": true
+    }
+  ],
+  "passed": 12,
+  "failed": 0,
+  "boundary": "Static file and local urllib delivery only; no browser navigation, CDN or worker execution."
+}

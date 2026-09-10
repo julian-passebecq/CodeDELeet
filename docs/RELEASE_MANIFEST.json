@@ -1,0 +1,44 @@
+{
+  "app": "CodeDELeet",
+  "version": "2.0.0",
+  "releaseStatus": "source release candidate; external runtime gates pending",
+  "date": "2026-09-10",
+  "baselineCommit": "d3c7c21ba79a082da21925b5ee0dce69212577fe",
+  "repoMutations": false,
+  "deployments": false,
+  "exercises": 51,
+  "retainedV1Ids": 27,
+  "newExercises": 24,
+  "renderers": 13,
+  "testResults": {
+    "node": {
+      "passed": 58,
+      "failed": 0
+    },
+    "nativeFixtures": {
+      "passed": 42,
+      "failed": 0
+    },
+    "builtFileUI": {
+      "passed": 68,
+      "failed": 0
+    },
+    "networkRuntime": "UNVERIFIED - blocked by browser policy",
+    "releaseIntegrity": {
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "retainedInputs": [
+    {
+      "file": "public/companion/Deepnote_Interview_Suite_v1_4.zip",
+      "sha256": "e73ea7b0d5f9aa0be977a146b31422efebaf899db7eba8f6bbfe512974abaf35",
+      "unchanged": true
+    },
+    {
+      "file": "reference/legacy-trainer/leetcodedataeng-main.zip",
+      "sha256": "e7a725b67a787c27d1b1fdb2f77eb27f50395b598ca237c3124a8ea1108562c2",
+      "unchanged": true
+    }
+  ]
+}

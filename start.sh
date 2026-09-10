@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")"
-exec python3 server/app.py --open "$@"
+exec node scripts/serve.mjs
