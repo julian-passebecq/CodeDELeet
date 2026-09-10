@@ -2,9 +2,9 @@
 
 ## Inputs and authority
 
-The uploaded V2 handoff is retained under `reference/hand-off/`. The inspected current GitHub baseline is commit `d3c7c21ba79a082da21925b5ee0dce69212577fe`. The older uploaded `leetcodedataeng-main.zip` was inspected as a reference only; it is a separate React trainer and is not the current TypeScript migration baseline. The supplied Deepnote suite is retained and used for verified references.
+The current clean V2 candidate is maintained on `v2-clean-audit` and reviewed through PR #4. The inspected production baseline remains commit `d3c7c21ba79a082da21925b5ee0dce69212577fe` until promotion. The older uploaded trainer ZIP remains a reference only and is not loaded by the application.
 
-No GitHub or Netlify mutation occurred. V2 source and static build were authored locally.
+Deepnote is now deliberately **link/template only**. No Deepnote notebook archive is retained in `public/` or `dist/`; blank mapping examples preserve the future Open-in-Deepnote workflow without publishing notebook contents.
 
 ## Acceptance gate assessment
 
@@ -13,35 +13,42 @@ No GitHub or Netlify mutation occurred. V2 source and static build were authored
 | Stable IDs and state | All 27 baseline IDs retained; V1 key/schema preserved; migration and merge tests; browser boot snapshot test. Cross-origin export/import required. |
 | Shared shell | One fixed-height workstation, resizable columns/drawer, persisted layout, focus and mobile panels. Browser interactions and real screenshots included. |
 | Solutions | No automatic solution reveal; explicit reveal per exercise; draft remains separate. |
-| SQL/Python | Implemented real-engine adapters, lazy load, timeout/cancel and source tests. **External startup/worker release gates unverified here.** |
-| PySpark | Specific review renderer with schema/sample rows/plan/reference mapping; no false runtime badge. |
+| SQL/Python | Real browser adapters are implemented and lazy-loaded. DuckDB-Wasm and Pyodide are checked by a separate real-origin/runtime CI job before promotion. |
+| PySpark | Specific review renderer with schema/sample rows/plan and optional blank Deepnote mapping; no false Spark runtime badge. |
 | Model/BI | Functional teaching-model filters, grain/relationship checks and bounded DAX. Arbitrary semantic-model execution is deferred. |
 | Pipeline | Functional canonical graph editing and deterministic rules/retries/skip; separate dbt investigation. No real orchestration or transaction execution. |
 | Spark/config | Supplied meaningful task/plan/event/layer evidence plus bounded diagnosis/checks. Values never presented as learner-code measurements. |
-| Terminal/Git | Connected virtual state, separate shell semantics, state-based Git goal checks, command/unit/UI evidence. |
-| Architecture | Original editable custom graph/script retained; optional Mermaid source/renderer/export added. Mermaid CDN-render cases remain an open network gate. |
+| Terminal/Git | Connected virtual state, separate Bash/PowerShell semantics, state-based Git goal checks, command/unit/UI evidence. |
+| Architecture | Original editable conceptual graph/script plus Mermaid source/renderer/export. Mermaid is pinned to 11.16.1 for this release; real browser/CDN rendering belongs to the runtime promotion gate. |
 | Representative content | 51 curated questions covering all 13 renderer types. No bulk legacy-bank import claim. |
-| Tests | Node, native fixture and built-file Chromium UI evidence included. HTTP-origin/network/Firefox/Netlify not claimed passed. |
+| Tests | Deterministic Node, fixture and built-file Chromium suites plus a separate served-origin/runtime promotion job. Do not count blocked external runtime checks as passing. |
 
-## Defects found and corrected during this pass
+## Release hardening after the original V2 build
 
-- The extra hidden mobile-row grid made the desktop workspace collapse: explicit main grid row assignment fixed it.
-- Hiding the collapsed drawer splitter moved its tabs into the wrong row: explicit workstation row assignment fixed it.
-- Spark metric fixtures were objects while the panel expected arrays: the renderer now handles both and displays formatted values.
-- UI test harness passed an argument positionally where Playwright required `arg=`; corrected the test, not the app.
-- Mobile smoke awaited a question panel that is intentionally hidden in lab mode; now waits for attachment, then tests visibility by selected tab.
-- PowerShell output type is visually uppercase via CSS; the test now compares case-insensitively while underlying objects remain unchanged.
-- Git fetch now imports remote objects only during fetch; index/working-tree isolation, conflict staging and untracked file cases have unit tests.
-- Original diagram script and Mermaid now use separate fields; legacy saved scripts are not reinterpreted.
-- Deepnote headings corrected to exact supplied references, then asserted in fixture tests.
-- SQL trailing comments and bounded query validation, Python execution-phase timeout, generation-aware worker cancellation, DAX blank display and code-editor modes received corrective checks.
-- The lockfile was checked against actual registry metadata and validated with offline npm package-lock update and an npm ci dry run. Cold package download remains a target-environment check.
-- Stale success toasts are cleared when navigating to a different exercise.
+- Removed stale V1 files from the clean candidate branch.
+- Added a dedicated served-origin runtime CI job while retaining the fast deterministic contracts job.
+- Updated GitHub Actions to current v7 majors used by the release branch.
+- Raised Mermaid from 11.4.1 to the patched 11.16.1 release baseline.
+- Removed the publicly downloadable Deepnote example archive and converted the integration to blank URL templates/user-configured links.
+- Kept production `main` separate while PR #4 is audited.
 
-## Test replacement / baseline scope
+## Defects corrected during V2 implementation
 
-The original Node/Python/server/UI test files were not copied wholesale: V2 replaces the old local-server SQL architecture with a static-browser adapter and a new shared shell. The submitted tests target the retained contracts and new state machines. This is an explicit test-suite replacement, not a claim that every original test was rerun unchanged. Actual results and skipped gates are in `V2_TEST_REPORT.md`.
+- Desktop workspace grid and drawer-row collapse bugs.
+- Spark metric fixture shape mismatch.
+- Playwright harness argument/waiting issues.
+- PowerShell output casing expectation while retaining object semantics.
+- Git fetch/index/working-tree isolation and conflict staging cases.
+- Diagram-script versus Mermaid field separation.
+- SQL trailing-comment and read-only validation cases.
+- Python execution timeout/cancellation generation handling.
+- DAX blank display and code-editor mode checks.
+- Stale success toasts after exercise navigation.
+
+## V2.1 direction
+
+The next implementation pass should preserve this release baseline while introducing the lab-specific layout architecture: three modes per lab, right utility rail, independent output docking, case-study navigation and coordinated light/soft themes. `src/app.ts` should be modularized before significant shell expansion rather than becoming a larger monolith.
 
 ## Release decision
 
-Deliver as a **full source release candidate for an isolated preview**. Promotion to production is gated on the real-origin/runtime checks and the next AI's branch review. Do not turn an unverified external adapter into a checked box merely because its source compiles.
+PR #4 is the clean promotion candidate. Merge only after its latest deterministic and real-origin/runtime checks complete successfully and the Netlify deploy preview is verified on the same head commit. Application-development models should return source/build ZIPs; GitHub/Netlify promotion remains a release-coordinator responsibility.
