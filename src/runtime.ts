@@ -1,6 +1,6 @@
 /** Browser-only adapters. No backend, API key, or simulated execution fallback. */
 import type {Question,Fixtures,QueryResult} from './types.js';
-export const RUNTIME_VERSIONS={duckdb:'1.29.0',pyodide:'0.27.7',mermaid:'11.4.1'};
+export const RUNTIME_VERSIONS={duckdb:'1.29.0',pyodide:'0.27.7',mermaid:'11.16.1'};
 /** Remove comments and literal contents before enforcing a read-only teaching contract. */
 export function sqlTokens(sql:string):string {
  let out='',quote='',line=false,block=false;
