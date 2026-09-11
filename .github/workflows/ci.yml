@@ -87,7 +87,6 @@ jobs:
             /tmp/codedeleet-server.log
   netlify-preview:
     if: github.event_name == 'pull_request'
-    needs: [contracts, runtime-smoke]
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
@@ -97,11 +96,12 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - run: |
-          python -m pip install -r requirements-dev.txt
-          python -m playwright install --with-deps chromium
       - name: Verify deployed build and security headers
         run: python scripts/verify_hosted.py
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
       - name: Full deployed workstation smoke
         env:
           UI_MODE: http

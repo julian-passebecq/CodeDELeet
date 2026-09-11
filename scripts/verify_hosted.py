@@ -1,19 +1,18 @@
-"""Compare an approved CodeDELeet HTTPS deployment with this checkout's build.
-Read-only: no secrets, deployment operations or writes to user storage.
-"""
+"""Compare the approved HTTPS deployment with the committed build; read-only."""
 from pathlib import Path
-import hashlib, json, os, re, time, urllib.request, urllib.error
+import difflib, hashlib, json, os, re, time, urllib.request, urllib.error
 ROOT = Path(__file__).resolve().parents[1]
 BASE = os.environ.get('BASE_URL', '').rstrip('/')
 if not re.fullmatch(r'https://(?:deploy-preview-\d+--)?leetdejul\.netlify\.app', BASE):
     raise SystemExit('BASE_URL must be the existing CodeDELeet production or PR preview origin')
+OUT = ROOT / 'evidence/coordinator'
+OUT.mkdir(parents=True, exist_ok=True)
 report = {'baseURL': BASE, 'checks': [], 'deploymentWrites': False}
 def get(path):
     request = urllib.request.Request(BASE + '/' + path, headers={'Cache-Control': 'no-cache'})
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read(), response.headers
 try:
-    # Wait for exact candidate bytes, not merely a page answering 200.
     expected = (ROOT / 'dist/app/app.js').read_bytes()
     for attempt in range(30):
         try:
@@ -30,7 +29,20 @@ try:
             continue
         name = p.relative_to(ROOT / 'dist').as_posix()
         data, headers = get(name)
-        assert data == p.read_bytes(), 'Deployed bytes differ: ' + name
+        expected = p.read_bytes()
+        if data != expected:
+            mismatch = OUT / 'hosted-mismatch'
+            mismatch.mkdir(exist_ok=True)
+            (mismatch / 'expected.bin').write_bytes(expected)
+            (mismatch / 'observed.bin').write_bytes(data)
+            report['mismatch'] = {'asset': name, 'expectedSHA256': hashlib.sha256(expected).hexdigest(), 'observedSHA256': hashlib.sha256(data).hexdigest(), 'expectedBytes': len(expected), 'observedBytes': len(data)}
+            try:
+                diff = ''.join(difflib.unified_diff(expected.decode('utf-8').splitlines(True), data.decode('utf-8').splitlines(True), fromfile='committed/'+name, tofile='served/'+name))
+                (mismatch / 'difference.diff').write_text(diff)
+                print('STRICT DEPLOYMENT MISMATCH\n' + diff[:18000], flush=True)
+            except UnicodeDecodeError:
+                pass
+            raise AssertionError('Deployed bytes differ: ' + name)
         report['checks'].append({'asset': name, 'sha256': hashlib.sha256(data).hexdigest(), 'passed': True})
     _, headers = get('index.html')
     assert headers.get('X-Content-Type-Options') == 'nosniff'
@@ -48,7 +60,5 @@ except Exception as exc:
     report.update(status='FAIL', error=str(exc))
     raise
 finally:
-    out = ROOT / 'evidence/coordinator'
-    out.mkdir(parents=True, exist_ok=True)
-    (out / 'hosted-integrity.json').write_text(json.dumps(report, indent=2) + '\n')
+    (OUT / 'hosted-integrity.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
