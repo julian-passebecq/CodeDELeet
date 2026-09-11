@@ -39,3 +39,34 @@ export async function mountEditor(host, value, language, onChange, onRun, readOn
         return { getValue: () => ta.value, setValue: s => ta.value = s, focus: () => ta.focus(), destroy: () => ta.remove(), refresh: () => { } };
     }
 }
+/** Retain the real editor DOM/Doc across mode, tab and theme changes. */
+export class EditorPool {
+    entries = new Map();
+    attach(placeholder, key, value, language, onChange, onRun) {
+        const existing = this.entries.get(key);
+        if (existing) {
+            placeholder.replaceWith(existing.node);
+            void existing.handle.then(h => h.refresh());
+            return existing.handle;
+        }
+        const entry = { node: placeholder, suppress: false, handle: Promise.resolve(null) };
+        entry.handle = mountEditor(placeholder, value, language, value => { if (!entry.suppress)
+            onChange(value); }, onRun);
+        this.entries.set(key, entry);
+        return entry.handle;
+    }
+    async replace(key, value) { const entry = this.entries.get(key); if (entry) {
+        const handle = await entry.handle;
+        entry.suppress = true;
+        try {
+            handle.setValue(value);
+        }
+        finally {
+            entry.suppress = false;
+        }
+    } }
+    refresh(key) { const e = this.entries.get(key); if (e && e.node.isConnected)
+        void e.handle.then(h => h.refresh()); }
+    dispose() { for (const e of this.entries.values())
+        void e.handle.then(h => h.destroy()); this.entries.clear(); }
+}

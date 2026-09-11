@@ -1,4 +1,4 @@
-import { headId, commitAt, ancestors } from './git.js';
+import { ancestors, commitAt, headId } from './git.js';
 const check = (label, passed, detail) => ({ label, passed, detail });
 export function gitGoal(q, s) {
     const h = commitAt(s, headId(s)), f = q.fixture?.goal;

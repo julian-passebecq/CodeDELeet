@@ -1,7 +1,7 @@
 /** Bounded, explainable checks. Not a production validator or hidden interview judge. */
-import type {Question,Graph,Fixtures} from './types.js';
-import type {GitState} from './git.js';
-import {headId,commitAt,ancestors} from './git.js';
+import type { GitState } from './git.js';
+import { ancestors,commitAt,headId } from './git.js';
+import type { Fixtures,Graph,Question } from './types.js';
 export type Check={label:string;passed:boolean;detail:string};
 const check=(label:string,passed:boolean,detail:string):Check=>({label,passed,detail});
 export function gitGoal(q:Question,s:GitState):Check[]{

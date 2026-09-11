@@ -1,25 +1,13 @@
-# Deepnote companion integration
+# Deepnote integration - links only
 
-## Purpose
+V2.2 removes the old public companion archive. The build rejects all `.zip` and `.ipynb` assets under `public/`; the release validator independently checks `public/` and `dist/`. No notebook content is fetched or copied by the application.
 
-Deepnote is an optional **external companion** for exercises that benefit from a real notebook/runtime. CodeDELeet remains the fast, local-first drill surface. No Deepnote notebook archive is bundled or published by the site.
+## Configure
 
-The built-in mapping file contains **blank URL examples** keyed by stable exercise IDs. They demonstrate how SQL, Python, Pandas, PySpark, BI and pipeline exercises can later point to the user's own Deepnote projects/notebooks. The examples are metadata only; they are not a claim that those notebooks exist online.
+Download the blank mapping from Settings, fill the `url` fields for stable exercise IDs and import it through Settings > Import URL mapping. The envelope is `schemaVersion: 1` with a `links` object. Link entries have `type`, `label`, `url` and optional reference metadata. An empty URL never renders an external action.
 
-## Configure real URLs
+Question metadata can alternatively provide `deepnoteUrl`, `deepnoteLabel`, `deepnoteMode` and optional `deepnoteEmbedUrl`. Accepted destinations use HTTPS on the exact `deepnote.com` or `www.deepnote.com` host, accepted workspace/project/app/embed paths, no user credentials, and no custom port. Lookalike domains are rejected. Public embed paths have a narrower allowlist. Embeds require an explicit preview action and may be blocked by permissions or provider policy. Deepnote Data Apps are labelled as read-only previews, not notebook editors.
 
-1. In Settings, download the URL mapping template, or edit `public/packs/deepnote-mapping.json` before rebuilding.
-2. Paste the user's actual project/notebook links into the appropriate `url` fields. Leave unconfigured entries blank.
-3. Import the JSON via Settings -> Import URL mapping. Only valid HTTPS Deepnote URLs render buttons. The user must already have access to those notebooks.
+The mapping record in `DEEPNOTE_REFERENCE_MAP.json` retains historical title/section labels from the previous source, not live URLs or proof of current notebook access. V2.2 checks that shipped link metadata is consistent and URLs are blank; it does not require the private original notebook archive or verify an external workspace.
 
-The map has `schemaVersion: 1` and a `links` object keyed by stable exercise IDs. Link types are exercise/concept/mock/reference/project. Optional notebook and section labels are descriptive hints only. Only the exact `deepnote.com` / `www.deepnote.com` hosts and accepted paths are allowed; credentials, custom ports and lookalike hosts are rejected.
-
-The app cannot discover the user's workspace URLs or permissions. It does not need a token, does not create projects, does not require a GitHub sync, and does not claim an embedded preview can edit a Deepnote notebook. For an externally configured embed, availability is provider- and permission-dependent.
-
-## Learning workflow
-
-Attempt the problem and inspect the supplied rows/schema in CodeDELeet. For PySpark, write the transformation and explain the plan; CodeDELeet explicitly reports that it did not execute Spark. If the user later configures a matching Deepnote URL, the Deepnote button opens that external notebook for real execution. Return to CodeDELeet to record confidence and notes.
-
-## Release policy
-
-The public site ships the link/mapping mechanism only. Do not add private notebook exports, copied interview-note archives or workspace credentials to `public/` or `dist/`.
+No token, workspace discovery, notebook creation, Git synchronization, or Deepnote API integration is needed. A PySpark companion runs externally; CodeDELeet itself never claims to execute Spark.

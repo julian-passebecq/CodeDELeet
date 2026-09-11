@@ -1,0 +1,248 @@
+{
+  "baselineCommit": "0a0ddad5cb8704abda26257d58e95e861ecff33e",
+  "sourceArchiveSha256": "487729963a3f5b2353c0f11cc8ac7e6527a48021309569ecd4bcdba816e05f66",
+  "baseSha256": "17084e228d2da2a15eacc887f689d15a87ae51edf800a45e82108974a7904edc",
+  "targetSha256": "4a085896769e102f78473074e03fe1cdfb1efd66ce4350ba7dd56e56ee2b6075",
+  "blobs": [
+    {
+      "path": "public/styles.css",
+      "blob": "7d38a48364f4e2c18e87d90266e72eb89d649320",
+      "length": 33982
+    },
+    {
+      "path": "scripts/build.mjs",
+      "blob": "505750bba888cc970787511540b0fa47dd7317fa",
+      "length": 622
+    },
+    {
+      "path": "scripts/build_content.py",
+      "blob": "bee7b9eb845c18e2b80b8c58e5f807e6a7079347",
+      "length": 58017
+    },
+    {
+      "path": "scripts/serve.mjs",
+      "blob": "dc9de65fcbca62e9abbeeae8ff51d5b763d99bfa",
+      "length": 1257
+    },
+    {
+      "path": "scripts/validate_release.py",
+      "blob": "c382e5900b7d2a917ec6dbee48a404668c0db04a",
+      "length": 3528
+    },
+    {
+      "path": "src/app.ts",
+      "blob": "8c4dee5ef83c916eb544ac572a874a7a329c8f1e",
+      "length": 75725
+    },
+    {
+      "path": "src/checks.ts",
+      "blob": "f3e237f16fcb72140bc6c8130844f14ce67d8199",
+      "length": 5734
+    },
+    {
+      "path": "src/core.ts",
+      "blob": "cad620241d9203aa8476d0b01a3e7b583955712d",
+      "length": 12216
+    },
+    {
+      "path": "src/dax.ts",
+      "blob": "ce1ecd40f5e91299a917580e1ae95edae306d0c2",
+      "length": 8189
+    },
+    {
+      "path": "src/editor.ts",
+      "blob": "d45e2875c02d5d842d3fe85ee8550ef097a173ca",
+      "length": 3220
+    },
+    {
+      "path": "src/git.ts",
+      "blob": "e3368f24c0a6ab59f14de622d1572751a2e2781b",
+      "length": 17453
+    },
+    {
+      "path": "src/graph.ts",
+      "blob": "7b70385e8c09ecfe9d016ccb8cb83415e244a9b2",
+      "length": 11523
+    },
+    {
+      "path": "src/runtime.ts",
+      "blob": "3840bebf1570ee154b58642a288c711d87b29f1b",
+      "length": 8990
+    },
+    {
+      "path": "src/terminal.ts",
+      "blob": "91776ad564e743d867932c223c1a695f0cd2120e",
+      "length": 14454
+    },
+    {
+      "path": "src/types.ts",
+      "blob": "df2b9bd6906333c36af09e3bb10bdd38ef5ab147",
+      "length": 3228
+    },
+    {
+      "path": "src/ui.ts",
+      "blob": "f0c6ba933a59dac1face87b3d89f63266c917698",
+      "length": 2619
+    },
+    {
+      "path": "tests/browser_harness.py",
+      "blob": "d713a67a7aa3c93e1ee71d206f0f11cc7d885b58",
+      "length": 4668
+    },
+    {
+      "path": "tests/browser_support.py",
+      "blob": "42951780ab934b2f8916e6196533dfdbe5789094",
+      "length": 415
+    },
+    {
+      "path": "tests/core.test.mjs",
+      "blob": "6ad246b340b08b6589bc2e71b12286134427e27d",
+      "length": 7475
+    },
+    {
+      "path": "tests/fixture_check.py",
+      "blob": "2b8ff5986e9ed0feddb985b28bf800595714b99b",
+      "length": 4106
+    },
+    {
+      "path": "tests/git.test.mjs",
+      "blob": "c13b70c6988df4629843414b8869a333a77cf74d",
+      "length": 6094
+    },
+    {
+      "path": "tests/graph-dax.test.mjs",
+      "blob": "d2f5ec66b434da824ad845cac16c49f90fc22101",
+      "length": 5094
+    },
+    {
+      "path": "tests/network_runtime_smoke.py",
+      "blob": "1412c32904474bc2e4f8bc6ece77fc30b6b3bcbc",
+      "length": 6586
+    },
+    {
+      "path": "tests/terminal.test.mjs",
+      "blob": "ecafa394810d29a3a8dc93c276eca04b584e9731",
+      "length": 4203
+    },
+    {
+      "path": "tests/ui_smoke.py",
+      "blob": "61cafec601fb873fd1746a660c64bccd2c62ee2f",
+      "length": 15351
+    }
+  ],
+  "patchSha256": "4d799530fe3e7256b378473e5ac283c5610a9b5f2fa4bd1fc035d843054c14df",
+  "parts": 17,
+  "filesMaterialized": 105,
+  "intentionalExceptions": [
+    "SECURITY.md retained from audited V2",
+    "CI reconciled separately; real-origin gate retained",
+    "generated public/app and dist rebuilt; screenshots regenerated"
+  ],
+  "files": {
+    ".gitignore": "8d7126d4143840e404dd4810fefa3fd5a6a349b0dc12f6aed3922b6ba8d6fb1e",
+    "00_START_HERE.md": "adeb6ed1407f25cbe5a2e7591edc3880fce57e2e7540a224c49ea6f14e619f76",
+    "LICENSE": "f57f273e5af0b2f72cf179b4d9aee9b89a43e850892855a54890b7dc0a474a04",
+    "README.md": "f6d82ca8427e09e1017ccf54ba9c41373fd34a1cef430d6d45fa46aed71230c3",
+    "START_WINDOWS.bat": "271dd473748135d651ca3f1625c1463deb3feaef17541bb49fdfa4a8ae374818",
+    "THIRD_PARTY_NOTICES.md": "c575d9ea6a111cbfb6df8337f1c8b6ca655cd7332c56a7f5170b9ef41ec12702",
+    "docs/BUILD_DEPENDENCY_PROVENANCE.json": "e889a4135431fe5dc61249671e372e9fc9a7b35e8548f66401f22ad29db02300",
+    "docs/DEEPNOTE_INTEGRATION.md": "9d43efd9311e1d220c68740adc90ac7e5e6778f046013b21307838114335ec7c",
+    "docs/DEEPNOTE_REFERENCE_MAP.json": "a23a31ba7b6192979e42d2f346c9a86f885ad6ebab5d9b0ac0a3905c528ffe59",
+    "docs/EXERCISE_INVENTORY.md": "164cf96f47f1e753e1b96fde3b083cd85d6882aadad03a3458a81de395081857",
+    "docs/GIT_VISUAL_LAB.md": "641e300923de6d4690e5a54cf0527eed2b25ea42cdf0a9550ad5763d4dc89edd",
+    "docs/KNOWN_LIMITATIONS.md": "03279d480f6a56abae1ae665b362133f1fc2c633f2679e9af1ffe9c11097615c",
+    "docs/NEXT_AI_HANDOFF.md": "67ee970b3cf8434d062f3a525f4cc5323ce2c8b757206fe0eead69971b230b0f",
+    "docs/RELEASE_MANIFEST.json": "bb9e31b8579f80c630f347fa5c1e79152b9c4d20fc65466ab2266f7f563b3a03",
+    "docs/RENDERER_INVENTORY.md": "de21847a3ecc6da0500566fca9eb21e31770fb818613b60f0979731a77603744",
+    "docs/TERMINAL_LAB.md": "0bbe31636bbe0fd5e370a41a8e6ee9d31e6d16285e7b3ec3a2dd9b1daa2f0d4c",
+    "docs/V2_2_ARCHITECTURE.md": "b8310989244f6a372b22edc370d9283955bdfe1d6e7285b6c3cef84b0ad2185c",
+    "docs/V2_2_AUDIT.md": "a95a5909e04916b7d4debb831fcc124cb93f2048a8fe3d6ab03589f934f1debb",
+    "docs/V2_2_TEST_REPORT.md": "e15ceefcef95b6f8fa2547f14cacd298728dd73643cea4d5a9ac012e364c3238",
+    "docs/baseline-stable-ids.json": "e2e7773b3d8b2981b1b9a83116246cfadac51183f6b085e1a8c2fddcbf88f07e",
+    "evidence/v22/ENVIRONMENT.md": "1843e3377738204f0d970078cca37976be26b11d4e77c1ba0a79d17b567bcb1b",
+    "evidence/v22/baseline-check.log": "9b35d17aa93cf365741a4406828b2cea4a6a876017a1c8263cfcb5daccb3df17",
+    "evidence/v22/baseline-fixtures.log": "fcb8665592e917c4b3a388a4b4055433ff874b91316b890df8328339561edd59",
+    "evidence/v22/baseline-unit.log": "071b81cf867f93a0a8d2bc4a48889103d340bc687c983269970c1e7897a5edf0",
+    "evidence/v22/build-files.json": "f9efd18495f24f796061ff791ec7df2d0f60ab6d9278705d7f6d1efd4140ceaf",
+    "evidence/v22/build-final.log": "4a0abf01efecdc7349fc3ae913f7b0e1972e1414456bd3e0bbd7d0dbb08a1f82",
+    "evidence/v22/fixture-report.json": "3550df86a2c20f320b65487731fc32e3907c605b7b6a4add966adda5f946a794",
+    "evidence/v22/fixtures-final.log": "fcb8665592e917c4b3a388a4b4055433ff874b91316b890df8328339561edd59",
+    "evidence/v22/gallery.html": "d770bb17ad8008dab0e495dce16c5280c83da951e5bb8ee715a8542ea6bdc90b",
+    "evidence/v22/integrity-final.log": "0b136f6497188b11698ba83f940a7eb95c03d1fd271880c9b46a370fdb7c6a93",
+    "evidence/v22/local-server.log": "7133c6a3d0b0c13de5a9fb3d465e00b36af76d63a842b9a019793d70d64163fa",
+    "evidence/v22/network-runtime-report.json": "ecf27993fbc4ab97fb885c476c74d02f71084fc66a6c1ac76a17abe40e5d9b90",
+    "evidence/v22/network-runtime.log": "7b58532806bdd7970d8ae93b598f5fc9be3bfe9dc57780d9e02d68e3f2442bd0",
+    "evidence/v22/npm-ci.log": "e26788cd99f1300593f3a5c8ddb2fdecf9485ba34eb90b57f93b601b4a07e37b",
+    "evidence/v22/origin-probe.json": "470ebda20ef24f020af65c8e8408522cea5d0aa59d073ff28f454589d071fb1a",
+    "evidence/v22/provenance.json": "87e79272159daf66203fb734408c4724cbab8caf8c99739049f1761d864776bc",
+    "evidence/v22/rebuild-reproducibility.json": "2a26a939df4406d8162b41ae4767c77dcdb9ab95c1ce4dd9059e52ad6a3d2a09",
+    "evidence/v22/release-integrity-report.json": "0b136f6497188b11698ba83f940a7eb95c03d1fd271880c9b46a370fdb7c6a93",
+    "evidence/v22/test-results.json": "59acb04463d4ef4dd2ddc8c9846b8578afc915eba7300634db0601cf12743606",
+    "evidence/v22/typecheck-final.log": "77a8e0216273cbaa328852a441f0709cfc48374e76a26ea78f9a16850e66eaa4",
+    "evidence/v22/ui-legacy-report.json": "9df6d219e0f9cb018d1a1d75394bc3cf139d696e435f0a583bb520fa16aa9ad6",
+    "evidence/v22/ui-legacy.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/v22/ui-legacy.log": "00039bcdec999b413b2628e0b9ee479e28adf5cccf46c526709da48b0ac9d701",
+    "evidence/v22/ui-shell-report.json": "f450ec7f24fef25d12b717ec4ea35406393592238773116e4ff41ba2e9c5dd87",
+    "evidence/v22/ui-shell.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/v22/ui-shell.log": "a4e2150fc0270c8e691d6fb731a170cf32bdb7bc89f35b7462d2fc394471b576",
+    "evidence/v22/unit-final.log": "a436a5c7cae959ef3b2309dc48d4257e68bf6cc922c75d94485dda9cc6431be3",
+    "examples/content-pack.schema.json": "5f75a45fb1c10defc3b52b7c54eada3230c7c3550fd965ee40542f3060f4184d",
+    "examples/custom-pack.json": "cc662aca5e96390de96df90b856815cee06478ef6f7790fcf7334cbaf1c617ec",
+    "netlify.toml": "bf989a44b72165fe706855d98d71eba626a99eceb8e06cc2193e4613e9c7813d",
+    "package-lock.json": "af9fe1a3780ac3a629d08668697ca19fcd6df5ac201c6e9098fa7b516a38137e",
+    "package.json": "95ad6116d8b4501a3dcf7465c9b93a4bbd1cabd9d313bb9eebbe641be6413c99",
+    "public/cases/index.json": "e663c187242ce3050ccce46af814dc0c6d6a7bba5302f13c9a6087aa039e3d60",
+    "public/favicon.svg": "92d48710d14df29a3245bf1802ce299b3f55bdc8965dff76de60b966216af872",
+    "public/index.html": "c42bf97f2f2466b2c08c71007e66374f9809e882a93662841ca11ee5da96fad9",
+    "public/shell.css": "37a4c32e8a4469f60f5b518f50a9bbc1cb4f64e4ae36fecdc01bf1c2aaa40938",
+    "public/workers/python.js": "d0faf627d1911b421aceb55407de17a88af21d1c78e77aa335a9be62a04acd43",
+    "requirements-dev.txt": "d92f6428ddf5e590456b92d2093cc3a7353cbc4c72542354337c53599cf023fb",
+    "scripts/build.mjs": "df2683b491dfd7ef4e28fff24b4723e381c46204ee2d4e4eab9cab207e3d7e11",
+    "scripts/build_content.py": "63df99e8281bfa155751557f1ad1eb4bd35c4df46e3060bce9658c7b59c0185e",
+    "scripts/package_release.py": "84e2193d562fcb6d5abae8f73f772844b777ffe0defb6b5f494194f7f381eb92",
+    "scripts/serve.mjs": "b9fecca1a4b09f02b7ec25a2d8b2c6fb9ea1adf1bbd1eb8da5bad65f5d7e8189",
+    "scripts/validate_release.py": "b0adfb222dba8903e9c2b7bbaffb41f547842b36c37e1855edebb651cce882f2",
+    "src/app.ts": "afeb88470fb67ce7e38bc0f792cc8f4be6633488810c6962391ded30ece391c3",
+    "src/case-study/controller.ts": "c07b4ed3359c6825c008691f8e879f79a00465625b568908c2fb11087557944b",
+    "src/case-study/view.ts": "af8b8401d79b3da59f6928cbe2102b25c3d954d4ed41e46ca0376fa3ab6f42ac",
+    "src/checks.ts": "dc06d64a37845aebbdb07771a643f939a61845a9ad684bd1a07515b086fc171c",
+    "src/core.ts": "b8c5fcbd89aad2928ec812f869cd70364c8f5909fc9c7b15eb00043035cb04d8",
+    "src/dax.ts": "743b6d1c7bd1ddda70c1a20350d6c5fb873efc3775c18d89b9d8c512c6cb4a77",
+    "src/editor.ts": "ec19a24fc801729bb6305b52c4121df876232af2d6c32697c3f0b5bb0400b37e",
+    "src/git.ts": "91751d8134706d04b6ce305cbbbda732bc265aa38582838a0e845391086cc7a9",
+    "src/graph.ts": "c2a4901911aad6be08f242e946612a0445feef1db960d27f90ed19ab0f1cde6a",
+    "src/renderers/code-view.ts": "2dfb7ff032d9ffaf835bbb4087cb075d69159954a4797a4465bc02cb095dd103",
+    "src/renderers/context.ts": "48b9efc250e4448abeb49932886f10127639860f36d59bc45f6550d50d86d6bb",
+    "src/renderers/model-view.ts": "92db6522e196f6646870b30cd8fdf8c9c857bf9bf8265362b503facd2c1a8c9a",
+    "src/renderers/pipeline-view.ts": "e13c873a92e3a32059808e9179ccb3c995029a9202d42345e4043580fb605143",
+    "src/renderers/systems-view.ts": "49a5fccd2a74aec58aa307ade0cec250c6613eb9fac3a03905c01fcd622f8b24",
+    "src/renderers/workspace.ts": "cb3b40d67fcb38ac7a3f707ee964f8c7c5a68c3eaebf68b37c73d8d0fbe2f8bf",
+    "src/runtime.ts": "f36f2049ec5ff6be79bbb65e02d131d3b62877056779ef4d515cb6c10fd86847",
+    "src/shell/dom-layout.ts": "ef6c1fa38568aafb050db01a2f312730457b1e757de32927db4f5eea9537e347",
+    "src/shell/layout-controller.ts": "147f5d77857991a81b8d03e12132803cff73f19bf5325a3a5b85ec2f778335bb",
+    "src/shell/orchestration.ts": "5ddedbde488109c933407c9aacc94020f4c1eb5306cad8d4a52f179aacd27cc8",
+    "src/shell/output-dock.ts": "2b83b2d8518e6b7db889ab642e8e3905af50b1ce55393e5ecfe7322936a47377",
+    "src/shell/reading-panels.ts": "04722fd2c95759930d750d9d01e94d5b6bfeeaaab1337b6b1ace76b7f01c37e5",
+    "src/shell/scaffold.ts": "e3e92344c1325bdc6d2cb0df95720c4d1c7dfc888191240d91dcebc18f018e4a",
+    "src/shell/settings.ts": "daedab4de8a6a58e78f175ddce4c4e7e2159a3e9c726dfef35db45bdaec52822",
+    "src/shell/theme-data.ts": "c44106acb0ba2e555ed3c87d15ef32085d7c4258b75b3d87beb8c52f47c699bc",
+    "src/shell/themes.ts": "733aae1445de99c289455e652519b7fc532f417998b36c5ffed0e0b431f0b499",
+    "src/shell/tool-rail.ts": "d164d3251150b09c7d50686068aa9ee2e7df6f42a6acfe7277e930e0b922e310",
+    "src/terminal.ts": "8ad43422c7cae24d7fe9dd327b4a9803fead901d2b8978c00df9e1612d4be3eb",
+    "src/types.ts": "36220f2554d13832cf58cc0e1fc37d76fb3e6bf572a2924d5cc0620ca579f592",
+    "src/ui.ts": "85e6d126baed3f3bb30f2ecb60c91dadf96670fa91f372d74c4d79c5df25e8a3",
+    "start.sh": "5966210940983e11e5a413864f53ee61412da639293b0d535648c2d3ce1f638d",
+    "tests/browser_harness.py": "414258de78b06e15ea58b01f2baf07fe11b351b2f3477351d8434389dbf992c6",
+    "tests/browser_support.py": "614ef36a97889cbf9b6eedea8164e868aa597aca27b7153e42c914d11b3ea4ec",
+    "tests/core.test.mjs": "cca5ba1e8eb4398dfe06127d5a32e5cc4d7234e86a22a8aba0a91b22ba41e888",
+    "tests/fixture_check.py": "dd1505b0dc5fb709ff3f328d13bf43941d1e2f35b519e228c19cb2aac5f78836",
+    "tests/git.test.mjs": "ca4a43052d7a0362357f115ccdb7f267b58629fd852fa72f358240222ad12123",
+    "tests/graph-dax.test.mjs": "9184dcb152b2d5d671afba0d2a32c0002934fdf253d45991c449bb1c66b7759b",
+    "tests/network_runtime_smoke.py": "d2fde4758d29e57ea029951154762a132fe5761c8cdab40869e69e7523bf8854",
+    "tests/shell.test.mjs": "738f3c687b9bb84d820b1b099fd0f1913a64471cd3d3f96eadff78c1ac6f311a",
+    "tests/terminal.test.mjs": "357620dc6913ea198a163161d81d3096eda29b53869289dbc14aacf62f953518",
+    "tests/ui_smoke.py": "a6462b3ab7c66b37d640124aaec04456db93df5dc3dabd5a516956c739ddab02",
+    "tests/v22_ui.py": "da6e6f591703e895fa1ac2b73e17383f395a9d81cf28836971aa5224b5018972",
+    "tsconfig.json": "0381ee6c598633c9c62c7ce63a0819d09e7c1b79cd6c7c05ba729529728072c6"
+  }
+}

@@ -1,6 +1,6 @@
 /** Small deterministic virtual shells. Commands never touch the host. Unsupported syntax is rejected. */
-import {clone} from './core.js';
-import {shellWords} from './git.js';
+import { clone } from './core.js';
+import { shellWords } from './git.js';
 export interface TerminalState{shell:'bash'|'powershell';cwd:string;files:Record<string,string>;dirs:string[];env:Record<string,string>;history:{command:string;output:string;ok:boolean;type:string}[];}
 export function terminalFixture(shell:'bash'|'powershell'='bash'):TerminalState{return {shell,cwd:'/workspace',dirs:['/','/workspace','/workspace/data','/workspace/logs'],env:{DATA_DIR:'/workspace/data'},files:{'/workspace/pipeline.log':'INFO batch=41 started\nERROR source timeout\nINFO retry=1\nerror row=7 invalid country\nINFO batch=41 completed\n','/workspace/data/sales.csv':'country,amount,status\nNO,120,paid\nSE,60,paid\nNO,40,cancelled\nDK,20,pending\nNO,80,paid\n','/workspace/data/api.json':JSON.stringify({items:[{id:1,status:'active'},{id:2,status:'inactive'},{id:3,status:'active'}],next:null},null,2),'/workspace/logs/job.log':'2026-09-10 INFO loaded 5 rows\n2026-09-10 ERROR duplicate key=42\n'},history:[]};}
 export function splitPipeline(line:string):string[]{const parts:string[]=[];let buf='',quote='',braces=0;for(let i=0;i<line.length;i++){const c=line[i];if(quote){buf+=c;if(c===quote&&line[i-1]!=='\\')quote='';}else if(c==='"'||c==="'"){quote=c;buf+=c;}else if(c==='{'){braces++;buf+=c;}else if(c==='}'){braces--;buf+=c;}else if(c==='|'&&braces===0){parts.push(buf.trim());buf='';}else buf+=c;}if(quote||braces!==0)throw Error('Unclosed quote or object-pipeline block.');parts.push(buf.trim());if(parts.some(x=>!x)||parts.length>15)throw Error('Invalid or overly long pipeline.');return parts;}

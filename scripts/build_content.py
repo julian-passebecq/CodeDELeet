@@ -128,7 +128,7 @@ map_specs={
  'adf-watermark':('03 - Airflow Pipeline and SQL Data Engineering Arena','D1. Advance the watermark safely'),
  'dag-idempotency':('03 - Airflow Pipeline and SQL Data Engineering Arena','C2. Commit then retry'),
 }
-# Exact section references are rechecked by tests/fixture_check.py against the supplied archive.
+# Historical section labels are retained as blank-URL metadata only. The V2.2 fixture checker checks this metadata, not a notebook archive.
 for q in old+new:
  if q['renderer']=='sql-editor' and q['engine']!='sql':q['executionMode']='review'
  if q['id']=='v2-dbt-failure':q['solution']=q['starter'].replace('-- Keep one deterministic row', 'SELECT * EXCLUDE(rn) FROM ranked WHERE rn = 1;') + '\n-- Rerun unique and not_null tests before publishing.'

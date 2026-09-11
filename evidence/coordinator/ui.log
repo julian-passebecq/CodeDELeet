@@ -1,0 +1,79 @@
+PASS Desktop fixed-height workstation and real CodeMirror visible
+PASS Reference reveal is deliberate and resets on navigation
+PASS Code, notes, confidence and bookmark survive navigation
+PASS Keyboard split resize, drawer collapse and focus mode work
+PASS Library filtering survives selecting an exercise
+PASS Renderer/views: sql-paid-revenue
+PASS Renderer/views: sql-latest-order
+PASS Renderer/views: python-aggregate
+PASS Renderer/views: python-two-sum
+PASS Renderer/views: spark-dedup
+PASS Renderer/views: tsql-running-total
+PASS Renderer/views: bigquery-qualify
+PASS Renderer/views: pandas-grain
+PASS Renderer/views: git-safe-undo
+PASS Renderer/views: linux-log-triage
+PASS Renderer/views: bi-star-schema
+PASS Renderer/views: bi-revenue
+PASS Renderer/views: bi-margin
+PASS Renderer/views: bi-filter-context
+PASS Renderer/views: bi-csharp
+PASS Renderer/views: bi-scd
+PASS Renderer/views: dag-data-quality
+PASS Renderer/views: adf-watermark
+PASS Renderer/views: dbt-lineage
+PASS Renderer/views: dag-idempotency
+PASS Renderer/views: arch-fabric
+PASS Renderer/views: arch-databricks
+PASS Renderer/views: arch-bigquery
+PASS Renderer/views: arch-tofu
+PASS Renderer/views: arch-kubernetes
+PASS Renderer/views: arch-spark-skew
+PASS Renderer/views: arch-table-formats
+PASS Renderer/views: v2-sql-quality
+PASS Renderer/views: v2-sql-cte
+PASS Renderer/views: v2-python-batches
+PASS Renderer/views: v2-python-latest
+PASS Renderer/views: v2-spark-aggregate
+PASS Renderer/views: v2-spark-join
+PASS Renderer/views: v2-airflow-branch
+PASS Renderer/views: v2-dbt-failure
+PASS Renderer/views: v2-spark-files
+PASS Renderer/views: v2-tofu-replacement
+PASS Renderer/views: v2-k8-selector
+PASS Renderer/views: v2-docker-cache
+PASS Renderer/views: v2-bash-csv
+PASS Renderer/views: v2-powershell-csv
+PASS Renderer/views: v2-powershell-json
+PASS Renderer/views: v2-git-stage
+PASS Renderer/views: v2-git-merge
+PASS Renderer/views: v2-git-rebase
+PASS Renderer/views: v2-git-fetch
+PASS Renderer/views: v2-git-conflict
+PASS Renderer/views: v2-git-detached
+PASS Renderer/views: v2-cloud-compare
+PASS Renderer/views: v2-concept-watermark
+PASS Renderer/views: v2-concept-shuffle
+PASS Virtual Bash command, visible output and goal check
+PASS PowerShell object pipeline works through the UI
+PASS Git graph/HEAD/console/goal and prediction are connected
+PASS Conflict resolution via working file editor and staging
+PASS Graph JSON roundtrip, repaired quality gate and retry simulation
+PASS DAX subset evaluates through editor and active country filter
+PASS Infrastructure analyzer labels checks and unchanged evidence honestly
+PASS PySpark review and performance fixture never pretend execution
+PASS Deepnote buttons are hidden until explicit safe URLs are imported
+PASS Backup merge through the actual file input preserves unrelated work
+PASS V1 browser boot retains draft, settings, notes and a pre-upgrade snapshot
+PASS 390px mobile tabs, notes, shell and exercise drawer are usable
+{
+  "passed": 68,
+  "failed": 0,
+  "pageErrors": [],
+  "browser": {
+    "browser": "Chromium",
+    "version": "152.0.7977.0",
+    "mode": "built-file in-memory harness",
+    "urlNavigation": "blocked by environment policy"
+  }
+}

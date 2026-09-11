@@ -30,7 +30,7 @@ try:
         page.on('dialog', lambda dialog: dialog.accept())
         page.on('pageerror', lambda error: report['pageErrors'].append(str(error)))
         try:
-            page.goto(BASE + '/#exercise=sql-paid-revenue', wait_until='networkidle', timeout=20000)
+            page.goto(BASE + '/#exercise=sql-paid-revenue', wait_until='domcontentloaded', timeout=20000)
             page.locator('.CodeMirror').wait_for(timeout=10000)
         except Exception as exc:
             report['status'] = 'UNVERIFIED: origin unavailable or navigation blocked'
@@ -85,7 +85,7 @@ try:
             go('sql-paid-revenue'); code('SELECT 7 AS saved_draft;')
             page.locator('[data-drawer-tab="Notes"]').click()
             page.locator('#notes').fill('Network gate reload note')
-            page.wait_for_timeout(350); page.reload(wait_until='networkidle')
+            page.wait_for_timeout(350); page.reload(wait_until='domcontentloaded')
             page.locator('.CodeMirror').wait_for()
             assert page.evaluate('document.querySelector(".CodeMirror").CodeMirror.getValue()') == 'SELECT 7 AS saved_draft;'
             page.locator('[data-drawer-tab="Notes"]').click()
@@ -99,12 +99,10 @@ try:
         }
         for name, source in diagrams.items():
             def diagram(source=source):
-                go('arch-fabric'); page.locator('[data-lab-tab="Mermaid"]').click()
+                go('arch-fabric'); page.locator('#layout-mode').select_option('work'); page.locator('[data-lab-tab="Mermaid"]').click()
                 page.locator('#mermaid-source').fill(source)
                 page.locator('[data-action="render-mermaid"]').click()
-                # architecture-beta nests service-icon SVGs inside the rendered root SVG;
-                # wait for the single top-level diagram rather than every descendant SVG.
-                page.locator('#mermaid-output > svg').wait_for(timeout=35000)
+                page.locator('#mermaid-output svg').wait_for(timeout=35000)
             check('Real CDN Mermaid: ' + name, diagram)
         report['status'] = 'PASS' if all(x['passed'] for x in report['checks']) and not report['pageErrors'] else 'FAIL'
         browser.close()
@@ -115,8 +113,8 @@ except Exception as exc:
 finally:
     report['passed'] = sum(x['passed'] for x in report['checks'])
     report['failed'] = sum(not x['passed'] for x in report['checks'])
-    (ROOT / 'evidence').mkdir(exist_ok=True)
-    (ROOT / 'evidence/network-runtime-report.json').write_text(json.dumps(report, indent=2)+'\n')
+    (ROOT / 'evidence/v22').mkdir(exist_ok=True,parents=True)
+    (ROOT / 'evidence/v22/network-runtime-report.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps({key: report[key] for key in ['status', 'passed', 'failed']}, indent=2))
 
 sys.exit(0 if report['status'] == 'PASS' else 2)

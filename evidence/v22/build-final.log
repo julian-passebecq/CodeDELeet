@@ -1,0 +1,5 @@
+
+> codedeleet-v2@2.2.0 build
+> tsc -p tsconfig.json && node scripts/build.mjs
+
+Built static site in dist. No serverless functions or secrets required.

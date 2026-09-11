@@ -1,35 +1,67 @@
 {
+  "schemaVersion": 1,
   "app": "CodeDELeet",
-  "version": "2.0.0",
-  "releaseStatus": "clean audit candidate; real-origin runtime gate in CI",
-  "date": "2026-09-10",
-  "baselineCommit": "d3c7c21ba79a082da21925b5ee0dce69212577fe",
-  "releaseBranch": "v2-clean-audit",
-  "releasePr": 4,
-  "releaseCoordination": "GitHub and Netlify managed by release coordinator; application implementation remains ZIP-based",
+  "version": "2.2.0",
+  "date": "2026-09-10T19:15:07.036272+00:00",
+  "releaseStatus": "Complete local source/build handoff; real-origin preview promotion gates pending",
+  "inputs": {
+    "source": {
+      "name": "CodeDELeet_V2_Full_Source.zip",
+      "sha256": "dce46d5ebde8c1c8bfbd00a9cb6a7a03f3ec470e634ebde43a983b0b48b8deac",
+      "packageVersion": "2.0.0"
+    },
+    "authority": {
+      "name": "CodeDELeet_V2_2_Pro_Improvement_Handoff.zip",
+      "sha256": "b3c190186e51a6e7636e7e4fa5b2277075cd4cf8e6f4cd3e17af42295153b2a2"
+    }
+  },
+  "repositoryRead": false,
+  "repositoryWrite": false,
+  "deployment": false,
   "exercises": 51,
   "retainedV1Ids": 27,
-  "newExercises": 24,
-  "renderers": 13,
-  "runtimePins": {
-    "duckdbWasm": "1.29.0",
-    "pyodide": "0.27.7",
-    "mermaid": "11.16.1"
+  "authoredCases": 4,
+  "independentCaseTasks": 12,
+  "layouts": 12,
+  "themes": 4,
+  "storageKey": "data-practice-studio.v1",
+  "storageSchema": 1,
+  "removedPublicNotebookArchive": true,
+  "buildRejectsPublicNotebooksAndArchives": true,
+  "mermaid": "11.16.1",
+  "newPresentationModules": 18,
+  "testResults": {
+    "nativeFixtures": {
+      "passed": 42,
+      "failed": 0
+    },
+    "exerciseUI": {
+      "passed": 68,
+      "failed": 0
+    },
+    "shellCaseUI": {
+      "passed": 30,
+      "failed": 0
+    },
+    "releaseIntegrity": {
+      "passed": 22,
+      "failed": 0
+    },
+    "node": {
+      "passed": 80,
+      "failed": 0
+    },
+    "networkRuntime": "UNVERIFIED - browser origin navigation blocked",
+    "cleanNpmCi": "BLOCKED - registry DNS"
   },
-  "testBaseline": {
-    "node": {"passed": 58, "failed": 0},
-    "nativeFixtures": {"passed": 42, "failed": 0},
-    "builtFileUI": {"passed": 68, "failed": 0},
-    "networkRuntime": "separate real-origin CI gate; inspect latest PR run before promotion"
+  "build": {
+    "assetCount": 62,
+    "bytes": 1167622,
+    "treeSha256": "30072e42733b86eb11051ebc81fef3b096f11b584c71504a7ab65a191435f973",
+    "metadata": "../evidence/v22/build-files.json"
   },
-  "retainedInputs": [
-    {
-      "file": "reference/legacy-trainer/leetcodedataeng-main.zip",
-      "sha256": "e7a725b67a787c27d1b1fdb2f77eb27f50395b598ca237c3124a8ea1108562c2",
-      "unchanged": true,
-      "runtimeUse": false
-    }
-  ],
-  "deepnotePolicy": "link/template integration only; no bundled notebook archive",
-  "productionMainUntouchedUntilPromotion": true
+  "evidence": "../evidence/v22/test-results.json",
+  "audit": "V2_2_AUDIT.md",
+  "knownLimitations": "KNOWN_LIMITATIONS.md",
+  "coordinatorHandoff": "NEXT_AI_HANDOFF.md"
 }

@@ -1,0 +1,8 @@
+{
+  "command": "npm run build",
+  "result": "PASS",
+  "filesCompared": 62,
+  "byteIdenticalToTestedBuild": true,
+  "treeSha256": "30072e42733b86eb11051ebc81fef3b096f11b584c71504a7ab65a191435f973",
+  "compiler": "TypeScript 5.8.3, installed global compiler; clean registry install remains unverified"
+}

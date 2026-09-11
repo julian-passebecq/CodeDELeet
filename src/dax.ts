@@ -1,5 +1,5 @@
 /** Bounded v1 DAX teaching interpreter. No eval, XMLA, Power BI or external calls. */
-import type {Fixtures,Graph,Row} from './types.js';
+import type { Fixtures,Graph,Row } from './types.js';
 export const DAX_SUPPORT='SUM, SUMX, COUNTROWS, DISTINCTCOUNT, DIVIDE, CALCULATE with Country/Category equality, arithmetic, and [Revenue], [Cost], [Gross Profit]. Supplied teaching model only.';
 type Ast={kind:'number';value:number}|{kind:'string';value:string}|{kind:'column';table:string;column:string}|{kind:'measure';name:string}|{kind:'table';name:string}|{kind:'call';name:string;args:Ast[]}|{kind:'binary';op:string;left:Ast;right:Ast};
 type Token={type:string;text:string};

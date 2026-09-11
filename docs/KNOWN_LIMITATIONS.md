@@ -1,27 +1,27 @@
-# Known limitations - V2.0.0
+# Known limitations - V2.2
 
-## Release gates still open
+## Promotion gate, not a passed test
 
-The environment blocks browser URL navigation and external downloads. Real DuckDB-Wasm, Pyodide, Mermaid CDN startup, HTTP-origin delivery, full-origin persistence, Netlify deployment and Firefox could not be verified here. The adapters and opt-in network smoke test are implemented. Do not call these gates passed until the next AI runs them in a normal network-enabled browser environment.
+Actual browser URL navigation is blocked in this build environment (`net::ERR_BLOCKED_BY_ADMINISTRATOR`). The delivered deterministic browser tests exercise the actual compiled app, editor and teaching engines through a built-file transport/storage harness. Real HTTP-origin browser reload, DuckDB-Wasm startup, Pyodide execution/cancellation/restart, and Mermaid flowchart/ER/architecture-beta rendering are **UNVERIFIED here**. Run the supplied network gate in an allowed browser environment before promotion. Native SQLite and CPython reference checks are not browser-runtime verification.
 
-## Runtime and safety
+Registry DNS was unavailable. `npm ci --ignore-scripts` could not complete here; the build/typecheck used the installed TypeScript 5.8.3, matching the existing lockfile. No current npm vulnerability audit or fresh dependency installation is claimed.
 
-The app is a personal learning tool, not a secure multi-tenant judge. Solutions/fixtures ship to the browser. Only run trusted code. A Web Worker separates responsiveness, but Python's JS interoperability is not a complete security boundary. Do not store secrets or run arbitrary untrusted downloaded code. SQL is conservatively restricted to one read-only SELECT/WITH against small fixtures; this may reject legitimate advanced SQL, and vendor dialects remain review-only. Numeric SQL results cast large integers to JavaScript numbers; do not use fixtures that require exact integers beyond JavaScript's safe range. Results are bounded to 200 visible rows. There is no service worker/offline installation of heavy runtimes.
+## Intentional teaching limits
 
-## Specialist boundaries
+The 51-exercise bank is preserved, not expanded into hundreds of questions. Four original cases reuse stable exercise references; each task's artifact is independent. This is a learning workflow, not a scored certification exam or hidden-test judge.
 
-- PySpark: editor, supplied schema/rows/plan and review only. No Spark execution, AQE predictor or real cluster timing. Spark task numbers are explicit synthetic teaching fixtures, not measurements from the learner's draft.
-- Model/BI: supplied Sales/DimCustomer/DimProduct teaching model only; a subset of DAX and fixed country/category filter propagation. General custom semantic models, context transition, RLS, full DAX and XMLA are not implemented. Editing labels does not create a new Power BI table.
-- DAG: selected simplified trigger rules, skips, retry delay and ADF-style edge conditions. No real scheduler, pools/concurrency simulator, live backfill execution or persistent destination/watermark transaction model. Correct dependencies and a successful simulated run are distinct observations.
-- dbt: curated manifest and run-results evidence. No Jinja compiler, actual `dbt build` or regenerated artifacts from edited code.
-- Terraform/OpenTofu/Kubernetes/Docker: fixed-vocabulary text checks plus supplied plan/object/event/log/layer evidence. Not an HCL/YAML type checker, provider, kubectl, Docker daemon or state backend. These checks are intentionally partial, not correctness proofs.
-- Git: deterministic virtual repository, whole-file teaching conflicts, linear rebase, one-slot stash and fast-forward-only pull. Rebase-conflict continuation is not modeled. Stash pop restores the saved index in this teaching model, unlike plain real-Git defaults. Whole-file diff is not a minimal diff algorithm. No push/network/real repository access.
-- Shells: bounded grammar and command sets, not POSIX Bash or complete PowerShell. Bash grep is literal; no complete regex, job control, pipefail or exact exit-code model. Quote/variable-expansion semantics are simplified. PowerShell uses objects for supported cases but lacks full type coercion, case-insensitive property resolution and script language behavior. Small virtual fixtures only.
-- Mermaid: network-loaded optional renderer, strict mode, plain labels only. Preview excludes foreignObject/images/scripts. Native editable canvas and .mmd export work without it. Official platform icons are not bundled; original neutral SVGs are used.
-- Deepnote: links are intentionally blank until actual URLs are supplied. Embedded preview, where configured, depends on provider permissions and is not an editable remote IDE. No account API integration or invented URLs.
+The DAX evaluator supports the existing fixed three-table model and documented subset. The new inspector exposes fixture types, PK/FK roles, grain, one-to-many direction, active status and row previews. It does not implement arbitrary semantic schemas, bridge-table propagation, bidirectional relationships, role-playing dimension engines, semi-additive time intelligence or full Power BI. Such topics remain conceptual or future carefully scoped fixtures.
 
-## State / UX
+DAG simulation supports the existing explicit dependency conditions, trigger-rule subset, branching/skips and one recoverable injected transient failure. Grid, timeline and task logs show a deterministic run snapshot using declared time units. No Airflow/ADF scheduler, sensors, concurrency pool, ForEach/Until engine or real dbt compilation is created. Mermaid and code/config views do not infer a runnable workflow from arbitrary source text.
 
-Backup merge is whole-draft newest-wins, not field-level conflict resolution. localStorage can be unavailable or full; export backups. Branch-preview domains do not share storage. Custom packs can be imported/updated/exported; UI removal of packs is deferred rather than risking accidental orphan deletion. Switching shell modes resets virtual command history. Last shell output must be run again after reload before its goal can be checked. Accessibility has keyboard paths and labels but no complete screen-reader/WCAG audit was run.
+Git, Bash and PowerShell remain the existing connected virtual state machines with documented command subsets. There is no host filesystem, real repository, remote authentication or command execution. Broader new exercises for pull/revert/stash/cherry-pick/safe-force scenarios were not added in this shell-focused pass. Unsaved virtual-file text survives layout/tab changes; switching the selected file still requires deliberate Save/Stage to retain that file's edit. Do not use virtual commands as proof of a real repository operation.
 
-The source uses a pinned older CodeMirror 5 distribution copied from installed licensed assets. No dependency security audit is claimed. The lockfile uses verified registry metadata, but a cold `npm ci` download/install must still be checked in the target environment.
+Spark metrics, Kubernetes events/logs, Terraform plan fragments, Docker layers and architecture comparisons are supplied evidence. Config checks are bounded teaching checks, not vendor parsers. Changing the draft never fabricates new cloud logs, timings, costs, a Spark physical plan or deployment status. PySpark remains review-only.
+
+## Persistence and interface
+
+Local progress is browser-origin-specific and unencrypted. Export before changing domains or clearing storage. Merge uses timestamps with local values winning ties; this is not multi-device real-time collaboration. New case-session fields round-trip in V2.2, but an older app may not expose them. Pre-upgrade snapshots are recovery values, not a full version history.
+
+Editor undo, current graph camera and unsaved supplementary view text survive in-session layout/navigation. They are not a promise of full undo restoration after a browser restart. Run snapshots/selected open tools are transient; saved attempts and learning state survive reload. A temporary narrow viewport does not overwrite desktop preferences. Screen-reader access has explicit labels, keyboard controls and focus styles, but no full assistive-technology certification or exhaustive accessibility audit is claimed.
+
+Deepnote is links-only. No URLs are invented and no notebook archive is shipped. Optional embeds depend on provider policy/access; a Data App preview is not an editable notebook. Official references are external links, not republished vendor posters.

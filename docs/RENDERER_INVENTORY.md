@@ -26,11 +26,8 @@ Sources require HTTPS. IDs cannot shadow prototype keys or built-ins. Packs are 
 
 See `examples/custom-pack.json`, `examples/content-pack.schema.json` and runtime validation in `src/core.ts`. The JSON schema documents the portable envelope; the app still performs its own validation. Fixtures remain trusted learning data; a full per-renderer schema/fuzz audit is on the backlog.
 
-## Source layout
+## V2.2 source layout
 
-- `src/app.ts`: shared shell, view orchestration and events; `editor.ts`: bundled editor loader.
-- `src/core.ts`: validation, normalization, storage, migration and pack operations.
-- `src/runtime.ts`, `public/workers/python.js`: real runtime adapters.
-- `src/git.ts`, `terminal.ts`, `graph.ts`, `dax.ts`, `checks.ts`: bounded engines and checks.
-- `public/packs/`: shipped content and URL map. `scripts/build_content.py` regenerates the authored built-in bank; edit the generator if regenerating later, not only its output.
-- `scripts/build.mjs`: static build copy. No serverless/backend dependency.
+See [the shared-shell architecture](V2_2_ARCHITECTURE.md) for presentation, case and renderer modules. The renderer/engine dispatch contract and all 51 exercise IDs remain stable. The four authored cases reference this same bank without copying a second question bank or adding duplicate IDs.
+
+Presentation presets do not change the renderer's execution boundary. Inspector cards expose the supplied teaching model, not a general semantic engine. Run-investigation views render saved simulation snapshots, not a second scheduler.

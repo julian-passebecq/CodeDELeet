@@ -1,56 +1,55 @@
-# Handoff to the branch / deployment AI
+# Coordinator handoff - CodeDELeet V2.2
 
-## User boundary
+## Ownership and baseline
 
-User requested a local ZIP, no pushes or deployments by the V2 builder. That boundary was respected. You must obtain any required authorization for your own branch/deployment operations from your conversation with the user. Do not modify production by default.
+This implementation used the uploaded `CodeDELeet_V2_Full_Source.zip` and V2.2 handoff as authority. No GitHub/Netlify connector, repository write, branch creation or deployment was performed. You own integration and any deployment separately authorized in your conversation. Keep production unchanged until the gates below pass.
 
-## Baseline and files
+The ZIP is a complete source tree, not a patch. Extract its contents at the branch root. Use `src/`, `public/packs/`, `public/cases/`, and scripts as source; `public/app/` and `dist/` are generated. Avoid nesting another project folder. Preserve licenses and the existing static `netlify.toml`; no backend/serverless service is introduced.
 
-Read-only source baseline: `julian-passebecq/CodeDELeet` commit `d3c7c21ba79a082da21925b5ee0dce69212577fe`. The current four-lab TypeScript app, not the uploaded older React trainer, is the migration baseline. Relevant core, graph, DAX, type and complete starter-content contracts were inspected and refactored. The shared shell/editor/investigation views are V2 implementations, not a claim of a byte-for-byte overlay of every original source file.
+## Reconcile current branch safely
 
-Extract the V2 ZIP **at the branch root**. Keep `src`, `public`, `scripts`, tests, docs, examples, the license and build config. `dist` is a build artifact supplied for immediate inspection, not a second source of truth. `reference/legacy-trainer` is not loaded by the app. No `node_modules`, account tokens or serverless runner is required.
+The supplied source was V2.0.0 and still contained the old public notebook ZIP and Mermaid 11.4.1. This pass removes that archive, pins Mermaid 11.16.1 and makes the build reject notebook/archive assets. If your branch already has independent V2.1 hardening, preserve it; do not restore the old `public/companion/` path or downgrade the pin. The current app keeps the original storage key, all 51 exercise IDs and all 27 V1 IDs.
 
-## First validation
+## Reproduce deterministic evidence
 
 ```sh
 npm ci --ignore-scripts
 npm run check
 npm test
 python -m pip install -r requirements-dev.txt
+python -m playwright install --with-deps chromium
 python tests/fixture_check.py
-python -m playwright install chromium
-npm start
+python tests/ui_smoke.py
+python tests/v22_ui.py
 ```
 
-With the server running, use another terminal:
+Run `node scripts/serve.mjs dist` in another terminal, then `python scripts/validate_release.py` to check local asset/MIME delivery and release invariants. The delivered tests record JSON under `evidence/v22/`. Browser smoke scripts capture actual application screenshots, not mockups.
+
+## Required real-origin promotion gate
 
 ```sh
-UI_MODE=http python tests/ui_smoke.py
+# Server running at localhost:5173 or set BASE_URL to an isolated preview.
 python tests/network_runtime_smoke.py
 ```
 
-On Windows, set environment variables with PowerShell `$env:UI_MODE='http'` rather than POSIX prefix syntax. `BASE_URL` defaults to `http://127.0.0.1:5173`. `CHROMIUM_PATH` is optional.
+Use `UI_MODE=http python tests/ui_smoke.py` for the full original interaction suite on the served build. In PowerShell set `$env:UI_MODE='http'` and optionally `$env:BASE_URL='...'` before invoking Python. A blocked setup exits 2 and records **UNVERIFIED**, never PASS. All loader waits use DOM/content readiness rather than `networkidle`.
 
-The included lockfile uses verified npm registry metadata and integrity. Run `npm ci` in the target environment to verify a clean download/install. The submitted release was type-checked with exactly TypeScript 5.8.3.
+Verify actual reference execution for every executable SQL/Python/basic-pandas exercise, cold downloads, invalid queries, syntax errors, cancellation/timeouts and a successful subsequent worker run. The network script covers browser storage reload and Mermaid flowchart, ER and architecture-beta with the pinned version. Inspect CSP/headers in the hosted environment so the existing CDN/worker requirements are allowed without broadening unrelated privileges. No such hosted verification is claimed by this delivery.
 
-## Required promotion gates (not passed by the local harness)
+The local source/compiler checks used the installed exact TypeScript 5.8.3. A registry DNS failure prevented a clean `npm ci` in the implementation environment; perform that clean install and your dependency audit here.
 
-- Real-origin asset loading, CodeMirror lazy script delivery, page reload and persistent localStorage on the preview domain.
-- DuckDB-Wasm SQL: cold startup, reference answers, column/row comparison, nulls/empty/tie fixtures, invalid queries, timeout/cancel/restart.
-- Pyodide: cold startup, Python and pandas references, error output, infinite-loop termination and successful run after cancellation.
-- Mermaid flowchart, ER and architecture-beta via the pinned CDN, including unavailable-CDN fallback.
-- Chromium plus Firefox (where practical), desktop 1366px/1600px, tablet and phone. The actual local screenshots are in evidence/.
-- A manually exported V1 backup restored on the preview; notes and bookmarks still present after a **full browser reload**.
-- Optional real Deepnote URLs: import the mapping only after the user supplies their actual project/notebook URLs. Never invent them or configure a foreign account.
+## Migration acceptance
 
-## Deployment settings
+Export actual user progress from the current origin first. Import it into the isolated preview through Settings > Merge backup. Check standalone code, notes, virtual Git/shell state, bookmarks, confidence and attempts; then create/edit a case task, move exhibits/tasks, export/reimport and verify both scopes. Case mode alone must not create an authored session. Explicit standalone copying must checkpoint, not silently overwrite, a case answer.
 
-Node 22; build command `npm run build`; publish directory `dist`; no backend/functions; no secrets. Preserve the current production site. A manual static preview can publish the contents of `dist`. Run `scripts/build.mjs` through `npm run build` after any content or source edit.
+On first V2.2 boot an eligible older stored value is copied to `.pre-v22`. `.pre-v2` behavior remains. The original unreadable value is never silently replaced: saving is blocked and raw export is offered. Different preview domains have independent localStorage.
 
-## Do not re-architect this release
+## UI checks before promotion
 
-First close the real-origin/runtime gates and fix only demonstrated defects. Read `docs/V2_1_BACKLOG.md` for deliberately deferred work. Do not disguise simulations as Spark/Airflow/Power BI executions. Do not bulk-import the legacy exercise bank without a provenance and content audit. Do not treat built-in solutions as secret tests.
+Inspect Code Solve/Data & Debug, wide Model Designer, DAX Measures & Data, Pipeline Designer/Grid/Timeline/Logs, and Systems Compare. Check all four themes, terminal override, right-rail overlay/pin, all output anchors, exact Focus restoration and a phone-sized view. A narrow viewport must not rewrite desktop preferences. Output should say stale after evaluated inputs change but not after note/theme edits. No giant output region should be present before the first run.
 
-## Raw companion material review
+See [known limitations](KNOWN_LIMITATIONS.md) for teaching-engine boundaries and deferred broader specialist coverage. These are deliberate limits, not evidence of real cloud/Git execution.
 
-The static build currently includes the supplied Deepnote suite as a downloadable companion. Review its embedded source/license notices and any personal notes before making the preview public. Remove `public/companion/` and its download link if the suite should remain private. The old trainer archive under `reference/legacy-trainer/` is repository reference material, not a running app dependency; it can be omitted from a public branch after your review. No archive was uploaded or published by this builder.
+## Repackage without remote operations
+
+After rerunning the tests, use `python scripts/package_release.py --out /path/to/output`. The standard-library packager writes source, static-build and evidence ZIPs, checks every archive byte/CRC and source-manifest entry, and records hashes. It reads existing test evidence; it does not replace a fresh CI run and never uploads or deploys. The default output is the excluded `release-artifacts/` directory.

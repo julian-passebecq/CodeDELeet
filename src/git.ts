@@ -1,5 +1,5 @@
 /** Deterministic Git teaching state machine. No host git, network, filesystem or eval. */
-import {clone,escapeHTML as esc} from './core.js';
+import { clone,escapeHTML as esc } from './core.js';
 export interface Commit {id:string;parents:string[];message:string;tree:Record<string,string>;original?:string;}
 export interface GitState {commits:Commit[];branches:Record<string,string>;tracking:Record<string,string>;remote:Record<string,string>;head:string|null;detached:string|null;files:Record<string,string>;index:Record<string,string>;seq:number;pendingMerge?:string[];unmerged?:string[];remoteCommits?:Commit[];stash?:{files:Record<string,string>;index:Record<string,string>};history:string[];}
 export function headId(s:GitState):string{return s.head?s.branches[s.head]:s.detached!;}

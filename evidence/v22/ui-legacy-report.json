@@ -1,0 +1,290 @@
+{
+  "browser": {
+    "browser": "Chromium",
+    "version": "152.0.7977.0",
+    "mode": "built-file in-memory harness",
+    "urlNavigation": "blocked by environment policy"
+  },
+  "passed": 68,
+  "failed": 0,
+  "pageErrors": [],
+  "checks": [
+    {
+      "name": "Desktop fixed-height workstation and real CodeMirror visible",
+      "passed": true
+    },
+    {
+      "name": "Reference reveal is deliberate and resets on navigation",
+      "passed": true
+    },
+    {
+      "name": "Code, notes, confidence and bookmark survive navigation",
+      "passed": true
+    },
+    {
+      "name": "Keyboard split resize, drawer collapse and focus mode work",
+      "passed": true
+    },
+    {
+      "name": "Library filtering survives selecting an exercise",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: sql-paid-revenue",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: sql-latest-order",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: python-aggregate",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: python-two-sum",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: spark-dedup",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: tsql-running-total",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bigquery-qualify",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: pandas-grain",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: git-safe-undo",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: linux-log-triage",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-star-schema",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-revenue",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-margin",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-filter-context",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-csharp",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: bi-scd",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: dag-data-quality",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: adf-watermark",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: dbt-lineage",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: dag-idempotency",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-fabric",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-databricks",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-bigquery",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-tofu",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-kubernetes",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-spark-skew",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: arch-table-formats",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-sql-quality",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-sql-cte",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-python-batches",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-python-latest",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-spark-aggregate",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-spark-join",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-airflow-branch",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-dbt-failure",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-spark-files",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-tofu-replacement",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-k8-selector",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-docker-cache",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-bash-csv",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-powershell-csv",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-powershell-json",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-stage",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-merge",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-rebase",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-fetch",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-conflict",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-git-detached",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-cloud-compare",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-concept-watermark",
+      "passed": true
+    },
+    {
+      "name": "Renderer/views: v2-concept-shuffle",
+      "passed": true
+    },
+    {
+      "name": "Virtual Bash command, visible output and goal check",
+      "passed": true
+    },
+    {
+      "name": "PowerShell object pipeline works through the UI",
+      "passed": true
+    },
+    {
+      "name": "Git graph/HEAD/console/goal and prediction are connected",
+      "passed": true
+    },
+    {
+      "name": "Conflict resolution via working file editor and staging",
+      "passed": true
+    },
+    {
+      "name": "Graph JSON roundtrip, repaired quality gate and retry simulation",
+      "passed": true
+    },
+    {
+      "name": "DAX subset evaluates through editor and active country filter",
+      "passed": true
+    },
+    {
+      "name": "Infrastructure analyzer labels checks and unchanged evidence honestly",
+      "passed": true
+    },
+    {
+      "name": "PySpark review and performance fixture never pretend execution",
+      "passed": true
+    },
+    {
+      "name": "Deepnote buttons are hidden until explicit safe URLs are imported",
+      "passed": true
+    },
+    {
+      "name": "Backup merge through the actual file input preserves unrelated work",
+      "passed": true
+    },
+    {
+      "name": "V1 browser boot retains draft, settings, notes and a pre-upgrade snapshot",
+      "passed": true
+    },
+    {
+      "name": "390px mobile tabs, notes, shell and exercise drawer are usable",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Default harness substitutes file delivery, fetch and localStorage transport only.",
+    "Actual WebAssembly downloads and HTTP-origin browser integration are not covered by harness checks.",
+    "Screenshots are actual rendered build output, not generated concept art."
+  ]
+}

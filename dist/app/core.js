@@ -1,3 +1,4 @@
+import { mergeSessions, validateSessions } from './case-study/controller.js';
 export const WORKSPACES = { code: { title: 'Code Lab', short: 'Code', subtitle: 'SQL, Python & PySpark', icon: 'code' }, model: { title: 'Model / BI Lab', short: 'Model', subtitle: 'Grain, filters & measures', icon: 'model' }, pipeline: { title: 'Pipeline Lab', short: 'Pipeline', subtitle: 'DAGs, quality & orchestration', icon: 'pipeline' }, architecture: { title: 'Systems / Cloud Lab', short: 'Systems', subtitle: 'Performance, infrastructure & Git', icon: 'architecture' } };
 export const RENDERERS = ['sql-editor', 'code-editor', 'pyspark-editor', 'semantic-model', 'dag-editor', 'pipeline-investigation', 'architecture-editor', 'performance-investigation', 'config-editor', 'terminal', 'git-visual', 'multi-choice-reasoning', 'concept-case'];
 export const MODES = ['execute', 'analyze', 'simulate', 'review', 'external'];
@@ -21,7 +22,7 @@ export function safeDeepnoteURL(value, embed = false) { const str = safeHTTPS(va
     return null; if (embed && !/^\/(embed|app)\//.test(u.pathname))
     return null; if (!embed && !/^\/(workspace|project|app|embed)\//.test(u.pathname))
     return null; return u.href; }
-export function validDeepnoteLinks(q, map = {}) { return [...(q.deepnoteLinks ?? []), ...(map[q.id] ?? [])].filter(l => l && ['exercise', 'concept', 'mock', 'reference', 'project'].includes(l.type) && safeDeepnoteURL(l.url)).filter((v, i, a) => a.findIndex(x => x.url === v.url) === i); }
+export function validDeepnoteLinks(q, map = {}) { return [...(q.deepnoteUrl ? [{ type: 'exercise', label: q.deepnoteLabel ?? 'Open in Deepnote', url: q.deepnoteUrl }] : []), ...(q.deepnoteLinks ?? []), ...(map[q.id] ?? [])].filter(l => l && ['exercise', 'concept', 'mock', 'reference', 'project'].includes(l.type) && safeDeepnoteURL(l.url)).filter((v, i, a) => a.findIndex(x => x.url === v.url) === i); }
 export function normalizeQuestion(q) {
     const n = clone(q);
     n.technology ??= n.topic;
@@ -79,6 +80,8 @@ export function validatePack(input) {
             assert(MODES.includes(q.executionMode), 'Unknown execution mode.');
         if (q.deepnoteLinks)
             assert(Array.isArray(q.deepnoteLinks) && q.deepnoteLinks.length <= 15 && q.deepnoteLinks.every(l => l && typeof l.url === 'string' && typeof l.label === 'string'), 'Invalid Deepnote links.');
+        if (q.deepnoteUrl)
+            assert(safeDeepnoteURL(q.deepnoteUrl), 'Unsafe Deepnote URL.');
         if (q.deepnoteEmbedUrl)
             assert(safeDeepnoteURL(q.deepnoteEmbedUrl, true), 'Unsafe Deepnote embed.');
         if (q.fixture) {
@@ -144,6 +147,7 @@ export function validateStore(value) {
     assert(Array.isArray(s.customPacks) && s.customPacks.length <= 50, 'Invalid packs.');
     s.customPacks.forEach(validatePack);
     assert(s.settings && typeof s.settings === 'object' && typeof s.settings.focus === 'boolean', 'Invalid settings.');
+    validateSessions(s.caseSessions, drafts => { validateStore({ schemaVersion: 1, drafts, customPacks: [], settings: { focus: false } }); });
     return clone(s);
 }
 export function migrateStore(s) { const v = validateStore(s); v.v2 ??= { version: 2, migratedAt: new Date().toISOString() }; return v; }
@@ -159,7 +163,7 @@ export function mergeStores(current, incoming, builtins) { const other = validat
     const old = result.drafts[id];
     if (!old || Date.parse(d.updatedAt ?? '1970-01-01') > Date.parse(old.updatedAt ?? '1970-01-01'))
         result.drafts[id] = clone(d);
-} return migrateStore(result); }
+} result.caseSessions = mergeSessions(result.caseSessions, other.caseSessions); return migrateStore(result); }
 export function formatNumber(v) { return v === null || v === undefined ? 'BLANK' : typeof v === 'number' ? new Intl.NumberFormat('en', { maximumFractionDigits: 4 }).format(v) : String(v); }
 export function newId(prefix = 'node') { const b = new Uint8Array(10); crypto.getRandomValues(b); return prefix + '-' + Array.from(b, x => x.toString(16).padStart(2, '0')).join(''); }
 export function questionMode(q) { return q.executionMode === 'execute' ? (q.engine === 'sql' ? 'REAL EXECUTION - DuckDB-Wasm' : 'REAL EXECUTION - Pyodide') : q.renderer === 'terminal' ? 'VIRTUAL TERMINAL' : q.renderer === 'git-visual' ? 'SIMULATION - Git state' : q.executionMode === 'simulate' ? 'SIMULATION' : q.executionMode === 'analyze' ? 'ANALYZE - fixture checks' : 'REVIEW - no vendor engine'; }

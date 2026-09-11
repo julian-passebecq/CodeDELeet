@@ -206,7 +206,7 @@ export async function executeSQL(q, code, fixtures, progress) {
                 throw Error('Cancelled.');
             await loadFixtures(conn, fixtures, test.overrides ?? {});
             const actual = await queryPreview(conn, sql);
-            checks.push({ label: test.label, passed: JSON.stringify(actual.columns) === JSON.stringify(test.columns) && !actual.truncated && compareRows(actual.rows, test.rows, q.ordered !== false), detail: `Compared column names, ${test.rows.length} expected rows${q.ordered !== false ? ' and order' : ''}.` });
+            checks.push({ label: test.label, passed: JSON.stringify(actual.columns) === JSON.stringify(test.columns) && !actual.truncated && compareRows(actual.rows, test.rows, q.ordered !== false), detail: `Compared column names, ${test.rows.length} expected rows${q.ordered !== false ? ' and order' : ''}.`, actual: actual.rows, expected: test.rows, columns: test.columns, actualColumns: actual.columns });
         }
         return { engine: 'DuckDB-Wasm ' + RUNTIME_VERSIONS.duckdb, mode: 'execute', ...preview, elapsedMs: performance.now() - start, checks, notice: 'Real browser SQL. Read-only in-memory fixtures; 200 displayed rows. Checks are public learning tests, not a hidden judge.' };
     }

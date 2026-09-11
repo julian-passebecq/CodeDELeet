@@ -1,24 +1,45 @@
-import { WORKSPACES, clone, escapeHTML as e, emptyStore, loadStore, saveStore, markDraft, mergeStores, normalizeQuestion, validatePack, planPackImport, validateGraph, validDeepnoteLinks, safeDeepnoteURL, STORAGE_KEY, clampLayout, newId, formatNumber, safeId } from './core.js';
-import { graphTemplate, graphSVG, graphChecks, simulateDAG, autoLayout, toDiagram, parseDiagram, toMermaid } from './graph.js';
-import { evaluateDax, DAX_SUPPORT, visibleRows } from './dax.js';
-import { gitFixture, runGit, gitGraphSVG, headId, commitAt, gitDiff, aheadBehind } from './git.js';
-import { terminalFixture, runTerminal } from './terminal.js';
-import { gitGoal, terminalGoal, configurationChecks, modelChecks } from './checks.js';
-import { executeSQL, executePython, cancelRuntime, RUNTIME_VERSIONS } from './runtime.js';
-import { mountEditor } from './editor.js';
-import { icon, table, pre, notice, chips, steps, download, options } from './ui.js';
+import { ensureSession, patchTask, selectTask, taskDraft, validateCase } from './case-study/controller.js';
+import { caseReferences } from './case-study/view.js';
+import { configurationChecks, gitGoal, modelChecks, terminalGoal } from './checks.js';
+import { clone, escapeHTML as e, emptyStore, formatNumber, loadStore, markDraft, newId, normalizeQuestion, safeDeepnoteURL, saveStore, STORAGE_KEY, validateGraph, validatePack } from './core.js';
+import { evaluateDax } from './dax.js';
+import { EditorPool } from './editor.js';
+import { commitAt, gitFixture, headId, runGit } from './git.js';
+import { autoLayout, graphChecks, graphSVG, graphTemplate, parseDiagram, simulateDAG } from './graph.js';
+import * as codeViews from './renderers/code-view.js';
+import * as modelViews from './renderers/model-view.js';
+import * as pipelineViews from './renderers/pipeline-view.js';
+import * as systemsViews from './renderers/systems-view.js';
+import * as workspaceViews from './renderers/workspace.js';
+import { cancelRuntime, executePython, executeSQL, RUNTIME_VERSIONS } from './runtime.js';
+import { activePreferences, defaultPresentation, newTransient, normalizePresentation, presetFor, resolveLayout, setOutputSize, toggleFocus } from './shell/layout-controller.js';
+import * as shellViews from './shell/orchestration.js';
+import { answerFingerprint, newRunStatus, outputControls, outputDetail, runSummary } from './shell/output-dock.js';
+import * as readingViews from './shell/reading-panels.js';
+import { scaffold } from './shell/scaffold.js';
+import * as settingsViews from './shell/settings.js';
+import { runTerminal, terminalFixture } from './terminal.js';
+import { chips, download, icon, notice, options, pre } from './ui.js';
 const $ = (s) => document.querySelector(s);
 let builtins = [], fixtures = {}, mapping = {}, store = emptyStore(), questions = [], current;
-let workspace = 'code', search = '', difficulty = 'All levels', technology = 'All topics', queue = 'All exercises';
+let workspace = 'code', search = '', difficulty = 'All levels', technology = 'All topics', queue = 'All exercises', conceptFilter = '', priorityFilter = 'All priorities';
+let presentation = defaultPresentation(), shellState = newTransient(), cases = [], activeCase = null, outputTab = 'Summary', runState = newRunStatus(), selectedEdge = '';
+const editorPool = new EditorPool();
+const viewMemory = new Map();
+const cameraMemory = new Map();
+const inputMemory = new Map();
+let graphRedo = [];
 let leftTab = 'Task', drawerTab = 'Results', labTab = 'Workspace', hintCount = 0, revealed = false, selectedNode = '', selectedCommit = '', selectedFile = '', mobilePanel = 'lab';
 let editor = null, editorEpoch = 0, labEpoch = 0, saveTimer, result = null, runEpoch = 0, busy = false, storageBlocked = false;
 let graphUndo = [], timerStart = null, timerElapsed = 0, terminalResult = null;
 let runStatuses = {}, runGrid = [], graphDrag = false;
 const app = $('#app');
-const draft = () => store.drafts[current.id] ?? {};
+function viewContext() { return { current, labTab, selectedNode, selectedCommit, get selectedFile() { return selectedFile; }, set selectedFile(v) { selectedFile = v; }, graphUndo, graphRedo, selectedEdge, runStatuses: runSummary(runState, answerFingerprint(draft(), current?.starter ?? '')).stale ? {} : runStatuses, runGrid, fixtures, draft, graph, git, terminal }; }
+const draftKey = () => activeCase ? 'case/' + activeCase.id + '/' + ensureSession(store, activeCase).currentTaskId : 'exercise/' + current.id;
+const draft = () => activeCase ? taskDraft(store, activeCase) : store.drafts[current.id] ?? {};
 const code = () => draft().code ?? current.starter;
 function toast(message, error = false) { const host = $('#toast'); host.textContent = message; host.classList.toggle('error', error); host.classList.add('visible'); setTimeout(() => host.classList.remove('visible'), 5000); }
-function persist(immediate = false) { clearTimeout(saveTimer); const write = () => { if (storageBlocked) {
+function persist(immediate = false) { clearTimeout(saveTimer); const write = () => { store.settings.workstation = presentation; if (storageBlocked) {
     $('#save-status').textContent = 'Recovery needed';
     return;
 } try {
@@ -33,13 +54,18 @@ catch {
     write();
 else
     saveTimer = setTimeout(write, 220); }
-function patch(p, immediate = false) { markDraft(store, current.id, p); persist(immediate); }
+function patch(p, immediate = false) { if (activeCase)
+    patchTask(store, activeCase, p);
+else
+    markDraft(store, current.id, p); persist(immediate); updateRunBadge(); }
 function recalc() { questions = [...builtins, ...store.customPacks].flatMap(p => p.questions).map(normalizeQuestion); }
-function filtered() { return questions.filter(q => q.workspace === workspace && (!search || (q.title + ' ' + q.topic + ' ' + q.summary + ' ' + q.id).toLowerCase().includes(search.toLowerCase())) && (difficulty === 'All levels' || q.difficulty === difficulty) && (technology === 'All topics' || q.technology === technology) && (queue === 'All exercises' || queue === 'Bookmarked' && store.drafts[q.id]?.bookmark || queue === 'Review queue' && (store.drafts[q.id]?.status === 'review' || store.drafts[q.id]?.confidence === 'Review') || queue === 'Unfinished' && store.drafts[q.id]?.status !== 'completed')); }
+function filtered() { return questions.filter(q => q.workspace === workspace && (!search || (q.title + ' ' + q.topic + ' ' + q.summary + ' ' + q.id).toLowerCase().includes(search.toLowerCase())) && (difficulty === 'All levels' || q.difficulty === difficulty) && (technology === 'All topics' || q.technology === technology) && (!conceptFilter || q.concept.join(' ').toLowerCase().includes(conceptFilter.toLowerCase())) && (priorityFilter === 'All priorities' || q.interviewPriority === priorityFilter) && (queue === 'All exercises' || queue === 'Bookmarked' && store.drafts[q.id]?.bookmark || queue === 'Review queue' && (store.drafts[q.id]?.status === 'review' || store.drafts[q.id]?.confidence === 'Review') || queue === 'Unfinished' && store.drafts[q.id]?.status !== 'completed')); }
 function graph() { if (draft().graph)
     return clone(draft().graph); return validateGraph(current.fixture?.graph ?? graphTemplate(current.template ?? (current.workspace === 'model' ? 'model' : 'fabric'))); }
-function setGraph(g, remember = true) { if (remember)
-    graphUndo = [...graphUndo.slice(-19), graph()]; patch({ graph: validateGraph(g) }, true); renderLab(); }
+function setGraph(g, remember = true) { if (remember) {
+    graphUndo = [...graphUndo.slice(-19), graph()];
+    graphRedo = [];
+} patch({ graph: validateGraph(g) }, true); renderLab(); }
 function git() { const s = draft().labState; if (s?.kind === 'git' && s.value?.commits) {
     try {
         const v = clone(s.value);
@@ -52,7 +78,7 @@ function git() { const s = draft().labState; if (s?.kind === 'git' && s.value?.c
 } return gitFixture(current.fixture?.git ?? 'merge'); }
 function terminal() { const s = draft().labState; return s?.kind === 'terminal' && s.value?.files ? clone(s.value) : terminalFixture(current.fixture?.shell ?? 'bash'); }
 function shellHTML() {
-    app.innerHTML = `<a class="skip-link" href="#question-body">Skip to question</a><header class="topbar"><button class="icon-button mobile-menu" data-action="library" aria-label="Open exercise library">${icon('menu')}</button><a class="brand" href="#exercise=sql-paid-revenue" aria-label="CodeDELeet home"><span class="brand-mark">${icon('code')}</span><span>CodeDELeet<small>INTERVIEW WORKSTATION</small></span><span class="version">V2</span></a><nav class="workspace-nav" aria-label="Practice labs">${Object.entries(WORKSPACES).map(([key, w]) => `<button data-workspace="${key}" aria-label="${e(w.title)}" class="${key === workspace ? 'active' : ''}">${icon(w.icon)}<span>${w.title}</span></button>`).join('')}</nav><div class="top-actions"><span class="local-pill"><i></i>Local-first</span><button class="icon-button" data-action="settings" aria-label="Settings and backups">${icon('settings')}</button></div></header><div class="app-body"><aside class="library" aria-label="Exercise library"><div class="library-heading"><span class="eyebrow">YOUR PRACTICE</span><button class="icon-button mobile-menu" data-action="library" aria-label="Close library">${icon('close')}</button></div><h2 id="library-title">${e(WORKSPACES[workspace].title)}</h2><p class="muted library-subtitle">${e(WORKSPACES[workspace].subtitle)}</p><div class="search-wrap">${icon('search')}<input id="search" type="search" placeholder="Search exercises..." value="${e(search)}" aria-label="Search exercises"></div><div class="filter-row"><select id="difficulty" aria-label="Difficulty">${options(['All levels', 'Easy', 'Medium', 'Hard'], difficulty)}</select><select id="queue" aria-label="Practice queue">${options(['All exercises', 'Bookmarked', 'Review queue', 'Unfinished'], queue)}</select></div><select id="technology" aria-label="Technology">${options(['All topics', ...new Set(questions.filter(q => q.workspace === workspace).map(q => q.technology))], technology)}</select><div class="library-count" id="library-count"></div><div class="exercise-list" id="exercise-list" role="list"></div><div class="library-footer"><div id="progress-text"></div><div class="progress-track"><span id="progress-bar"></span></div><button class="text-button" data-action="export-backup">${icon('download')} Export my progress</button></div></aside><main class="main"><header class="exercise-header" id="exercise-header"></header><div class="mobile-tabs" aria-label="Mobile workspace"><button data-mobile="question">Question</button><button data-mobile="lab" class="active">Lab</button><button data-mobile="drawer">Results / notes</button></div><section class="workstation" id="workstation"><div class="top-split"><section class="question-panel"><nav class="panel-tabs" id="question-tabs" aria-label="Question information"></nav><div id="question-body" class="panel-scroll" tabindex="-1"></div></section><div class="separator vertical" id="column-separator" role="separator" tabindex="0" aria-label="Resize question and lab" aria-orientation="vertical" aria-valuemin="28" aria-valuemax="62"></div><section class="lab-panel"><div class="lab-toolbar" id="lab-toolbar"></div><div id="lab-content" class="lab-content"></div></section></div><div class="separator horizontal" id="drawer-separator" role="separator" tabindex="0" aria-label="Resize results drawer" aria-orientation="horizontal" aria-valuemin="120" aria-valuemax="520"></div><section class="drawer"><nav class="drawer-tabs" id="drawer-tabs" aria-label="Results and explanation"></nav><div class="drawer-body" id="drawer-body"></div></section></section><footer class="statusbar"><span id="save-status">Saved on this device</span><span>Ctrl + Enter: run &nbsp; &middot; &nbsp; Alt + arrows: navigate</span><span id="engine-status">No runtime loaded</span></footer></main></div>`;
+    app.innerHTML = scaffold({ workspace, questions, search, difficulty, technology, queue });
     renderLibrary();
     renderHeader();
     renderQuestion();
@@ -61,15 +87,33 @@ function shellHTML() {
     applyLayout();
     bindControls();
 }
-function renderLibrary() { const list = filtered(); $('#library-count').textContent = `${list.length} exercises`; $('#exercise-list').innerHTML = list.length ? list.map(q => { const d = store.drafts[q.id] ?? {}; return `<button class="exercise-item ${q.id === current.id ? 'selected' : ''}" data-question="${q.id}" role="listitem" aria-current="${q.id === current.id ? 'true' : 'false'}"><span class="exercise-status ${d.status === 'completed' ? 'done' : ''}">${d.status === 'completed' ? icon('check') : ''}</span><span class="exercise-item-copy"><strong>${e(q.title)}</strong><span><b class="level ${q.difficulty.toLowerCase()}">${q.difficulty}</b><span>${e(q.technology)}</span></span></span>${d.bookmark ? '<span class="tiny-bookmark">' + icon('bookmark') + '</span>' : ''}</button>`; }).join('') : '<div class="empty small">No exercises match these filters.</div>'; const done = questions.filter(q => store.drafts[q.id]?.status === 'completed').length; $('#progress-text').innerHTML = `<strong>${done}</strong> of ${questions.length} marked complete`; $('#progress-bar').style.width = 100 * done / questions.length + '%'; }
+function renderLibrary() {
+    const list = filtered();
+    const technologies = [...new Set(questions.filter(q => q.workspace === workspace).map(q => q.technology))];
+    $('#quick-filters').innerHTML = technologies.map(t => `<button data-quick-filter="${e(t)}" class="quick-filter ${technology === t ? 'active' : ''}" aria-pressed="${technology === t}">${e(t)}</button>`).join('');
+    $('#case-library').innerHTML = '<span class="eyebrow">CASE STUDIES</span>' + cases.filter(c => c.workspace === workspace).map(c => `<button class="case-library-item ${activeCase?.id === c.id ? 'active' : ''}" data-open-case="${e(c.id)}"><strong>${e(c.title)}</strong><span>${c.tasks.length} tasks / ${c.pages.length} exhibits</span></button>`).join('');
+    $('#library-count').textContent = `${list.length} exercises`;
+    $('#exercise-list').innerHTML = list.length ? list.map(q => { const d = store.drafts[q.id] ?? {}; return `<button class="exercise-item ${q.id === current.id ? 'selected' : ''}" data-question="${q.id}" role="listitem" aria-current="${q.id === current.id ? 'true' : 'false'}"><span class="exercise-status ${d.status === 'completed' ? 'done' : ''}">${d.status === 'completed' ? icon('check') : ''}</span><span class="exercise-item-copy"><strong>${e(q.title)}</strong><span><b class="level ${q.difficulty.toLowerCase()}">${q.difficulty}</b><span>${e(q.technology)}</span></span></span>${d.bookmark ? '<span class="tiny-bookmark">' + icon('bookmark') + '</span>' : ''}</button>`; }).join('') : '<div class="empty small">No exercises match these filters.</div>';
+    const done = questions.filter(q => store.drafts[q.id]?.status === 'completed').length;
+    $('#progress-text').innerHTML = `<strong>${done}</strong> of ${questions.length} marked complete`;
+    $('#progress-bar').style.width = 100 * done / questions.length + '%';
+}
 function labelMode() { const q = current; if (q.executionMode === 'execute')
     return q.engine === 'sql' ? 'EXECUTE / DUCKDB-WASM' : 'EXECUTE / PYODIDE'; if (q.renderer === 'pyspark-editor')
     return 'GUIDED REVIEW / NO SPARK RUNTIME'; if (q.renderer === 'semantic-model')
     return 'TEACHING MODEL / DAX SUBSET'; return `${q.executionMode?.toUpperCase()} / ${q.renderer === 'terminal' ? 'VIRTUAL SHELL' : q.renderer === 'git-visual' ? 'VIRTUAL GIT' : q.renderer === 'config-editor' ? 'TEXT CHECKS' : 'FIXTURE'}`; }
 function actionLabel() { return busy ? 'Cancel' : current.renderer === 'git-visual' || current.renderer === 'terminal' ? 'Check goal' : current.executionMode === 'execute' ? 'Run & test' : current.renderer === 'dag-editor' ? 'Simulate' : current.renderer === 'semantic-model' ? 'Evaluate' : current.renderer === 'config-editor' ? 'Analyze' : 'Record review'; }
-function renderHeader() { const d = draft(), siblings = filtered(), i = siblings.findIndex(q => q.id === current.id); $('#exercise-header').innerHTML = `<div class="exercise-title"><div class="breadcrumb">${e(WORKSPACES[current.workspace].title)} <span>/</span> ${e(current.technology)} <span class="level ${current.difficulty.toLowerCase()}">${current.difficulty}</span></div><h1>${e(current.title)}</h1><span class="mode-label">${e(labelMode())}</span></div><div class="exercise-actions"><button class="icon-button ${d.bookmark ? 'is-bookmarked' : ''}" data-action="bookmark" aria-label="Bookmark exercise" aria-pressed="${!!d.bookmark}">${icon('bookmark')}</button><button class="timer-button" data-action="timer" aria-label="Start or pause practice timer">${icon('clock')}<span id="timer-value">${clockText()}</span></button><div class="navigation-buttons"><button class="icon-button previous" data-action="previous" aria-label="Previous exercise" ${i <= 0 ? 'disabled' : ''}>${icon('chevron')}</button><span>${i >= 0 ? i + 1 : '-'}/${siblings.length}</span><button class="icon-button" data-action="next" aria-label="Next exercise" ${i < 0 || i >= siblings.length - 1 ? 'disabled' : ''}>${icon('chevron')}</button></div><button class="primary run-button" data-action="run">${icon(busy ? 'close' : 'play')}<span>${actionLabel()}</span></button></div>`; }
+function renderHeader() {
+    const d = draft(), siblings = filtered(), i = siblings.findIndex(q => q.id === current.id), mode = presentation.modes[workspace], r = runSummary(runState, answerFingerprint(d, current.starter));
+    $('#exercise-header').innerHTML = `<div class="exercise-title"><div class="breadcrumb">${e(current.technology)} <span class="level ${current.difficulty.toLowerCase()}">${current.difficulty}</span>${activeCase ? '<span class="chip">Case attempt</span>' : ''}</div><h1>${e(current.title)}</h1><span class="mode-label">${e(labelMode())}</span></div><div class="exercise-actions"><select id="layout-mode" aria-label="Lab layout">${options(['work', 'inspect', 'case'], mode, Object.fromEntries(['work', 'inspect', 'case'].map(x => [x, presetFor(workspace, x).label])))}</select><button class="icon-button ${d.bookmark ? 'is-bookmarked' : ''}" data-action="bookmark" aria-label="Bookmark exercise" aria-pressed="${!!d.bookmark}">${icon('bookmark')}</button><button class="timer-button" data-action="timer" aria-label="Start or pause practice timer">${icon('clock')}<span id="timer-value">${clockText()}</span></button><div class="navigation-buttons"><button class="icon-button previous" data-action="previous" aria-label="Previous exercise" ${activeCase || i <= 0 ? 'disabled' : ''}>${icon('chevron')}</button><button class="icon-button" data-action="next" aria-label="Next exercise" ${activeCase || i < 0 || i >= siblings.length - 1 ? 'disabled' : ''}>${icon('chevron')}</button></div><div class="run-cluster"><button class="primary run-button" data-action="run">${icon(busy ? 'close' : 'play')}<span>${actionLabel()}</span></button><button id="run-status" class="run-status ${r.state}" data-shell="output-toggle" aria-live="polite">${e(r.label)}</button></div></div>`;
+}
 function tabs(items, active, attr) { return items.map(x => `<button ${attr}="${e(x)}" class="${x === active ? 'active' : ''}" aria-pressed="${x === active}">${e(x)}</button>`).join(''); }
 function renderQuestion() {
+    if (activeCase && presentation.modes[workspace] === 'case') {
+        $('#question-tabs').innerHTML = '<span class="case-reference-label">Exhibits - independent of task navigation</span>';
+        $('#question-body').innerHTML = caseReferences(activeCase, ensureSession(store, activeCase));
+        return;
+    }
     $('#question-tabs').innerHTML = tabs(['Task', 'Data', 'Schema', 'Hints'], leftTab, 'data-left-tab');
     const q = current;
     let html = '';
@@ -83,274 +127,106 @@ function renderQuestion() {
         html = `<span class="eyebrow">A LITTLE HELP</span><h2>Work one step at a time</h2><p>Hints are optional. The reference solution stays closed.</p>${q.hints.slice(0, hintCount).map((h, i) => notice('Hint ' + (i + 1), h)).join('')}<button class="secondary" data-action="hint" ${hintCount >= q.hints.length ? 'disabled' : ''}>${hintCount >= q.hints.length ? 'All hints shown' : 'Reveal next hint'}</button><h3>Interview follow-ups</h3>${(q.followUps ?? []).map(f => `<p class="follow-up">${e(f)}</p>`).join('')}`;
     $('#question-body').innerHTML = html;
 }
-function dataPanel() {
-    const q = current, f = q.fixture ?? {};
-    let html = '<span class="eyebrow">SMALL, DETERMINISTIC DATA</span><h2>Inspect the inputs</h2>';
-    if (q.engine === 'sql' || q.renderer === 'semantic-model') {
-        const names = q.renderer === 'semantic-model' ? ['Sales', 'DimCustomer', 'DimProduct'] : ['customers', 'orders'];
-        for (const name of names)
-            html += `<h3>${name} <span class="muted">${fixtures[name].rows.length} rows</span></h3>${table(fixtures[name].rows)}`;
-        if (f.sqlTests)
-            html += `<details><summary>Expected result for the base fixture</summary>${table(f.sqlTests[0].rows, f.sqlTests[0].columns)}</details>`;
+function dataPanel() { return codeViews.dataPanel(viewContext()); }
+function schemaPanel() { return codeViews.schemaPanel(viewContext()); }
+function labTabs() { return workspaceViews.labTabs(workspaceViewsContext()); }
+function renderLabContent() { return workspaceViews.renderLabContent(workspaceViewsContext()); }
+function codePanel(text) { return workspaceViews.codePanel(workspaceViewsContext(), text); }
+async function mountCode(epoch) {
+    const host = $('#editor-host');
+    if (!host)
+        return;
+    const key = draftKey();
+    const h = await editorPool.attach(host, key, code(), current.language, value => { if (draftKey() !== key)
+        return; patch({ code: value, status: draft().status === 'completed' ? 'completed' : 'in-progress' }); }, () => void run());
+    if (epoch === labEpoch && key === draftKey()) {
+        editor = h;
+        editor.refresh();
     }
-    else if (q.pythonTests?.length)
-        html += q.pythonTests.map(t => `<details open><summary>${e(t.label)}</summary><h4>Arguments</h4>${pre(t.args)}<h4>Expected return</h4>${pre(t.expected)}</details>`).join('');
-    else if (f.tables) {
-        for (const [name, rows] of Object.entries(f.tables))
-            html += `<h3>${e(name)}</h3>${Array.isArray(rows) ? table(rows) : pre(rows)}`;
-        if (f.expected)
-            html += '<h3>Expected output</h3>' + table(f.expected);
-    }
-    else if (q.renderer === 'terminal') {
-        const t = terminal();
-        for (const [path, content] of Object.entries(t.files))
-            html += `<details><summary>${e(path)}</summary>${pre(content)}</details>`;
-    }
-    else if (q.renderer === 'git-visual') {
-        const s = git();
-        html += notice('Virtual repository', 'All files, commits and references stay inside this exercise. No connection to GitHub or your filesystem.');
-        html += table(Object.entries(s.branches).map(([branch, commit]) => ({ branch, commit })));
-        for (const [path, content] of Object.entries(s.files))
-            html += `<details><summary>${e(path)}</summary>${pre(content)}</details>`;
-    }
-    else if (f.tasks)
-        html += '<h3>Observed task metrics</h3>' + table(f.tasks);
-    else if (f.events)
-        html += '<h3>Events (supplied evidence)</h3>' + table(f.events);
-    else if (f.run_results)
-        html += '<h3>Run results</h3>' + table(f.run_results.results);
-    else
-        html += notice('Design / reasoning case', 'There is no hidden dataset. Use the task constraints and the evidence provided in the lab.');
-    return html;
 }
-function schemaPanel() {
-    const q = current;
-    let html = '<span class="eyebrow">CONTRACT & GRAIN</span><h2>Know what a row means</h2>';
-    if (q.engine === 'sql' || q.renderer === 'semantic-model') {
-        for (const name of q.renderer === 'semantic-model' ? ['Sales', 'DimCustomer', 'DimProduct'] : ['customers', 'orders'])
-            html += `<h3>${name}</h3>${table(fixtures[name].columns)}`;
-        html += notice('Grain', q.renderer === 'semantic-model' ? 'Sales: one order line. Dimensions: one row per key.' : 'customers: one customer. orders: one order. Do not multiply rows accidentally.');
-    }
-    else if (q.fixture?.schema)
-        html += pre(q.fixture.schema);
-    else if (q.renderer === 'dag-editor' || q.renderer === 'architecture-editor')
-        html += notice('Graph contract', 'Nodes have stable IDs, labels, roles and positions. Edges connect existing nodes. Cycles are rejected for DAG simulation. The Config tab edits the same graph as the canvas.');
-    else if (q.renderer === 'terminal')
-        html += notice('Pipeline contract', terminal().shell === 'powershell' ? 'PowerShell uses objects. Import-Csv initially creates string-valued properties; numeric comparisons need an explicit cast.' : 'Bash uses text streams. The virtual shell implements a documented subset, not a host shell.');
-    else if (q.renderer === 'git-visual')
-        html += steps(['Working tree: editable files', 'Index: next commit snapshot', 'Commit: immutable tree + parent(s)', 'Branch: movable reference; HEAD is symbolic or detached']);
-    else
-        html += notice('Interface contract', q.entrypoint ? `Implement ${q.entrypoint} with the parameters shown in the starter. Return the expected data structure; do not mutate inputs.` : 'This case is evidence-led review. State assumptions and validate the real platform separately.');
-    return html;
-}
-function labTabs() { switch (current.renderer) {
-    case 'git-visual': return ['Workspace', 'Files', 'Diff', 'Predict'];
-    case 'terminal': return ['Workspace', 'Files'];
-    case 'semantic-model': return ['Workspace', 'Model', 'Rows'];
-    case 'dag-editor': return ['Workspace', 'Config', 'Code', 'Run grid'];
-    case 'architecture-editor': return ['Workspace', 'Config', 'Script', 'Mermaid', 'Trade-offs'];
-    case 'performance-investigation': return ['Workspace', 'Evidence', 'Code'];
-    case 'pipeline-investigation': return ['Workspace', 'Artifacts', 'Code'];
-    case 'config-editor': return ['Workspace', 'Evidence'];
-    default: return ['Workspace', ...(current.renderer === 'pyspark-editor' ? ['Plan', 'Sample rows'] : [])];
-} }
-function renderLab() {
-    const epoch = ++labEpoch;
-    editorEpoch++;
-    editor?.destroy();
-    editor = null;
-    if (!labTabs().includes(labTab))
-        labTab = 'Workspace';
-    $('#lab-toolbar').innerHTML = `<nav class="panel-tabs compact" aria-label="Specialist lab views">${tabs(labTabs(), labTab, 'data-lab-tab')}</nav><div class="lab-tools"><button class="icon-button" data-action="focus" aria-label="Toggle focused lab" aria-pressed="${store.settings.focus}">${icon('layout')}</button><button class="text-button" data-action="reset-lab">Reset</button></div>`;
-    const host = $('#lab-content'), q = current, r = q.renderer;
-    if (r === 'git-visual') {
-        host.innerHTML = gitPanel();
-        return;
-    }
-    if (r === 'terminal') {
-        host.innerHTML = terminalPanel();
-        return;
-    }
-    if (r === 'semantic-model') {
-        if (labTab === 'Workspace') {
-            host.innerHTML = `<div class="semantic-summary"><div><span class="eyebrow">SALES TEACHING MODEL</span><strong id="kpi-value">${semanticKPI()}</strong><small>Current measure preview</small></div><div class="slicers"><label>Country<select id="country">${options(['All', 'Norway', 'Sweden', 'Denmark'], draft().country ?? 'All')}</select></label><label>Category<select id="category">${options(['All', 'Hardware', 'Accessories'], draft().category ?? 'All')}</select></label></div></div><div class="code-context"><span>${e(q.language)}</span><small>${e(q.engine === 'dax-subset' ? 'DAX teaching subset - not Power BI' : 'Record your grain and relationship reasoning')}</small></div><div id="editor-host" class="editor-host"></div><div class="lab-footnote">${e(DAX_SUPPORT)}</div>`;
-            mountCode(epoch);
-        }
-        else if (labTab === 'Model')
-            host.innerHTML = graphPanel(true);
-        else
-            host.innerHTML = `<div class="panel-scroll"><h3>Visible Sales rows</h3>${table(visibleRows('Sales', fixtures, graph(), { country: draft().country ?? 'All', category: draft().category ?? 'All' }))}<p class="muted">Change country/category in Workspace, or deactivate a relationship in Model.</p></div>`;
-        return;
-    }
-    if (r === 'dag-editor' || r === 'architecture-editor') {
-        if (labTab === 'Workspace')
-            host.innerHTML = graphPanel(false);
-        else if (labTab === 'Config')
-            host.innerHTML = `<div class="config-graph"><div class="notice compact-notice"><strong>One source of truth</strong><p>This JSON and the canvas share the saved graph. Apply to validate IDs, edges and coordinates.</p></div><textarea id="graph-config" class="code-fallback" aria-label="Graph configuration JSON">${e(JSON.stringify(graph(), null, 2))}</textarea><div class="inline-actions"><button class="primary" data-action="apply-graph">Apply graph configuration</button><button class="secondary" data-action="export-graph">Export JSON</button></div></div>`;
-        else if (labTab === 'Code') {
-            host.innerHTML = codePanel('Illustrative source - simulation uses the graph configuration, not this code.');
-            mountCode(epoch);
-        }
-        else if (labTab === 'Run grid')
-            host.innerHTML = `<div class="panel-scroll"><h3>Deterministic run grid</h3>${runGrid.length ? table(runGrid) : notice('No simulation yet', 'Run the graph to inspect states, attempts and fixture durations.')}<p class="muted">Durations are declared fixture values, not observed cloud performance.</p></div>`;
-        else if (labTab === 'Script')
-            host.innerHTML = `<div class="config-graph"><div class="notice compact-notice"><strong>Original diagram script</strong><p>Use a[Label] -&gt; b[Label]. Applying updates the same saved graph and preserves existing node settings.</p></div><textarea id="diagram-script" class="code-fallback" aria-label="Original diagram script">${e(draft().diagram ?? toDiagram(graph()))}</textarea><div class="inline-actions"><button class="primary" data-action="apply-script">Apply diagram script</button><button class="secondary" data-action="export-svg">Export SVG</button></div></div>`;
-        else if (labTab === 'Mermaid')
-            host.innerHTML = mermaidPanel();
-        else
-            host.innerHTML = `<div class="panel-scroll"><h3>Compare the design choices</h3>${q.fixture?.comparison ? table(q.fixture.comparison) : steps(q.visual?.steps ?? q.concept)}${q.fixture?.constraints ? pre(q.fixture.constraints) : ''}${notice('Explain trade-offs', 'A connected diagram is not proof of production security, sizing, reliability or correctness.')}</div>`;
-        return;
-    }
-    if (r === 'performance-investigation') {
-        if (labTab === 'Code') {
-            host.innerHTML = codePanel('Propose a change. No Spark cluster or performance predictor is running.');
-            mountCode(epoch);
-        }
-        else if (labTab === 'Evidence')
-            host.innerHTML = `<div class="panel-scroll"><h3>Task-level evidence</h3>${table(q.fixture?.tasks ?? [])}<h3>Supplied plan excerpt</h3>${pre(q.fixture?.plan ?? '')}</div>`;
-        else
-            host.innerHTML = performancePanel();
-        return;
-    }
-    if (r === 'pipeline-investigation') {
-        if (labTab === 'Code') {
-            host.innerHTML = codePanel('Suggested model repair - not compiled by dbt.');
-            mountCode(epoch);
-        }
-        else if (labTab === 'Artifacts')
-            host.innerHTML = `<div class="panel-scroll"><h3>manifest.json (curated subset)</h3>${pre(q.fixture?.manifest)}<h3>run_results.json (curated subset)</h3>${pre(q.fixture?.run_results)}</div>`;
-        else
-            host.innerHTML = `<div class="panel-scroll"><div class="section-header"><span class="eyebrow">DBT RUN INVESTIGATION</span><span class="chip">Fixture evidence</span></div>${graphSVG(graph())}<h3>What failed, and what was skipped?</h3>${table(q.fixture?.run_results?.results ?? [])}<label class="stacked-label">Your diagnosis<textarea id="diagnosis" placeholder="Name the upstream failure and the downstream consequence...">${e(draft().diagnosis ?? '')}</textarea></label>${notice('Lineage is not a scheduler trace', 'The graph reflects the supplied manifest relationships; run status is supplied evidence. Edits do not regenerate dbt artifacts.')}</div>`;
-        return;
-    }
-    if (r === 'config-editor' && labTab === 'Evidence') {
-        host.innerHTML = configEvidence();
-        return;
-    }
-    if (r === 'multi-choice-reasoning') {
-        host.innerHTML = `<div class="panel-scroll"><span class="eyebrow">CHOOSE, THEN EXPLAIN</span><h2>Which diagnosis fits?</h2><div class="choice-list">${(q.fixture?.options ?? []).map((o) => `<label class="choice"><input type="radio" name="answer" value="${e(o.id)}" ${draft().answer === o.id ? 'checked' : ''}><span>${e(o.label)}</span></label>`).join('')}</div><label class="stacked-label">Reasoning<textarea id="diagnosis" placeholder="Explain why, and why not the other choices...">${e(draft().diagnosis ?? '')}</textarea></label></div>`;
-        return;
-    }
-    if (r === 'pyspark-editor' && labTab === 'Plan') {
-        host.innerHTML = `<div class="panel-scroll"><h3>Illustrative transformation plan</h3>${steps(q.visual?.steps ?? [])}${pre(q.fixture?.plan)}${notice('Not a live physical plan', q.fixture?.planNotice ?? 'This is a supplied plan sketch. It is not generated from your draft, and no Spark execution is claimed.')}</div>`;
-        return;
-    }
-    if (r === 'pyspark-editor' && labTab === 'Sample rows') {
-        host.innerHTML = `<div class="panel-scroll">${dataPanel()}</div>`;
-        return;
-    }
-    host.innerHTML = codePanel(r === 'pyspark-editor' ? 'PySpark draft - sample rows and plan are supplied, not computed. Use Deepnote for an actual runtime.' : r === 'config-editor' ? 'Bounded text checks only. No terraform apply, kubectl, or Docker daemon.' : q.executionMode === 'review' ? 'Guided review - your reasoning is saved; no interpreter is claimed.' : q.engine === 'sql' ? 'Real SQL on small in-memory fixtures. First Run loads DuckDB-Wasm.' : 'Real Python in a disposable worker. First Run loads Pyodide.');
-    mountCode(epoch);
-}
-function codePanel(text) { return `<div class="code-context"><span>${e(current.language)}</span><small>${e(current.executionMode === 'execute' ? 'Runtime loads on demand' : 'No remote execution')}</small></div><div id="editor-host" class="editor-host"></div><div class="lab-footnote">${e(text)}</div>`; }
-async function mountCode(epoch) { const host = $('#editor-host'); if (!host)
-    return; const editId = ++editorEpoch, qid = current.id; const h = await mountEditor(host, code(), current.language, value => { if (current.id !== qid)
-    return; patch({ code: value, status: draft().status === 'completed' ? 'completed' : 'in-progress' }); }, () => void run()); if (epoch !== labEpoch || editId !== editorEpoch) {
-    h.destroy();
-    return;
-} editor = h; }
-function semanticKPI() { if (current.engine !== 'dax-subset')
-    return 'Grain first'; try {
-    return formatNumber(evaluateDax(code(), fixtures, graph(), { country: draft().country ?? 'All', category: draft().category ?? 'All' }).value);
-}
-catch {
-    return 'Not evaluated';
-} }
-function graphPanel(model) {
-    const g = graph(), n = g.nodes.find(x => x.id === selectedNode), architecture = current.renderer === 'architecture-editor';
-    return `<div class="graph-workspace"><div class="graph-actions"><span class="eyebrow">${model ? 'RELATIONSHIPS & GRAIN' : architecture ? 'YOUR DESIGN' : 'DEPENDENCY CANVAS'}</span><div><button class="text-button" data-action="undo-graph" ${graphUndo.length ? '' : 'disabled'}>Undo</button><button class="text-button" data-action="layout-graph">Auto layout</button><button class="text-button" data-action="add-node">+ Node</button></div></div><div class="graph-canvas" id="graph-canvas">${graphSVG(g, selectedNode, runStatuses)}</div><div class="graph-inspector">${n ? `<div class="node-fields"><label>Selected node<input id="node-label" value="${e(n.label)}" aria-label="Node label"></label><label>Role<input id="node-role" value="${e(n.role)}" aria-label="Node role"></label>${!model && !architecture ? `<label>Retries<select id="node-retries">${options(['0', '1', '2', '3'], String(n.retries ?? 0))}</select></label><label>Trigger rule<select id="node-trigger">${options(['all_success', 'all_done', 'one_success', 'none_failed_min_one_success'], n.triggerRule ?? 'all_success')}</select></label><label class="checkbox-label"><input id="node-transient" type="checkbox" ${n.transient ? 'checked' : ''}>Transient failure</label><label class="checkbox-label"><input id="node-skip" type="checkbox" ${n.skip ? 'checked' : ''}>Skip task</label>` : ''}<button class="text-button danger" data-action="delete-node">Remove node</button></div>` : `<p class="muted">Select or drag a node. Arrow keys move a selected node. Use Config for the shared JSON representation.</p>`}${model ? `<label class="grain-label">Fact grain<select id="grain">${options(['not-selected', 'order', 'order-line', 'customer'], draft().grain ?? 'not-selected')}</select></label>` : ''}<div class="edge-list">${g.edges.map(edge => `<div class="edge-row"><label class="checkbox-label"><input type="checkbox" data-edge-active="${e(edge.id)}" ${edge.active !== false ? 'checked' : ''}><span>${e(g.nodes.find(n => n.id === edge.from)?.label ?? edge.from)} <b>&rarr;</b> ${e(g.nodes.find(n => n.id === edge.to)?.label ?? edge.to)}</span></label>${current.template === 'watermark' ? `<select data-edge-condition="${e(edge.id)}" aria-label="Dependency condition">${options(['Succeeded', 'Failed', 'Completed', 'Skipped'], edge.condition ?? 'Succeeded')}</select>` : ''}<button class="icon-button" data-remove-edge="${e(edge.id)}" aria-label="Remove ${e(edge.from)} to ${e(edge.to)}">${icon('close')}</button></div>`).join('')}</div><div class="connect-row"><select id="edge-from" aria-label="Connect from">${options(g.nodes.map(n => n.id), g.nodes[0]?.id ?? '')}</select><span>&rarr;</span><select id="edge-to" aria-label="Connect to">${options(g.nodes.map(n => n.id), g.nodes[1]?.id ?? '')}</select><button class="secondary" data-action="connect-nodes">Connect</button></div></div></div>`;
-}
-function gitPanel() {
-    const s = git();
-    if (labTab === 'Predict')
-        return gitPredictionPanel();
-    if (labTab === 'Diff')
-        return `<div class="panel-scroll"><h3>Working tree &rarr; index</h3>${pre(gitDiff(s.index, s.files) || 'No unstaged changes.')}<h3>Index &rarr; HEAD</h3>${pre(gitDiff(commitAt(s, headId(s)).tree, s.index) || 'No staged changes.')}</div>`;
-    if (labTab === 'Files') {
-        selectedFile = Object.hasOwn(s.files, selectedFile) ? selectedFile : Object.keys(s.files)[0];
-        return `<div class="virtual-file-view"><label>Working-tree file<select id="git-file">${options(Object.keys(s.files), selectedFile)}</select></label><textarea id="virtual-file" class="code-fallback" aria-label="Virtual Git working-tree file">${e(s.files[selectedFile] ?? '')}</textarea><div class="inline-actions"><button class="primary" data-action="save-git-file">Save working file</button><button class="secondary" data-action="stage-file">Stage this file</button><span class="muted">Saving changes the working tree, not the index.</span></div></div>`;
-    }
-    const refs = aheadBehind(s, s.branches.main ?? headId(s), s.tracking['origin/main'] ?? headId(s));
-    const c = s.commits.find(c => c.id === selectedCommit);
-    return `<div class="git-workspace"><div class="git-summary"><span class="chip">SIMULATION</span><strong>HEAD &rarr; ${e(s.head ?? 'detached at ' + headId(s))}</strong><span class="muted">main: ${refs.ahead} ahead / ${refs.behind} behind tracking</span></div><div class="git-graph">${gitGraphSVG(s, selectedCommit)}</div><div class="git-middle"><div class="commit-inspector">${c ? `<span class="eyebrow">COMMIT ${e(c.id)}</span><strong>${e(c.message)}</strong><p>Parent${c.parents.length === 1 ? '' : 's'}: ${e(c.parents.join(', ') || 'none')}</p><p>${e(Object.keys(c.tree).join(', '))}</p>` : `<span class="eyebrow">CONNECTED STATE</span><p>Click a commit to inspect its parents and snapshot. Run commands to move real simulated refs.</p>`}</div><div class="git-state-summary"><div><span>Working tree</span><strong>${Object.keys(s.files).length} files</strong></div><div><span>Index</span><strong>${Object.keys(s.index).length} files</strong></div><div><span>Commits</span><strong>${s.commits.length}</strong></div></div></div><div class="terminal-console" aria-live="polite">${s.history.length ? s.history.slice(-12).map(x => pre(x)).join('') : '<p>Virtual Git ready. Type <code>git status</code> or <code>git help</code>.</p>'}</div><form class="command-line" id="git-form"><label for="git-command">git &gt;</label><input id="git-command" autocomplete="off" spellcheck="false" placeholder="git status" aria-label="Virtual Git command"><button class="primary" type="submit">Run command</button></form><div class="lab-footnote">No host, GitHub or remote access. Merge conflicts are whole-file teaching conflicts; rebase supports linear history only.</div></div>`;
-}
-function terminalPanel() {
-    const s = terminal();
-    if (labTab === 'Files') {
-        selectedFile = Object.hasOwn(s.files, selectedFile) ? selectedFile : Object.keys(s.files)[0];
-        return `<div class="virtual-file-view"><label>Virtual filesystem<select id="terminal-file">${options(Object.keys(s.files), selectedFile)}</select></label><textarea id="virtual-file" class="code-fallback" aria-label="Virtual shell file">${e(s.files[selectedFile] ?? '')}</textarea><div class="inline-actions"><button class="primary" data-action="save-terminal-file">Save virtual file</button><span class="muted">No access to your actual disk.</span></div></div>`;
-    }
-    return `<div class="terminal-workspace"><div class="terminal-heading"><label>Shell<select id="shell-select">${options(['bash', 'powershell'], s.shell)}</select></label><span class="chip">VIRTUAL FILESYSTEM</span><button class="text-button" data-action="open-git">Open Git Lab</button></div><div class="terminal-console" aria-live="polite">${s.history.length ? s.history.map(h => `<div class="console-entry ${h.ok ? '' : 'console-error'}"><div class="console-command">${e(s.shell === 'bash' ? '$' : 'PS>')} ${e(h.command)}</div><span class="output-type">${e(h.type)}</span>${pre(h.output)}</div>`).join('') : `<h3>${s.shell === 'bash' ? 'Bash text streams' : 'PowerShell object pipelines'}</h3><p>Practice against small local fixtures, with no operating-system access.</p><p>Type <code>${s.shell === 'bash' ? 'help' : 'Get-Help'}</code> for the supported command vocabulary.</p>`}</div><form class="command-line" id="terminal-form"><label for="terminal-command">${s.shell === 'bash' ? '$' : 'PS&gt;'}</label><input id="terminal-command" autocomplete="off" spellcheck="false" aria-label="Virtual shell command" placeholder="${s.shell === 'bash' ? 'cat pipeline.log' : 'Get-Content pipeline.log'}"><button type="submit" class="primary">Run command</button></form><div class="lab-footnote">${s.shell === 'bash' ? 'Text-stream simulation. Literal grep, simple pipes and a small safe command vocabulary.' : 'Object-pipeline simulation. This is not a full PowerShell interpreter; formatting is not converted to text between stages.'}</div></div>`;
-}
-function performancePanel() { const f = current.fixture ?? {}, tasks = f.tasks ?? [], max = Math.max(1, ...tasks.map((t) => Number(t.duration_s) || 0)); return `<div class="panel-scroll"><div class="section-header"><span class="eyebrow">PERFORMANCE INVESTIGATOR</span><span class="chip">Supplied observation fixture</span></div><div class="metric-cards">${(Array.isArray(f.metrics) ? f.metrics : Object.entries(f.metrics ?? {}).map(([label, value]) => ({ label, value }))).map((m) => `<div><span>${e(m.label)}</span><strong>${e(m.value)}</strong></div>`).join('')}</div><h3>Task duration distribution</h3><div class="task-bars">${tasks.map((t) => `<div><span>Task ${e(t.task)}</span><div><i style="width:${Math.max(2, 100 * Number(t.duration_s) / max)}%"></i></div><strong>${e(formatNumber(t.duration_s))} s</strong></div>`).join('')}</div><h3>Which explanation matches the evidence?</h3><div class="choice-list">${(f.diagnoses ?? []).map((d) => `<label class="choice"><input type="radio" name="diagnosis-choice" value="${e(d.id)}" ${draft().answer === d.id ? 'checked' : ''}><span>${e(d.label)}</span></label>`).join('')}</div><label class="stacked-label">What would you inspect next?<textarea id="diagnosis" placeholder="Name the next metric or plan detail, and one trade-off...">${e(draft().diagnosis ?? '')}</textarea></label><p class="muted">The chart visualizes supplied measurements. It does not predict the effect of changing partitions or cluster size.</p></div>`; }
-function configEvidence() { const f = current.fixture ?? {}; return `<div class="panel-scroll">${notice('Supplied evidence, not regenerated output', 'Editing your draft does not run a cloud provider, rebuild an image, replan resources or update this evidence.')}${f.graph ? graphSVG(validateGraph(f.graph)) : ''}${f.events ? '<h3>Events</h3>' + table(f.events) : ''}${f.logs ? '<h3>Logs</h3>' + pre(f.logs) : ''}${f.plan ? '<h3>Plan JSON</h3>' + pre(f.plan) : ''}${f.layers ? '<h3>Layer cache evidence</h3>' + table(f.layers) : ''}</div>`; }
-function mermaidPanel() { return `<div class="mermaid-workspace"><div class="notice compact-notice"><strong>Mermaid preview (optional)</strong><p>Flowchart, ER and architecture-beta syntax can be rendered on demand. Rendering loads a pinned library; the offline canvas remains available.</p></div><textarea id="mermaid-source" class="code-fallback" aria-label="Mermaid source">${e(draft().mermaid ?? toMermaid(graph()))}</textarea><div class="inline-actions"><button class="primary" data-action="render-mermaid">Render Mermaid</button><button class="secondary" data-action="export-mermaid">Export .mmd</button></div><div id="mermaid-output" class="mermaid-output"></div></div>`; }
+function semanticKPI() { return workspaceViews.semanticKPI(workspaceViewsContext()); }
+function graphPanel(model) { return pipelineViews.graphPanel(viewContext(), model); }
+function gitPanel() { return systemsViews.gitPanel(viewContext()); }
+function terminalPanel() { return systemsViews.terminalPanel(viewContext()); }
+function performancePanel() { return systemsViews.performancePanel(viewContext()); }
+function configEvidence() { return systemsViews.configEvidence(viewContext()); }
+function mermaidPanel() { return workspaceViews.mermaidPanel(workspaceViewsContext()); }
 function renderDrawer() {
-    $('#drawer-tabs').innerHTML = `<div>${tabs(['Results', 'Explanation', 'Visual', 'Deepnote', 'Notes', 'History'], drawerTab, 'data-drawer-tab')}</div><button class="icon-button" data-action="collapse-drawer" aria-label="${store.settings.drawerCollapsed ? 'Expand' : 'Collapse'} results drawer" aria-expanded="${!store.settings.drawerCollapsed}">${icon('chevron')}</button>`;
-    const host = $('#drawer-body');
-    if (drawerTab === 'Results')
-        host.innerHTML = resultPanel();
-    else if (drawerTab === 'Explanation')
-        host.innerHTML = explanationPanel();
-    else if (drawerTab === 'Visual')
-        host.innerHTML = visualPanel();
-    else if (drawerTab === 'Deepnote')
-        host.innerHTML = deepnotePanel();
-    else if (drawerTab === 'Notes')
-        host.innerHTML = `<div class="notes-panel"><div><span class="eyebrow">YOUR WORKING MEMORY</span><span class="muted">Private to this browser; included in your backup.</span></div><textarea id="notes" placeholder="Write the invariant, the mistake to avoid, or your interview explanation..." aria-label="Personal exercise notes">${e(draft().notes ?? '')}</textarea><div class="notes-settings"><label>Status<select id="status">${options(['not-started', 'in-progress', 'completed', 'review'], draft().status ?? 'not-started')}</select></label><label>Confidence<select id="confidence">${options(['New', 'Learning', 'Review', 'Confident'], draft().confidence ?? 'New')}</select></label></div></div>`;
-    else
-        host.innerHTML = `<div class="history-panel">${draft().attempts?.length ? [...draft().attempts].reverse().map(a => `<details class="history-entry"><summary><span class="result-dot ${a.passed === true ? 'pass' : a.passed === false ? 'fail' : 'review'}"></span><time>${e(new Date(a.at).toLocaleString())}</time><strong>${e(a.kind)}</strong><span>${e(a.summary)}</span></summary>${a.code ? pre(a.code) : '<p>No code snapshot for this command-based attempt.</p>'}</details>`).join('') : notice('No attempts yet', 'Runs, simulations and reviews are recorded here. A review is not marked as executed code.')}</div>`;
+    const effective = resolveLayout(presentation, workspace, window.innerWidth, shellState);
+    $('#drawer-tabs').innerHTML = outputControls(activePreferences(presentation, workspace), effective.outputSize, outputTab);
+    $('#drawer-body').innerHTML = outputDetail(result, outputTab, resultPanel);
+    const summary = runSummary(runState, answerFingerprint(draft(), current.starter));
+    if (summary.stale)
+        $('#drawer-body').insertAdjacentHTML('afterbegin', notice('Stale output', 'The answer or simulation inputs changed after this attempt. Run again to check the current state.'));
+    renderRail();
+    renderTool();
+    updateRunBadge();
 }
-function resultPanel() {
-    if (!result)
-        return `<div class="result-empty"><span class="empty-icon">${icon('play')}</span><div><h3>Your next attempt starts here</h3><p>Inspect the question, try a solution, then <strong>${e(actionLabel())}</strong>. Explanation stays closed until you choose it.</p></div></div>`;
-    const r = result, checks = r.checks ?? [], passed = checks.filter(c => c.passed).length;
-    return `<div class="result-header"><span class="result-state ${r.error ? 'error' : checks.length && passed < checks.length ? 'attention' : 'success'}">${r.error ? 'NOT EXECUTED / ERROR' : checks.length ? `${passed} / ${checks.length} checks` : 'Review recorded'}</span><span>${e(r.engine)}</span><span class="muted">${r.mode === 'execute' ? Math.round(r.elapsedMs) + ' ms including adapter work' : e(r.mode ?? 'review')}</span></div>${r.error ? notice('Attempt could not complete', r.error, 'error') : ''}${r.notice ? `<p class="result-notice">${e(r.notice)}</p>` : ''}${checks.length ? `<div class="checks">${checks.map(c => `<details class="check-item ${c.passed ? 'pass' : 'fail'}"><summary><span>${c.passed ? '&#10003;' : '&#215;'}</span>${e(c.label)}</summary><p>${e(c.detail)}</p></details>`).join('')}</div>` : ''}${r.rows.length ? table(r.rows, r.columns) : ''}${r.output ? pre(r.output) : ''}${r.truncated ? notice('Display capped', 'Only the first 200 rows are shown.') : ''}`;
-}
-function explanationPanel() {
-    const q = current;
-    if (!revealed)
-        return `<div class="reveal-card"><span class="eyebrow">LEARN AFTER YOUR ATTEMPT</span><h3>Keep the answer out of sight until you are ready.</h3><p>Revealing does not overwrite your draft or mark the exercise as solved.</p><button class="secondary" data-action="reveal">Reveal explanation and reference</button></div>`;
-    return `<div class="explanation-grid"><section><span class="eyebrow">WHY THIS WORKS</span><p>${e(q.explanation)}</p><h4>Self-review checklist</h4>${(q.rubric ?? q.requirements).map((r, i) => `<label class="rubric-item"><input type="checkbox" data-rubric="${i}" ${(draft().rubric ?? []).includes(String(i)) ? 'checked' : ''}><span>${e(r)}</span></label>`).join('')}<h4>Official references</h4><div class="source-links">${q.sources.map(s => `<a href="${e(s.url)}" target="_blank" rel="noopener noreferrer">${e(s.label)} &nearr;</a>`).join('')}</div></section><section><div class="section-header"><span class="eyebrow">REFERENCE APPROACH</span><button class="text-button" data-action="compare">Compare with my draft</button></div>${pre(q.solution)}<div id="comparison"></div></section></div>`;
-}
-function visualPanel() { let html = `<div class="visual-panel"><span class="eyebrow">MAKE THE CONCEPT VISIBLE</span>${steps(current.visual?.steps ?? current.concept)}${current.visual?.detail ? `<p>${e(current.visual.detail)}</p>` : ''}`; if (['dag-editor', 'architecture-editor', 'semantic-model'].includes(current.renderer))
-    html += graphSVG(graph(), selectedNode, runStatuses); if (current.renderer === 'git-visual')
-    html += gitGraphSVG(git(), selectedCommit); if (current.renderer === 'pyspark-editor')
-    html += `<h3>Expected sample output</h3>${table(current.fixture?.expected ?? [])}${pre(current.fixture?.plan)}`; return html + '</div>'; }
-function deepnotePanel() { const links = validDeepnoteLinks(current, store.settings.deepnoteMap ?? {}), refs = [...(current.deepnoteLinks ?? []), ...(mapping[current.id] ?? [])]; return `<div class="deepnote-panel"><div><span class="eyebrow">OPTIONAL COMPANION</span><h3>Continue in a notebook</h3><p>CodeDELeet keeps your draft and progress here. Deepnote is a separate environment; nothing is silently uploaded or executed.</p>${links.length ? `<div class="companion-links">${links.map(l => `<a class="secondary" href="${e(l.url)}" target="_blank" rel="noopener noreferrer">${e(l.label)} &nearr;</a>`).join('')}</div>` : notice('No notebook URL configured', 'The mapping keeps stable exercise IDs and notebook headings, but no project URL is invented. Add your own links in Settings.')}${refs.length ? `<details><summary>Mapped notebook sections</summary>${refs.map(l => `<p><strong>${e(l.notebook ?? l.label)}</strong><br>${e(l.exerciseRef ?? '')}</p>`).join('')}</details>` : ''}<a class="text-button download-companion" href="./companion/Deepnote_Interview_Suite_v1_4.zip" download>Download the supplied 3-project notebook suite</a></div><div><h4>Use your current attempt</h4><p>Export your draft, open the relevant notebook, and run it in the appropriate environment. PySpark support depends on that notebook runtime.</p><button class="secondary" data-action="export-code">Export my draft</button>${safeDeepnoteURL(current.deepnoteEmbedUrl, true) ? '<button class="secondary" data-action="embed-deepnote">Load configured public preview</button>' : ''}<div id="deepnote-embed"></div></div></div>`; }
-function applyLayout() { const { split, drawerHeight } = clampLayout(store.settings.split, store.settings.drawerHeight); const ws = $('#workstation'); ws.style.setProperty('--split', split + '%'); ws.style.setProperty('--drawer', Math.min(drawerHeight, Math.max(120, ws.clientHeight - 160)) + 'px'); ws.classList.toggle('drawer-collapsed', !!store.settings.drawerCollapsed); ws.classList.toggle('focus-lab', !!store.settings.focus); ws.dataset.mobile = mobilePanel; $('#column-separator').setAttribute('aria-valuenow', String(split)); $('#drawer-separator').setAttribute('aria-valuenow', String(drawerHeight)); editor?.refresh(); }
+function resultPanel() { return readingViews.resultPanel(readingViewsContext()); }
+function explanationPanel() { return readingViews.explanationPanel(readingViewsContext()); }
+function visualPanel() { return readingViews.visualPanel(readingViewsContext()); }
+function deepnotePanel() { return readingViews.deepnotePanel(readingViewsContext()); }
+function applyLayout() { return shellViews.applyLayout(shellViewsContext()); }
 function clockText() { const secs = Math.floor((timerElapsed + (timerStart ? Date.now() - timerStart : 0)) / 1000); return `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`; }
 setInterval(() => { const el = document.querySelector('#timer-value'); if (el)
     el.textContent = clockText(); }, 1000);
-function navigate(id) { $('#toast').classList.remove('visible'); const q = questions.find(q => q.id === id); if (!q)
-    return; if (busy) {
-    cancelRuntime();
-    busy = false;
-    runEpoch++;
-} persist(true); const changedLab = workspace !== q.workspace; current = q; workspace = q.workspace; store.settings.lastQuestion = id; result = null; runGrid = []; runStatuses = {}; terminalResult = null; selectedNode = ''; selectedCommit = ''; selectedFile = ''; graphUndo = []; leftTab = 'Task'; drawerTab = 'Results'; labTab = 'Workspace'; hintCount = 0; revealed = false; timerStart = null; timerElapsed = 0; if (changedLab) {
-    search = '';
-    difficulty = 'All levels';
-    technology = 'All topics';
-    queue = 'All exercises';
-} location.hash = 'exercise=' + encodeURIComponent(id); shellHTML(); persist(); }
+function navigate(id, caseId, taskId) {
+    const q = questions.find(q => q.id === id);
+    if (!q)
+        return;
+    if (current) {
+        captureView();
+        if (busy) {
+            cancelRuntime();
+            busy = false;
+            runEpoch++;
+        }
+        persist(true);
+    }
+    const nextCase = caseId ? cases.find(c => c.id === caseId) ?? null : null;
+    activeCase = nextCase;
+    if (activeCase && taskId)
+        selectTask(store, activeCase, taskId);
+    const changedLab = workspace !== q.workspace;
+    current = q;
+    workspace = q.workspace;
+    store.settings.lastQuestion = id;
+    store.settings.activeCase = activeCase?.id;
+    if (changedLab) {
+        search = '';
+        difficulty = 'All levels';
+        technology = 'All topics';
+        queue = 'All exercises';
+        conceptFilter = '';
+        priorityFilter = 'All priorities';
+    }
+    restoreView();
+    setRoute();
+    shellHTML();
+    persist();
+}
 async function run() {
     if (busy) {
         cancelRuntime();
         runEpoch++;
         busy = false;
+        runState.phase = 'cancelled';
         result = { engine: 'Cancelled', columns: [], rows: [], elapsedMs: 0, error: 'The worker was terminated. Your draft and notes are preserved.' };
         drawerTab = 'Results';
-        store.settings.drawerCollapsed = false;
+        runState.result = result;
+        setOutputSize(presentation, workspace, shellState, 'compact');
         renderHeader();
         renderDrawer();
         applyLayout();
         return;
     }
-    const q = current, token = ++runEpoch;
+    const q = current, key = draftKey(), runCode = code(), fingerprint = answerFingerprint(draft(), q.starter), token = ++runEpoch;
     busy = true;
+    runState = { phase: 'running', fingerprint, result: null };
     renderHeader();
     drawerTab = 'Results';
-    store.settings.drawerCollapsed = false;
+    if (resolveLayout(presentation, workspace, innerWidth, shellState).outputSize === 'closed')
+        setOutputSize(presentation, workspace, shellState, 'compact');
     result = { engine: 'Preparing attempt', columns: [], rows: [], elapsedMs: 0, notice: 'Preparing the selected execution or review mode.' };
     renderDrawer();
     applyLayout();
@@ -368,7 +244,7 @@ async function run() {
                 result = { engine: q.engine === 'sql' ? 'DuckDB-Wasm loading' : 'Pyodide loading', columns: [], rows: [], elapsedMs: 0, notice: m };
                 renderDrawer();
             } };
-            r = q.engine === 'sql' ? await executeSQL(q, code(), fixtures, progress) : await executePython(q, code(), progress);
+            r = q.engine === 'sql' ? await executeSQL(q, runCode, fixtures, progress) : await executePython(q, runCode, progress);
         }
         else if (q.renderer === 'git-visual') {
             const checks = gitGoal(q, git());
@@ -410,16 +286,18 @@ async function run() {
             r = { engine: 'Conceptual architecture review', mode: 'review', columns: [], rows: [], elapsedMs: 0, checks: graphChecks(graph(), q.template ?? 'fabric'), notice: 'Graph checks assess roles and reachability only. They do not verify real licensing, cost, security or capacity.' };
         else
             r = { engine: q.renderer === 'pyspark-editor' ? 'PySpark guided review - NOT EXECUTED' : 'Guided interview review', mode: 'review', columns: [], rows: [], elapsedMs: 0, notice: 'Your draft/reasoning was recorded. No automatic correctness claim: use the reference checklist, explain your choices, and validate with the appropriate external runtime.' };
-        if (token !== runEpoch || q.id !== current.id)
+        if (token !== runEpoch || key !== draftKey())
             return;
         result = r;
+        runState = { phase: 'complete', fingerprint, result: r };
         const checks = r.checks ?? [], passed = checks.length ? checks.every(c => c.passed) : null;
-        patch({ status: draft().status === 'completed' ? 'completed' : 'in-progress', attempts: [...(draft().attempts ?? []), { at: new Date().toISOString(), kind: r.engine, passed, summary: checks.length ? `${checks.filter(c => c.passed).length}/${checks.length} checks` : 'Review / no automated correctness claim', code: code().slice(0, 30000) }].slice(-100) }, true);
+        patch({ status: draft().status === 'completed' ? 'completed' : 'in-progress', attempts: [...(draft().attempts ?? []), { at: new Date().toISOString(), kind: r.engine, passed, summary: checks.length ? `${checks.filter(c => c.passed).length}/${checks.length} checks` : 'Review / no automated correctness claim', code: runCode.slice(0, 30000) }].slice(-100) }, true);
     }
     catch (error) {
         if (token !== runEpoch)
             return;
         result = { engine: 'Attempt not completed', columns: [], rows: [], elapsedMs: 0, error: error.message };
+        runState = { phase: q.executionMode === 'execute' && /fetch|network|worker could not|loading|failed to load|dynamically imported|timed out|importing a module/i.test(error.message) ? 'unavailable' : 'error', fingerprint, result };
         patch({ attempts: [...(draft().attempts ?? []), { at: new Date().toISOString(), kind: 'Error / not completed', passed: null, summary: error.message.slice(0, 500) }].slice(-100) }, true);
     }
     finally {
@@ -429,54 +307,13 @@ async function run() {
             renderHeader();
             renderDrawer();
             renderLibrary();
+            applyLayout();
         }
     }
 }
 function exportBackup() { persist(true); download('CodeDELeet-progress-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(store, null, 2)); }
-function settings() {
-    const dialog = $('#modal');
-    dialog.innerHTML = `<form method="dialog" class="dialog-header"><div><span class="eyebrow">LOCAL-FIRST WORKSPACE</span><h2>Settings & backups</h2></div><button class="icon-button" aria-label="Close settings">${icon('close')}</button></form><div class="dialog-body"><div class="settings-section"><h3>Your progress belongs to you</h3><p>Drafts, graphs, virtual repositories, notes, confidence and history live in this browser. A new domain or branch preview has separate storage: export here and import there.</p><div class="inline-actions"><button class="primary" id="settings-export">Export my backup</button><label class="secondary file-label">Merge backup<input type="file" id="backup-import" accept="application/json,.json"></label><button class="secondary" id="snapshot-export">Export pre-V2 snapshot</button></div>${storageBlocked ? notice('Storage needs attention', 'Saving is blocked to avoid overwriting an unreadable backup. Download the raw stored value, then deliberately start a fresh local session.', 'error') + '<div class="inline-actions"><button class="secondary" id="raw-export">Download raw stored value</button><button class="secondary danger" id="storage-reset">Start fresh local storage</button></div>' : ''}</div><div class="settings-section"><h3>Content packs</h3><p>Import a versioned JSON pack. Built-in exercise IDs are protected. Updating a pack never detaches drafts or silently removes questions.</p><label class="secondary file-label">Import / update a pack<input type="file" id="pack-import" accept="application/json,.json"></label><div>${store.customPacks.map(p => `<div class="custom-pack"><strong>${e(p.title)}</strong><span>v${p.version} &middot; ${p.questions.length} exercises</span><button class="text-button" data-export-pack="${e(p.id)}">Export</button></div>`).join('')}</div></div><div class="settings-section"><h3>Deepnote companion links</h3><p>Download the blank mapping, paste your own project/notebook URLs, then import it. Only explicit HTTPS Deepnote links are displayed; no API credentials are required.</p><div class="inline-actions"><button class="secondary" id="map-export">Download URL template</button><label class="secondary file-label">Import URL mapping<input type="file" id="map-import" accept="application/json,.json"></label></div></div><div class="settings-section"><h3>Runtime & layout</h3><p>SQL: DuckDB-Wasm ${RUNTIME_VERSIONS.duckdb}. Python: Pyodide ${RUNTIME_VERSIONS.pyodide}. Optional Mermaid: ${RUNTIME_VERSIONS.mermaid}. Downloads start only on explicit use. This page contains no service credentials or backend runner.</p><div class="inline-actions"><button class="secondary" id="runtime-reset">Reset workers & download consent</button><button class="secondary" id="layout-reset">Reset panel layout</button></div><p class="muted">Only run code you trust. Browser workers are not a security boundary against every form of hostile JavaScript/Python interoperability.</p></div><p class="muted">Version 2.0.0 &middot; Source, tests and migration notes are included in the delivery ZIP.</p></div>`;
-    dialog.showModal();
-    $('#settings-export').onclick = exportBackup;
-    $('#snapshot-export').onclick = () => { const raw = localStorage.getItem(STORAGE_KEY + '.pre-v2'); if (raw)
-        download('CodeDELeet-pre-v2.json', raw);
-    else
-        toast('No pre-upgrade value was present in this browser.'); };
-    if (storageBlocked) {
-        $('#raw-export').onclick = () => download('CodeDELeet-raw-recovery.txt', localStorage.getItem(STORAGE_KEY) ?? 'No value available.', 'text/plain');
-        $('#storage-reset').onclick = () => { if (confirm('Start fresh local storage? Download your raw backup first. This replaces the unreadable active value, not the pre-V2 snapshot.')) {
-            storageBlocked = false;
-            persist(true);
-            dialog.close();
-        } };
-    }
-    $('#backup-import').onchange = () => void readJSONFile($('#backup-import'), value => { store = mergeStores(store, value, builtins); recalc(); persist(true); dialog.close(); navigate(current.id); toast('Backup merged. Newer drafts win; this device\'s settings are retained.'); });
-    $('#pack-import').onchange = () => void readJSONFile($('#pack-import'), value => { const plan = planPackImport(store.customPacks, value, builtins); store.customPacks = plan.packs; recalc(); persist(true); dialog.close(); shellHTML(); toast(plan.summary); });
-    $('#map-export').onclick = () => download('deepnote-url-mapping.json', JSON.stringify({ schemaVersion: 1, links: mapping }, null, 2));
-    $('#map-import').onchange = () => void readJSONFile($('#map-import'), value => { if (value.schemaVersion !== 1 || !value.links || typeof value.links !== 'object' || Array.isArray(value.links))
-        throw Error('Expected schemaVersion 1 with a links object.'); const clean = {}; for (const [id, links] of Object.entries(value.links)) {
-        if (!safeId(id) || !Array.isArray(links) || links.length > 15)
-            throw Error('Invalid mapping entry.');
-        clean[id] = links.map(l => { if (typeof l.url !== 'string' || l.url && !safeDeepnoteURL(l.url) || !['exercise', 'concept', 'mock', 'reference', 'project'].includes(l.type) || typeof l.label !== 'string')
-            throw Error('Unsafe or invalid Deepnote link.'); return l; });
-    } store.settings.deepnoteMap = { ...store.settings.deepnoteMap, ...clean }; persist(true); dialog.close(); renderDrawer(); toast('Deepnote links saved. Blank URLs remain hidden.'); });
-    $('#runtime-reset').onclick = () => { cancelRuntime(); runEpoch++; busy = false; store.settings.runtimeConsent = false; store.settings.pyodideConsent = false; persist(true); renderHeader(); toast('Workers stopped. The next execution will ask before downloading.'); };
-    $('#layout-reset').onclick = () => { store.settings.split = 42; store.settings.drawerHeight = 238; store.settings.drawerCollapsed = false; store.settings.focus = false; persist(); applyLayout(); toast('Panel layout reset.'); };
-    dialog.querySelectorAll('[data-export-pack]').forEach(b => b.onclick = () => { const p = store.customPacks.find(p => p.id === b.dataset.exportPack); download(p.id + '.json', JSON.stringify(p, null, 2)); });
-}
-async function readJSONFile(input, apply) { const file = input.files?.[0]; if (!file)
-    return; try {
-    if (file.size > 8_000_000)
-        throw Error('Import limit: 8 MB.');
-    const value = JSON.parse(await file.text());
-    apply(value);
-}
-catch (error) {
-    toast(error.message, true);
-}
-finally {
-    input.value = '';
-} }
+function settings() { return settingsViews.settings(settingsViewsContext()); }
+async function readJSONFile(input, apply) { return settingsViews.readJSONFile(settingsViewsContext(), input, apply); }
 async function renderMermaid() { const source = $('#mermaid-source').value; if (source.length > 15000) {
     toast('Mermaid input limit: 15,000 characters.', true);
     return;
@@ -523,12 +360,16 @@ function command(which) {
         console.scrollTop = console.scrollHeight;
 }
 function resetLab() { if (!confirm('Reset the current code and lab state to the exercise fixture? Notes, bookmark, confidence and attempt history are preserved.'))
-    return; patch({ code: current.starter, graph: undefined, labState: undefined, diagram: undefined, mermaid: undefined, answer: undefined, diagnosis: undefined, grain: undefined }, true); result = null; runStatuses = {}; runGrid = []; terminalResult = null; graphUndo = []; selectedNode = ''; selectedCommit = ''; renderLab(); renderDrawer(); }
+    return; for (const key of inputMemory.keys())
+    if (key.startsWith(draftKey() + '|'))
+        inputMemory.delete(key); patch({ code: current.starter, graph: undefined, labState: undefined, diagram: undefined, mermaid: undefined, answer: undefined, diagnosis: undefined, grain: undefined }, true); result = null; runState = newRunStatus(); runStatuses = {}; runGrid = []; terminalResult = null; graphUndo = []; graphRedo = []; selectedNode = ''; selectedCommit = ''; void editorPool.replace(draftKey(), current.starter); renderLab(); renderDrawer(); }
 function bindControls() {
     $('#search').oninput = () => { search = $('#search').value; renderLibrary(); };
     app.onclick = (event) => {
         const target = event.target, button = target.closest('button,a');
         if (!button || button.hasAttribute('disabled'))
+            return;
+        if (handleShellClick(button))
             return;
         if (button.dataset.question) {
             navigate(button.dataset.question);
@@ -541,6 +382,8 @@ function bindControls() {
             search = '';
             difficulty = 'All levels';
             queue = 'All exercises';
+            conceptFilter = '';
+            priorityFilter = 'All priorities';
             const q = filtered()[0];
             if (q)
                 navigate(q.id);
@@ -552,21 +395,22 @@ function bindControls() {
             return;
         }
         if (button.dataset.labTab) {
+            rememberInputs();
             labTab = button.dataset.labTab;
             renderLab();
             return;
         }
         if (button.dataset.drawerTab) {
-            drawerTab = button.dataset.drawerTab;
-            store.settings.drawerCollapsed = false;
-            renderDrawer();
-            applyLayout();
-            persist();
+            openTool(button.dataset.drawerTab);
             return;
         }
         if (button.dataset.mobile) {
-            mobilePanel = button.dataset.mobile;
-            document.querySelectorAll('[data-mobile]').forEach(b => b.classList.toggle('active', b.dataset.mobile === mobilePanel));
+            shellState.mobile = { question: 'context', lab: 'artifact', drawer: 'output', tools: 'tools' }[button.dataset.mobile];
+            if (shellState.mobile === 'output')
+                setOutputSize(presentation, workspace, shellState, 'expanded');
+            if (shellState.mobile === 'tools' && !shellState.tool)
+                shellState.tool = 'Notes';
+            renderDrawer();
             applyLayout();
             return;
         }
@@ -574,6 +418,20 @@ function bindControls() {
             const g = graph();
             g.edges = g.edges.filter(x => x.id !== button.dataset.removeEdge);
             setGraph(g);
+            return;
+        }
+        if (button.dataset.inspectEdge) {
+            selectedEdge = button.dataset.inspectEdge;
+            selectedNode = '';
+            renderLab();
+            openTool('Inspector', true);
+            return;
+        }
+        if (button.dataset.investigateNode) {
+            selectedNode = button.dataset.investigateNode;
+            labTab = 'Workspace';
+            renderLab();
+            openTool('Inspector', true);
             return;
         }
         const action = button.dataset.action;
@@ -619,20 +477,23 @@ function bindControls() {
                     renderQuestion();
                     break;
                 case 'focus':
-                    store.settings.focus = !store.settings.focus;
-                    persist();
+                    toggleFocus(shellState, presentation);
+                    renderHeader();
+                    renderRail();
+                    renderTool();
                     applyLayout();
-                    renderLab();
+                    persist(true);
                     break;
                 case 'collapse-drawer':
-                    store.settings.drawerCollapsed = !store.settings.drawerCollapsed;
+                    setOutputSize(presentation, workspace, shellState, 'closed');
                     persist();
                     renderDrawer();
                     applyLayout();
                     break;
                 case 'reveal':
                     revealed = true;
-                    renderDrawer();
+                    patch({ revealed: true });
+                    renderTool(true);
                     break;
                 case 'compare':
                     $('#comparison').innerHTML = '<h4>Your draft (read-only comparison)</h4>' + pre(code());
@@ -645,8 +506,35 @@ function bindControls() {
                     break;
                 case 'undo-graph': {
                     const previous = graphUndo.pop();
-                    if (previous)
+                    if (previous) {
+                        graphRedo.push(graph());
                         setGraph(previous, false);
+                    }
+                    break;
+                }
+                case 'redo-graph': {
+                    const next = graphRedo.pop();
+                    if (next) {
+                        graphUndo.push(graph());
+                        setGraph(next, false);
+                    }
+                    break;
+                }
+                case 'fit-graph': {
+                    const canvas = document.querySelector('#graph-canvas');
+                    if (canvas) {
+                        canvas.scrollTo(0, 0);
+                        canvas.style.setProperty('--graph-zoom', '1');
+                    }
+                    break;
+                }
+                case 'zoom-in':
+                case 'zoom-out': {
+                    const canvas = document.querySelector('#graph-canvas');
+                    if (canvas) {
+                        const z = Number(canvas.style.getPropertyValue('--graph-zoom') || 1);
+                        canvas.style.setProperty('--graph-zoom', String(Math.max(.6, Math.min(2, z + (action === 'zoom-in' ? .2 : -.2)))));
+                    }
                     break;
                 }
                 case 'add-node': {
@@ -686,6 +574,7 @@ function bindControls() {
                     break;
                 }
                 case 'apply-graph':
+                    inputMemory.delete(draftKey() + '|' + labTab);
                     setGraph(validateGraph(JSON.parse($('#graph-config').value)));
                     toast('Graph configuration applied.');
                     break;
@@ -710,13 +599,15 @@ function bindControls() {
                         $('#deepnote-embed').innerHTML = `<iframe title="Configured Deepnote preview" src="${e(url)}" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" loading="lazy"></iframe><p class="muted">Read-only companion preview; availability and authentication are controlled by Deepnote.</p>`;
                     break;
                 }
-                case 'save-git-file': {
-                    const s = git();
-                    s.files[selectedFile] = $('#virtual-file').value;
-                    patch({ labState: { kind: 'git', value: s } }, true);
-                    toast('Working file saved. It is not staged.');
-                    break;
-                }
+                case 'save-git-file':
+                    inputMemory.delete(draftKey() + '|' + labTab);
+                    {
+                        const s = git();
+                        s.files[selectedFile] = $('#virtual-file').value;
+                        patch({ labState: { kind: 'git', value: s } }, true);
+                        toast('Working file saved. It is not staged.');
+                        break;
+                    }
                 case 'stage-file': {
                     const s = git();
                     s.files[selectedFile] = $('#virtual-file').value;
@@ -725,15 +616,17 @@ function bindControls() {
                     toast(r.output, !r.ok);
                     break;
                 }
-                case 'save-terminal-file': {
-                    const s = terminal();
-                    s.files[selectedFile] = $('#virtual-file').value;
-                    if (s.files[selectedFile].length > 200000)
-                        throw Error('Virtual file limit exceeded.');
-                    patch({ labState: { kind: 'terminal', value: s } }, true);
-                    toast('Virtual file saved.');
-                    break;
-                }
+                case 'save-terminal-file':
+                    inputMemory.delete(draftKey() + '|' + labTab);
+                    {
+                        const s = terminal();
+                        s.files[selectedFile] = $('#virtual-file').value;
+                        if (s.files[selectedFile].length > 200000)
+                            throw Error('Virtual file limit exceeded.');
+                        patch({ labState: { kind: 'terminal', value: s } }, true);
+                        toast('Virtual file saved.');
+                        break;
+                    }
                 case 'open-git':
                     navigate('v2-git-stage');
                     break;
@@ -752,6 +645,8 @@ function bindControls() {
     app.onchange = (event) => {
         const t = event.target;
         try {
+            if (handleShellChange(t))
+                return;
             if (t.id === 'difficulty') {
                 difficulty = t.value;
                 renderLibrary();
@@ -770,6 +665,7 @@ function bindControls() {
             else if (t.id === 'country' || t.id === 'category') {
                 patch({ [t.id]: t.value }, true);
                 renderLab();
+                renderTool();
             }
             else if (t.id === 'grain') {
                 patch({ grain: t.value }, true);
@@ -816,6 +712,7 @@ function bindControls() {
                 setGraph(g);
             }
             else if (t.id === 'git-file' || t.id === 'terminal-file') {
+                inputMemory.delete(draftKey() + '|' + labTab);
                 selectedFile = t.value;
                 renderLab();
             }
@@ -833,7 +730,10 @@ function bindControls() {
         }
     };
     app.oninput = (event) => { const t = event.target; if (t.id === 'notes')
-        patch({ notes: t.value }); if (t.id === 'diagnosis')
+        patch({ notes: t.value }); if (t.id === 'concept-filter') {
+        conceptFilter = t.value;
+        renderLibrary();
+    } if (t.id === 'diagnosis')
         patch({ diagnosis: t.value }); if (t.id === 'mermaid-source')
         patch({ mermaid: t.value }); if (t.id === 'diagram-script')
         patch({ diagram: t.value }); };
@@ -844,26 +744,31 @@ function bindControls() {
     app.onpointerdown = event => { const t = event.target; const node = t.closest('[data-node]'); if (!node || !t.closest('#graph-canvas'))
         return; const svg = node.ownerSVGElement, g = graph(), n = g.nodes.find(n => n.id === node.dataset.node); if (!n)
         return; const start = { x: event.clientX, y: event.clientY, nx: n.x, ny: n.y }, scale = svg.viewBox.baseVal.width / svg.getBoundingClientRect().width; graphDrag = false; const move = (ev) => { const dx = (ev.clientX - start.x) * scale, dy = (ev.clientY - start.y) * scale; if (Math.abs(dx) + Math.abs(dy) > 3)
-        graphDrag = true; n.x = Math.max(0, Math.min(4000, start.nx + dx)); n.y = Math.max(0, Math.min(4000, start.ny + dy)); node.setAttribute('transform', `translate(${n.x},${n.y})`); }; const end = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', end); selectedNode = n.id; if (graphDrag)
+        graphDrag = true; n.x = Math.max(0, Math.min(4000, start.nx + dx)); n.y = Math.max(0, Math.min(4000, start.ny + dy)); node.setAttribute('transform', `translate(${n.x},${n.y})`); }; const end = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', end); selectedNode = n.id; selectedEdge = ''; if (graphDrag)
         setGraph(g);
     else
-        renderLab(); }; window.addEventListener('pointermove', move); window.addEventListener('pointerup', end, { once: true }); event.preventDefault(); };
-    $('#column-separator').onpointerdown = ev => resize(ev, 'column');
-    $('#drawer-separator').onpointerdown = ev => resize(ev, 'drawer');
-    for (const [id, kind] of [['column-separator', 'column'], ['drawer-separator', 'drawer']])
-        $('#' + id).onkeydown = ev => { if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(ev.key))
-            return; ev.preventDefault(); if (kind === 'column')
-            store.settings.split = clampLayout(Number(store.settings.split ?? 42) + (ev.key === 'ArrowLeft' ? -2 : 2), store.settings.drawerHeight).split;
-        else
-            store.settings.drawerHeight = clampLayout(store.settings.split, Number(store.settings.drawerHeight ?? 238) + (ev.key === 'ArrowDown' ? -20 : 20)).drawerHeight; applyLayout(); persist(); };
+        renderLab(); openTool('Inspector', true); }; window.addEventListener('pointermove', move); window.addEventListener('pointerup', end, { once: true }); event.preventDefault(); };
+    bindSplitters();
 }
 // A single persistent delegated handler survives partial panel renders.
-function selectSVG(event) { const target = event.target, commit = target.closest('[data-commit]'); if (commit) {
+function selectSVG(event) { const target = event.target, edge = target.closest('[data-model-edge]'); if (edge && target.closest('#graph-canvas')) {
+    selectedEdge = edge.dataset.modelEdge ?? '';
+    selectedNode = '';
+    renderLab();
+    openTool('Inspector', true);
+    return;
+} const commit = target.closest('[data-commit]'); if (commit) {
     selectedCommit = commit.dataset.commit ?? '';
     renderLab();
 } }
 app.addEventListener('click', selectSVG);
-app.addEventListener('keydown', event => { const t = event.target; if (t.dataset.commit && (event.key === 'Enter' || event.key === ' ')) {
+app.addEventListener('keydown', event => { const t = event.target; if (t.dataset.modelEdge && (event.key === 'Enter' || event.key === ' ')) {
+    event.preventDefault();
+    selectedEdge = t.dataset.modelEdge;
+    selectedNode = '';
+    renderLab();
+    openTool('Inspector', true);
+} if (t.dataset.commit && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault();
     selectedCommit = t.dataset.commit;
     renderLab();
@@ -871,7 +776,9 @@ app.addEventListener('keydown', event => { const t = event.target; if (t.dataset
     if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         selectedNode = t.dataset.node;
+        selectedEdge = '';
         renderLab();
+        openTool('Inspector', true);
     }
     else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
         event.preventDefault();
@@ -882,10 +789,25 @@ app.addEventListener('keydown', event => { const t = event.target; if (t.dataset
         setGraph(g);
     }
 } });
-function resize(event, kind) { event.preventDefault(); const ws = $('#workstation'), rect = ws.getBoundingClientRect(); document.body.classList.add('resizing'); const move = (ev) => { if (kind === 'column')
-    store.settings.split = clampLayout(100 * (ev.clientX - rect.left) / rect.width, store.settings.drawerHeight).split;
-else
-    store.settings.drawerHeight = clampLayout(store.settings.split, rect.bottom - ev.clientY).drawerHeight; applyLayout(); }; const end = () => { document.body.classList.remove('resizing'); window.removeEventListener('pointermove', move); persist(true); }; window.addEventListener('pointermove', move); window.addEventListener('pointerup', end, { once: true }); }
+function resize(event, kind) {
+    event.preventDefault();
+    const ws = $('#workstation'), rect = ws.getBoundingClientRect(), m = activePreferences(presentation, workspace);
+    document.body.classList.add('resizing');
+    const move = (ev) => { if (kind === 'column')
+        m.split = Math.max(25, Math.min(60, 100 * (ev.clientX - rect.left) / rect.width));
+    else if (kind === 'tool')
+        m.toolWidth = Math.max(320, Math.min(560, innerWidth - 48 - ev.clientX));
+    else if (m.outputAnchor === 'right')
+        m.outputWidth = Math.max(300, Math.min(600, rect.right - ev.clientX));
+    else {
+        m.outputHeight = Math.max(120, Math.min(600, rect.bottom - ev.clientY));
+        setOutputSize(presentation, workspace, shellState, 'compact');
+    } applyLayout(); };
+    const end = () => { document.body.classList.remove('resizing'); window.removeEventListener('pointermove', move); window.removeEventListener('pointercancel', end); persist(true); };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', end, { once: true });
+    window.addEventListener('pointercancel', end, { once: true });
+}
 window.addEventListener('keydown', event => { if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
     if (event.target.closest('.CodeMirror'))
         return;
@@ -899,8 +821,7 @@ window.addEventListener('resize', () => { if (current)
     applyLayout(); });
 window.addEventListener('beforeunload', () => { if (current)
     persist(true); });
-window.addEventListener('hashchange', () => { const id = new URLSearchParams(location.hash.slice(1)).get('exercise'); if (id && id !== current?.id)
-    navigate(id); });
+window.addEventListener('hashchange', handleRoute);
 async function boot() {
     try {
         const manifest = await (await fetch('./packs/index.json')).json();
@@ -912,47 +833,177 @@ async function boot() {
             store = loadStore();
             if (original && !JSON.parse(original).v2 && !localStorage.getItem(STORAGE_KEY + '.pre-v2'))
                 localStorage.setItem(STORAGE_KEY + '.pre-v2', original);
+            if (original && !JSON.parse(original).settings?.workstation && !localStorage.getItem(STORAGE_KEY + '.pre-v22'))
+                localStorage.setItem(STORAGE_KEY + '.pre-v22', original);
         }
         catch {
             storageBlocked = true;
             store = emptyStore();
         }
+        presentation = normalizePresentation(store.settings.workstation, { split: store.settings.split, drawerHeight: store.settings.drawerHeight });
+        store.settings.focus = false;
         recalc();
-        const id = new URLSearchParams(location.hash.slice(1)).get('exercise') ?? store.settings.lastQuestion;
-        current = questions.find(q => q.id === id) ?? questions[0];
+        const authored = await (await fetch('./cases/index.json')).json();
+        cases = authored.cases.map((c) => validateCase(c, questions));
+        const route = new URLSearchParams(location.hash.slice(1)), caseId = route.get('case') ?? (!route.get('exercise') ? store.settings.activeCase : undefined);
+        activeCase = cases.find(c => c.id === caseId) ?? null;
+        if (activeCase) {
+            const session = ensureSession(store, activeCase), requestedTask = route.get('task');
+            if (requestedTask && activeCase.tasks.some(t => t.id === requestedTask))
+                selectTask(store, activeCase, requestedTask);
+            current = questions.find(q => q.id === activeCase.tasks.find(t => t.id === session.currentTaskId).questionRef);
+        }
+        else {
+            const id = route.get('exercise') ?? store.settings.lastQuestion;
+            current = questions.find(q => q.id === id) ?? questions[0];
+        }
         workspace = current.workspace;
+        restoreView();
         shellHTML();
+        persist();
         if (storageBlocked)
-            toast('Stored progress could not be read. It has NOT been overwritten. Open Settings for recovery.', true);
+            toast('Stored progress needs recovery. Export the raw value from Settings before starting fresh.', true);
     }
     catch (error) {
-        app.innerHTML = `<div class="boot-error"><h1>CodeDELeet could not start</h1><p>${e(error.message)}</p><p>Serve the app using <code>npm start</code>, or deploy the built dist folder. Opening index.html directly as a file is not supported.</p></div>`;
+        app.innerHTML = `<div class="boot-screen"><h1>Could not open the workstation</h1>${notice('Build or content error', error.message, 'error')}<p>Serve the complete dist folder from an HTTP origin. Keep app, cases, packs and vendor files together.</p></div>`;
     }
 }
 void boot();
-function gitPredictions() { const goal = current.fixture?.goal; const correct = goal === 'fetch' ? { id: 'tracking', label: 'Only the remote-tracking reference and fetched objects change.' } : goal === 'rebase' ? { id: 'replay', label: 'The feature changes are replayed onto main with new commit IDs.' } : goal === 'staged-only' ? { id: 'index', label: 'The commit contains the staged index, not every working-tree file.' } : goal === 'rescue' ? { id: 'branch', label: 'A new named branch points to the current commit and HEAD becomes attached.' } : { id: 'parents', label: 'A new commit records both parent histories; existing commits keep their IDs.' }; return [correct, { id: 'rewrite-all', label: 'All existing commit IDs are rewritten and their snapshots are mutated.' }, { id: 'working-only', label: 'Only the working files change; references and history never change.' }]; }
-function gitPredictionPanel() {
-    const choices = gitPredictions(), ordered = [choices[1], choices[0], choices[2]];
-    let target = gitFixture(current.fixture?.git);
-    const perform = (cmd) => { const r = runGit(target, cmd); if (r.ok)
-        target = r.state; };
-    if (current.fixture?.goal === 'merge') {
-        perform('git merge feature');
-        if (target.pendingMerge) {
-            target.files['pipeline.py'] = 'print("ingest and validate")\n';
-            perform('git add pipeline.py');
-            perform('git commit -m "Resolved merge"');
-        }
-    }
-    if (current.fixture?.goal === 'rebase')
-        perform('git rebase main');
-    if (current.fixture?.goal === 'fetch')
-        perform('git fetch');
-    if (current.fixture?.goal === 'rescue')
-        perform('git switch -c rescue');
-    if (current.fixture?.goal === 'staged-only') {
-        perform('git add pipeline.py');
-        perform('git commit -m "Validation"');
-    }
-    return `<div class="panel-scroll"><span class="eyebrow">PREDICT BEFORE YOU CHANGE IT</span><h3>What should change when you reach this goal?</h3><div class="choice-list">${ordered.map(c => `<label class="choice"><input type="radio" name="git-prediction" value="${e(c.id)}" ${draft().gitPrediction === c.id ? 'checked' : ''}><span>${e(c.label)}</span></label>`).join('')}</div><div class="inline-actions" style="margin-top:12px"><button class="secondary" data-action="check-prediction">Check my prediction</button></div><div id="prediction-feedback"></div><details><summary>View target topology (not the command solution)</summary>${gitGraphSVG(target)}<p class="muted">Target state is a separate reference fixture. It never changes your live virtual repository. Branch and commit names may differ in an equivalent solution.</p></details></div>`;
+function gitPredictions() { return systemsViews.gitPredictions(viewContext()); }
+function gitPredictionPanel() { return systemsViews.gitPredictionPanel(viewContext()); }
+// Shared shell orchestration. Domain engines remain in their original modules.
+function companionLinks() { return shellViews.companionLinks(shellViewsContext()); }
+function updateRunBadge() { return shellViews.updateRunBadge(shellViewsContext()); }
+function renderRail() { return shellViews.renderRail(shellViewsContext()); }
+let inspectorElement = null;
+function renderTool(force = false) { return shellViews.renderTool(shellViewsContext(), force); }
+function openTool(tool, keep = false) { return shellViews.openTool(shellViewsContext(), tool, keep); }
+function rememberInputs() {
+    if (!current || !document.querySelector('#lab-content'))
+        return;
+    const inputs = {};
+    document.querySelectorAll('#lab-content input:not([type=radio]):not([type=checkbox]),#lab-content textarea:not(.CodeMirror textarea):not(.code-fallback[aria-label="Code editor"])').forEach(el => { if (el.id && el.id !== 'diagnosis' && el.id !== 'mermaid-source' && el.id !== 'diagram-script')
+        inputs[el.id] = { value: el.value, start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0, scroll: el.scrollTop }; });
+    inputMemory.set(draftKey() + '|' + labTab, inputs);
 }
+function captureView() {
+    rememberInputs();
+    viewMemory.set(draftKey(), { leftTab, labTab, hintCount, revealed, selectedNode, selectedEdge, selectedCommit, selectedFile, graphUndo, graphRedo, runStatuses, runGrid, terminalResult, result, runState, timerStart, timerElapsed });
+}
+function restoreView() {
+    const v = viewMemory.get(draftKey());
+    leftTab = v?.leftTab ?? (presentation.modes[workspace] === 'inspect' && workspace === 'code' ? 'Data' : 'Task');
+    labTab = v?.labTab ?? presetFor(workspace, presentation.modes[workspace]).view;
+    hintCount = v?.hintCount ?? 0;
+    revealed = v?.revealed ?? draft().revealed === true;
+    selectedNode = v?.selectedNode ?? '';
+    selectedEdge = v?.selectedEdge ?? '';
+    selectedCommit = v?.selectedCommit ?? '';
+    selectedFile = v?.selectedFile ?? '';
+    graphUndo = v?.graphUndo ?? [];
+    graphRedo = v?.graphRedo ?? [];
+    runStatuses = v?.runStatuses ?? {};
+    runGrid = v?.runGrid ?? [];
+    terminalResult = v?.terminalResult ?? null;
+    result = v?.result ?? null;
+    runState = v?.runState ?? newRunStatus();
+    timerStart = v?.timerStart ?? null;
+    timerElapsed = v?.timerElapsed ?? 0;
+    if (current.renderer !== 'semantic-model' && labTab === 'Model')
+        labTab = 'Workspace';
+    if (current.renderer !== 'dag-editor' && labTab === 'Run grid')
+        labTab = 'Workspace';
+}
+function renderLab() {
+    // Preserve the camera independently of graph/model state.
+    const before = document.querySelector('#lab-content');
+    const canvas = before?.querySelector('#graph-canvas');
+    if (before?.dataset.answerKey === draftKey() && canvas)
+        cameraMemory.set(draftKey(), { zoom: canvas.style.getPropertyValue('--graph-zoom') || '1', x: canvas.scrollLeft, y: canvas.scrollTop });
+    renderLabContent();
+    $('#lab-content').dataset.answerKey = draftKey();
+    const after = document.querySelector('#graph-canvas'), camera = cameraMemory.get(draftKey());
+    if (after && camera) {
+        after.style.setProperty('--graph-zoom', camera.zoom);
+        after.scrollTo(camera.x, camera.y);
+    }
+    const inspector = document.querySelector('#lab-content .graph-inspector');
+    if (inspector) {
+        inspectorElement = inspector;
+        $('#inspector-parking').replaceChildren(inspector);
+    }
+    else if (current.renderer === 'semantic-model') {
+        inspectorElement = document.createElement('div');
+        inspectorElement.className = 'graph-inspector';
+        inspectorElement.innerHTML = modelViews.modelInspector(viewContext());
+        $('#inspector-parking').replaceChildren(inspectorElement);
+    }
+    else if (!['dag-editor', 'architecture-editor'].includes(current.renderer))
+        inspectorElement = null;
+    const input = inputMemory.get(draftKey() + '|' + labTab);
+    if (input)
+        for (const [id, v] of Object.entries(input)) {
+            const el = document.querySelector('#lab-content #' + id);
+            if (el) {
+                el.value = v.value;
+                try {
+                    el.setSelectionRange(v.start, v.end);
+                }
+                catch { }
+                el.scrollTop = v.scroll;
+            }
+        }
+    $('#task-strip').innerHTML = `<button class="text-button" data-shell="context-toggle">${icon('book')} Task</button><span>${e(current.summary)}</span>${['semantic-model', 'dag-editor', 'architecture-editor'].includes(current.renderer) ? '<button class="text-button" data-tool="Inspector">Inspector</button>' : ''}`;
+    renderCaseParts();
+    renderComparison();
+    if (shellState.tool === 'Inspector')
+        renderTool(true);
+    applyLayout();
+}
+function renderCaseParts() { return shellViews.renderCaseParts(shellViewsContext()); }
+function renderComparison() { return shellViews.renderComparison(shellViewsContext()); }
+function changeMode(slot) { return shellViews.changeMode(shellViewsContext(), slot); }
+function setRoute() {
+    const value = activeCase ? 'case=' + encodeURIComponent(activeCase.id) + '&task=' + encodeURIComponent(ensureSession(store, activeCase).currentTaskId) : 'exercise=' + encodeURIComponent(current.id);
+    if (location.hash.slice(1) !== value)
+        location.hash = value;
+}
+function handleRoute() {
+    const route = new URLSearchParams(location.hash.slice(1)), cid = route.get('case');
+    if (cid) {
+        const c = cases.find(c => c.id === cid);
+        if (!c)
+            return;
+        const task = route.get('task') ?? ensureSession(store, c).currentTaskId;
+        const t = c.tasks.find(t => t.id === task);
+        if (t && (activeCase?.id !== cid || ensureSession(store, c).currentTaskId !== task))
+            navigate(t.questionRef, cid, task);
+    }
+    else {
+        const id = route.get('exercise');
+        if (id && (id !== current?.id || activeCase))
+            navigate(id);
+    }
+}
+function handleShellClick(button) { return shellViews.handleShellClick(shellViewsContext(), button); }
+function handleShellChange(t) { return shellViews.handleShellChange(shellViewsContext(), t); }
+function bindSplitters() { return shellViews.bindSplitters(shellViewsContext()); }
+window.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.querySelector('dialog[open]')) {
+    if (shellState.tool) {
+        shellState.tool = null;
+        renderRail();
+        renderTool();
+        applyLayout();
+    }
+    else if (shellState.focus) {
+        toggleFocus(shellState, presentation);
+        renderRail();
+        renderTool();
+        applyLayout();
+        persist(true);
+    }
+} });
+function shellViewsContext() { return { get presentation() { return presentation; }, set presentation(v) { presentation = v; }, get workspace() { return workspace; }, set workspace(v) { workspace = v; }, get shellState() { return shellState; }, set shellState(v) { shellState = v; }, get editorPool() { return editorPool; }, draftKey, get current() { return current; }, set current(v) { current = v; }, get mapping() { return mapping; }, set mapping(v) { mapping = v; }, get store() { return store; }, set store(v) { store = v; }, get runState() { return runState; }, set runState(v) { runState = v; }, draft, $, companionLinks, get revealed() { return revealed; }, set revealed(v) { revealed = v; }, get selectedNode() { return selectedNode; }, set selectedNode(v) { selectedNode = v; }, get selectedEdge() { return selectedEdge; }, set selectedEdge(v) { selectedEdge = v; }, get inspectorElement() { return inspectorElement; }, set inspectorElement(v) { inspectorElement = v; }, explanationPanel, visualPanel, get fixtures() { return fixtures; }, set fixtures(v) { fixtures = v; }, deepnotePanel, get activeCase() { return activeCase; }, set activeCase(v) { activeCase = v; }, labelMode, renderRail, renderTool, applyLayout, graph, viewContext, rememberInputs, get labTab() { return labTab; }, set labTab(v) { labTab = v; }, get leftTab() { return leftTab; }, set leftTab(v) { leftTab = v; }, renderHeader, renderQuestion, renderLab, renderCaseParts, renderComparison, renderDrawer, persist, changeMode, openTool, get outputTab() { return outputTab; }, set outputTab(v) { outputTab = v; }, get technology() { return technology; }, set technology(v) { technology = v; }, renderLibrary, get cases() { return cases; }, set cases(v) { cases = v; }, navigate, code, get search() { return search; }, set search(v) { search = v; }, get difficulty() { return difficulty; }, set difficulty(v) { difficulty = v; }, get queue() { return queue; }, set queue(v) { queue = v; }, get conceptFilter() { return conceptFilter; }, set conceptFilter(v) { conceptFilter = v; }, get priorityFilter() { return priorityFilter; }, set priorityFilter(v) { priorityFilter = v; }, toast, patch, resize }; }
+function workspaceViewsContext() { return { get current() { return current; }, set current(v) { current = v; }, get labEpoch() { return labEpoch; }, set labEpoch(v) { labEpoch = v; }, labTabs, get labTab() { return labTab; }, set labTab(v) { labTab = v; }, $, tabs, gitPanel, terminalPanel, semanticKPI, draft, mountCode, graphPanel, get fixtures() { return fixtures; }, set fixtures(v) { fixtures = v; }, graph, codePanel, viewContext, get runState() { return runState; }, set runState(v) { runState = v; }, mermaidPanel, performancePanel, configEvidence, dataPanel, code }; }
+function readingViewsContext() { return { get busy() { return busy; }, set busy(v) { busy = v; }, get result() { return result; }, set result(v) { result = v; }, actionLabel, get current() { return current; }, set current(v) { current = v; }, get revealed() { return revealed; }, set revealed(v) { revealed = v; }, draft, graph, get selectedNode() { return selectedNode; }, set selectedNode(v) { selectedNode = v; }, get runStatuses() { return runStatuses; }, set runStatuses(v) { runStatuses = v; }, git, get selectedCommit() { return selectedCommit; }, set selectedCommit(v) { selectedCommit = v; }, companionLinks, get mapping() { return mapping; }, set mapping(v) { mapping = v; } }; }
+function settingsViewsContext() { return { syncImportedDraft: () => { void editorPool.replace(draftKey(), code()); navigate(current.id, activeCase?.id, activeCase ? ensureSession(store, activeCase).currentTaskId : undefined); }, $, get storageBlocked() { return storageBlocked; }, set storageBlocked(v) { storageBlocked = v; }, get store() { return store; }, set store(v) { store = v; }, get presentation() { return presentation; }, set presentation(v) { presentation = v; }, exportBackup, toast, persist, readJSONFile, get builtins() { return builtins; }, set builtins(v) { builtins = v; }, recalc, navigate, get current() { return current; }, set current(v) { current = v; }, shellHTML, get mapping() { return mapping; }, set mapping(v) { mapping = v; }, renderDrawer, handleShellChange, get workspace() { return workspace; }, set workspace(v) { workspace = v; }, applyLayout, get runEpoch() { return runEpoch; }, set runEpoch(v) { runEpoch = v; }, get busy() { return busy; }, set busy(v) { busy = v; }, renderHeader, get shellState() { return shellState; }, set shellState(v) { shellState = v; }, renderLab }; }

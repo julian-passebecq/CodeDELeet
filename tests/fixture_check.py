@@ -32,21 +32,20 @@ for q in QS:
     if q['engine']=='python':
         for t in q.get('pythonTests',[]):record(q['id']+' / '+t['label'],'native CPython/pandas reference',lambda q=q,t=t:python_check(q,t))
     if q['renderer']=='pyspark-editor':record(q['id'],'PySpark source syntax only',lambda q=q:ast.parse(q['solution']))
-# Validate optional Deepnote template metadata without requiring or publishing notebook files.
-map_report=[]
+# Links-only release: check blank URL metadata against the prior source's mapping record.
+# No notebook archive is required, copied, fetched, or published by the application.
+prior=json.loads((ROOT/'docs/DEEPNOTE_REFERENCE_MAP.json').read_text())
+by_ref={(x['exerciseId'],x['notebook'],x['section']) for x in prior}
 for q in QS:
     for link in q.get('deepnoteLinks',[]):
-        def check(link=link):
-            assert link.get('type') in {'exercise','concept','mock','reference','project'},link
-            assert isinstance(link.get('label'),str) and link['label'].strip(),link
-            assert isinstance(link.get('notebook'),str) and link['notebook'].strip(),link
-            assert isinstance(link.get('exerciseRef'),str) and link['exerciseRef'].strip(),link
-            assert link.get('url','')=='','Example mapping must not invent a live Deepnote URL'
-        record(q['id']+' / Deepnote template metadata','Deepnote mapping template',check)
-        map_report.append({'exerciseId':q['id'],'type':link.get('type'),'label':link.get('label'),'notebook':link.get('notebook'),'section':link.get('exerciseRef'),'url':link.get('url',''),'status':'template-only'})
-report={'environment':{'python':platform.python_version(),'sqlite':sqlite3.sqlite_version},'limitations':['SQLite is not DuckDB-Wasm.','Native CPython/pandas is not Pyodide.','Spark source was not executed.','Deepnote entries are blank URL templates only; no notebook archive or live workspace was tested.'],'passed':sum(r['passed'] for r in results),'failed':sum(not r['passed'] for r in results),'checks':results}
-(ROOT/'evidence/fixture-report.json').write_text(json.dumps(report,indent=2))
-(ROOT/'docs/DEEPNOTE_MAPPING_VERIFIED.json').write_text(json.dumps(map_report,indent=2))
+        def check(q=q,link=link):
+            assert (q['id'],link['notebook'],link['exerciseRef']) in by_ref,'Reference metadata drift'
+            assert link['url']=='','No invented project URLs'
+            assert isinstance(link['label'],str) and link['label'],'Link needs an explicit label'
+        record(q['id']+' / links-only reference metadata','Deepnote mapping contract (not live verification)',check)
+report={'environment':{'python':platform.python_version(),'sqlite':sqlite3.sqlite_version},'limitations':['SQLite is not DuckDB-Wasm.','Native CPython/pandas is not Pyodide.','Spark source was not executed.','Deepnote link metadata matched the prior mapping record; no notebooks or live Deepnote workspace were opened in this test.'],'passed':sum(r['passed'] for r in results),'failed':sum(not r['passed'] for r in results),'checks':results}
+(ROOT/'evidence/v22/fixture-report.json').write_text(json.dumps(report,indent=2))
+
 print(json.dumps({k:report[k] for k in ['environment','passed','failed']},indent=2))
 for r in results:
     if not r['passed']:print('FAIL',r)
