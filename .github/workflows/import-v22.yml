@@ -1,0 +1,74 @@
+name: Import supplied V2.2 source
+on:
+  push:
+    branches: [v2.2-pro-improvement]
+    paths: ['.integration/v22/**', '.github/workflows/import-v22.yml']
+permissions:
+  contents: read
+concurrency:
+  group: import-supplied-v22
+  cancel-in-progress: false
+jobs:
+  import:
+    if: github.ref == 'refs/heads/v2.2-pro-improvement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Materialize exact source from verified transport
+        run: |
+          command -v zstd || (sudo apt-get update && sudo apt-get install -y zstd)
+          python .integration/v22/materialize.py
+      - name: Clean dependency install, build and contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts 2>&1 | tee evidence/coordinator/npm-ci.log
+          npm run check 2>&1 | tee evidence/coordinator/typecheck.log
+          npm test 2>&1 | tee evidence/coordinator/unit.log
+          python -m pip install -r requirements-dev.txt
+          python tests/fixture_check.py 2>&1 | tee evidence/coordinator/fixtures.log
+          python -m playwright install --with-deps chromium
+      - name: Actual compiled UI, migration, layout and case regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tests/ui_smoke.py 2>&1 | tee evidence/coordinator/ui.log
+          python tests/v22_ui.py 2>&1 | tee evidence/coordinator/shell.log
+          node scripts/serve.mjs dist > /tmp/v22-server.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:5173/ >/dev/null && break; sleep 1; done
+          python scripts/validate_release.py 2>&1 | tee evidence/coordinator/integrity.log
+      - name: Commit unpacked source, build and actual evidence only to candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/v2.2-pro-improvement
+          git diff --exit-code -- .github
+          rm -rf .integration/v22
+          git add -A
+          git diff --cached --exit-code -- .github
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Import verified CodeDELeet V2.2 source and rebuilt assets; 242 regression checks'
+          git push origin HEAD:refs/heads/v2.2-pro-improvement
+          git rev-parse HEAD
+      - name: Preserve integration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22-import-evidence
+          path: |
+            evidence/coordinator/
+            evidence/v22/
+            evidence/*report.json
+            dist/build-info.json
