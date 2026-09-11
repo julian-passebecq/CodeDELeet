@@ -38,7 +38,6 @@ jobs:
           name: v22-contract-evidence
           path: evidence/
   runtime-smoke:
-    needs: contracts
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
@@ -88,7 +87,7 @@ jobs:
             /tmp/codedeleet-server.log
   netlify-preview:
     if: github.event_name == 'pull_request'
-    needs: runtime-smoke
+    needs: [contracts, runtime-smoke]
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:

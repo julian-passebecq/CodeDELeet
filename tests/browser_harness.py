@@ -25,6 +25,9 @@ def open_app(page,exercise='sql-paid-revenue',store=None,route=None):
         if store is not None:page.add_init_script('localStorage.setItem("data-practice-studio.v1",'+json.dumps(json.dumps(store))+');')
         page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#'+(route if route is not None else 'exercise='+exercise),wait_until='domcontentloaded')
         page.locator('#question-body').wait_for(state='attached')
+        # HTTP lazily loads the bundled editor; do not mistake shell DOM for editor readiness.
+        if page.locator('#editor-host').count():
+            page.locator('#editor-host .CodeMirror').wait_for(state='visible', timeout=15000)
         return
     css='\n'.join((DIST/file).read_text() for file in ['styles.css','vendor/codemirror/lib/codemirror.css','vendor/codemirror/addon/dialog/dialog.css','shell.css'])
     page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2.2 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
