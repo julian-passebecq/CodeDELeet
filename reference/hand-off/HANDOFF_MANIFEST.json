@@ -1,0 +1,20 @@
+{
+  "name": "CodeDELeet v2 Pro Handoff",
+  "version": "2.0-spec-final",
+  "purpose": "Feature and implementation instructions for a fresh Pro-model build chat",
+  "expected_companion_inputs": [
+    "Complete CodeDELeet v1 repository ZIP",
+    "Deepnote 3-Project Interview Suite ZIP"
+  ],
+  "authoritative_entrypoint": "FINAL_BUILD_PROMPT.md",
+  "supporting_files": [
+    "README_START_HERE.md",
+    "GIT_VISUAL_EXERCISES.md",
+    "DEEPNOTE_INTEGRATION_SPEC.md",
+    "FEATURE_MATRIX.md",
+    "ACCEPTANCE_GATES.md",
+    "SCOPE_GUARDRAILS.md",
+    "EXERCISE_METADATA_V2.md",
+    "DELIVERY_CHECKLIST.md"
+  ]
+}

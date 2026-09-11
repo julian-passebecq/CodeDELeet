@@ -1,0 +1,49 @@
+{
+  "version": "2.2.0",
+  "inputSource": {
+    "name": "CodeDELeet_V2_Full_Source.zip",
+    "sha256": "dce46d5ebde8c1c8bfbd00a9cb6a7a03f3ec470e634ebde43a983b0b48b8deac",
+    "packageVersion": "2.0.0"
+  },
+  "authorityHandoff": {
+    "name": "CodeDELeet_V2_2_Pro_Improvement_Handoff.zip",
+    "sha256": "b3c190186e51a6e7636e7e4fa5b2277075cd4cf8e6f4cd3e17af42295153b2a2"
+  },
+  "repositoryRead": false,
+  "repositoryWrite": false,
+  "deployment": false,
+  "appEntrypointBytes": {
+    "v2": 75725,
+    "v22": 53072
+  },
+  "newSourceModules": [
+    "src/case-study/controller.ts",
+    "src/case-study/view.ts",
+    "src/renderers/code-view.ts",
+    "src/renderers/context.ts",
+    "src/renderers/model-view.ts",
+    "src/renderers/pipeline-view.ts",
+    "src/renderers/systems-view.ts",
+    "src/renderers/workspace.ts",
+    "src/shell/dom-layout.ts",
+    "src/shell/layout-controller.ts",
+    "src/shell/orchestration.ts",
+    "src/shell/output-dock.ts",
+    "src/shell/reading-panels.ts",
+    "src/shell/scaffold.ts",
+    "src/shell/settings.ts",
+    "src/shell/theme-data.ts",
+    "src/shell/themes.ts",
+    "src/shell/tool-rail.ts"
+  ],
+  "storageKey": "data-practice-studio.v1",
+  "storageSchema": 1,
+  "presentationSchema": 1,
+  "caseSchema": 1,
+  "exercises": 51,
+  "retainedV1Ids": 27,
+  "authoredCases": 4,
+  "caseTasks": 12,
+  "mermaid": "11.16.1",
+  "removedPublicAsset": "companion/Deepnote_Interview_Suite_v1_4.zip"
+}

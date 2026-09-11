@@ -1,0 +1,110 @@
+[
+  {
+    "exerciseId": "sql-paid-revenue",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "01 - SQL Interview Arena",
+    "section": "CSI-01 \u2014 Retail Orders",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "sql-latest-order",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "02 - SQL Patterns Optimization and Interview Playbook",
+    "section": "B3. Window functions are row-preserving analytics",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "python-aggregate",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "01 - Python Core Interview Arena",
+    "section": "B2. Count by key with a dictionary",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "spark-dedup",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "C2. Latest row per customer",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "pandas-grain",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "02 - Pandas and NumPy Data Wrangling Arena",
+    "section": "C1. Revenue and order count by country",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "bi-revenue",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "01 - BI Analytics Engineering - dbt DAX Power BI",
+    "section": "C1. Revenue",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "bi-filter-context",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "01 - BI Analytics Engineering - dbt DAX Power BI",
+    "section": "D1. Filter context",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "adf-watermark",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "03 - Airflow Pipeline and SQL Data Engineering Arena",
+    "section": "D1. Advance the watermark safely",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "dag-idempotency",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "03 - Airflow Pipeline and SQL Data Engineering Arena",
+    "section": "C2. Commit then retry",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "v2-python-latest",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "01 - Python Core Interview Arena",
+    "section": "C1. Latest record per key",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "v2-spark-aggregate",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "B2. groupBy + agg",
+    "url": "",
+    "status": "template-only"
+  },
+  {
+    "exerciseId": "v2-spark-join",
+    "type": "exercise",
+    "label": "Open companion notebook",
+    "notebook": "03 - PySpark DataFrame Interview Arena",
+    "section": "C1. Join a dimension",
+    "url": "",
+    "status": "template-only"
+  }
+]

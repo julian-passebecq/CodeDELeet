@@ -1,0 +1,319 @@
+{
+  "algorithm": "SHA-256",
+  "treeDigestDefinition": "SHA-256 of sorted UTF-8 lines: file_sha256 + two spaces + relative_posix_path + LF",
+  "buildTreeSha256": "30072e42733b86eb11051ebc81fef3b096f11b584c71504a7ab65a191435f973",
+  "count": 62,
+  "totalBytes": 1167622,
+  "files": [
+    {
+      "path": "app/app.js",
+      "bytes": 64218,
+      "sha256": "320f8cb9f0a21a36055fcd59c54d657c3a5f84630a24b4c37da6297e6bc42a7f"
+    },
+    {
+      "path": "app/case-study/controller.js",
+      "bytes": 6964,
+      "sha256": "6b69ab910ffb2569129d7f215b771e102163f44158ad6b24053fbe0eaed13769"
+    },
+    {
+      "path": "app/case-study/view.js",
+      "bytes": 2322,
+      "sha256": "0d929c0d2bc9b12279c8718913a91cb01137e0350a7d1648763fbd869f588439"
+    },
+    {
+      "path": "app/checks.js",
+      "bytes": 6019,
+      "sha256": "9b02da89d483fa956e3df62249a7c236a4930eb3fbb1db26f8202c1b6dce1a5e"
+    },
+    {
+      "path": "app/core.js",
+      "bytes": 13835,
+      "sha256": "8b0c7dc1232a5f956b2b270f4f4d8c937f8851715579dfecd4b731078b9c1f26"
+    },
+    {
+      "path": "app/dax.js",
+      "bytes": 9108,
+      "sha256": "1cf8594ae95deb51e03b9bf74b9a35e1b7be4237d13299d0d309cb81e6c63b8b"
+    },
+    {
+      "path": "app/editor.js",
+      "bytes": 4567,
+      "sha256": "1d691b58555d134d720d440f2a753ba38f0c65f4fad709594c200f659317fec5"
+    },
+    {
+      "path": "app/git.js",
+      "bytes": 22664,
+      "sha256": "2dad44ba72c036849f62599dd9ae1036399a93d3195ad2da416d3d9ce21b3b53"
+    },
+    {
+      "path": "app/graph.js",
+      "bytes": 13427,
+      "sha256": "8cce1b37196758f9f1d33c4569901e446fad30bfe373ef26b1f72699cd06a1b2"
+    },
+    {
+      "path": "app/renderers/code-view.js",
+      "bytes": 5956,
+      "sha256": "4892b49bc6db6fc90bf7f8bc757851e6e27be46255b25cd4d588c55242f2dd06"
+    },
+    {
+      "path": "app/renderers/context.js",
+      "bytes": 11,
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    {
+      "path": "app/renderers/model-view.js",
+      "bytes": 2766,
+      "sha256": "1690a96322c6d5f9f9fb970a815aafef44ddb554f916cc1d9a7c40e29fce9dc1"
+    },
+    {
+      "path": "app/renderers/pipeline-view.js",
+      "bytes": 5358,
+      "sha256": "1e8d608572cc3d0efc5a8101251ef7858ae7641f2ef13a327ae32aa1873176e5"
+    },
+    {
+      "path": "app/renderers/systems-view.js",
+      "bytes": 13174,
+      "sha256": "95cb5698fb5d0d678a8c3a9306899395cedc84c7800f8538167f9eee3a0eca40"
+    },
+    {
+      "path": "app/renderers/workspace.js",
+      "bytes": 10772,
+      "sha256": "2ff633be492799f40b7b93a53cb9c8d3f4d9e0b539559cce943d900dbbfbbc56"
+    },
+    {
+      "path": "app/runtime.js",
+      "bytes": 11032,
+      "sha256": "b2c01f639d94ff81690266023d7099eeb42ed56129be2ed921c0eb5049c71948"
+    },
+    {
+      "path": "app/shell/dom-layout.js",
+      "bytes": 2961,
+      "sha256": "fe942795bfa99972fee099cbde36cc97e44ccc849f2d8f02f9befb68d4619f6a"
+    },
+    {
+      "path": "app/shell/layout-controller.js",
+      "bytes": 6678,
+      "sha256": "f7f70800e625b2797ef1c22078d60ba438b947a9a7d9a2c3795e110a863d5575"
+    },
+    {
+      "path": "app/shell/orchestration.js",
+      "bytes": 17643,
+      "sha256": "3165a938064062d82ffd2b3ed995ddcc2144a7eb796427e4f1c476449426b056"
+    },
+    {
+      "path": "app/shell/output-dock.js",
+      "bytes": 4087,
+      "sha256": "87113452af3ba33bd5bc753ee87468fb53b7e7cd04075f105d26ca00faeb21dc"
+    },
+    {
+      "path": "app/shell/reading-panels.js",
+      "bytes": 5252,
+      "sha256": "8335f7418ac5e2a0e54eb38e7c176262528f62a1f694ec9d65bc99f18392e2ff"
+    },
+    {
+      "path": "app/shell/scaffold.js",
+      "bytes": 6070,
+      "sha256": "7e07f4db15e38b420e25589b658b3ff5949296deae8f5cb5709758dc68591f7e"
+    },
+    {
+      "path": "app/shell/settings.js",
+      "bytes": 8472,
+      "sha256": "a127e8fa3b6b69ed6b962414c76e845ecb04e2857c422cdaa6d1a9d040cee235"
+    },
+    {
+      "path": "app/shell/theme-data.js",
+      "bytes": 2291,
+      "sha256": "3a62122aae300aa12312a2b4e035ee66fa2637f3b98cd8b3c2c26c747f9d00b3"
+    },
+    {
+      "path": "app/shell/themes.js",
+      "bytes": 914,
+      "sha256": "d51d02e9cfb52f7180f107c98e684e8bc51057f4d57a4e835eb30f051678956d"
+    },
+    {
+      "path": "app/shell/tool-rail.js",
+      "bytes": 2432,
+      "sha256": "d11cf62711c4246d1c962517d7700f5f1ac0dbb890c68196b9ac624a0759125f"
+    },
+    {
+      "path": "app/terminal.js",
+      "bytes": 18568,
+      "sha256": "9670f51f55d5e0016c0f0a7816ee35f167453d8df03bcbd768441c0a38e99e17"
+    },
+    {
+      "path": "app/types.js",
+      "bytes": 11,
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    {
+      "path": "app/ui.js",
+      "bytes": 2763,
+      "sha256": "ccf951b6450c18429d50f89579d4fced30623604cfdde4108238e7dc3872d235"
+    },
+    {
+      "path": "build-info.json",
+      "bytes": 230,
+      "sha256": "6bb5b418836c573cba469f9eaf8e52c54ac5337bd278af59128183cebd3a5ac1"
+    },
+    {
+      "path": "cases/index.json",
+      "bytes": 10941,
+      "sha256": "e663c187242ce3050ccce46af814dc0c6d6a7bba5302f13c9a6087aa039e3d60"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 261,
+      "sha256": "92d48710d14df29a3245bf1802ce299b3f55bdc8965dff76de60b966216af872"
+    },
+    {
+      "path": "index.html",
+      "bytes": 1093,
+      "sha256": "c42bf97f2f2466b2c08c71007e66374f9809e882a93662841ca11ee5da96fad9"
+    },
+    {
+      "path": "packs/deepnote-mapping.json",
+      "bytes": 3118,
+      "sha256": "142b48bd9d66311d9e8075c2de4bf4b49676e05464cad7400c7264abe5cd628d"
+    },
+    {
+      "path": "packs/fixtures.json",
+      "bytes": 4624,
+      "sha256": "7fbfb73300c33a8a92d7d65a4baba23a7aab557200d6755dd58b868ee73bbd7f"
+    },
+    {
+      "path": "packs/index.json",
+      "bytes": 66,
+      "sha256": "aba4af8175df9281631a2862fa514121de229af4136427b48720734530e190c7"
+    },
+    {
+      "path": "packs/starter.json",
+      "bytes": 85432,
+      "sha256": "0d1cb310840f2eb143684a260599369423d9dcd129fe3348421f96331cc9fe2f"
+    },
+    {
+      "path": "packs/v2-specialists.json",
+      "bytes": 80687,
+      "sha256": "63a5307572ffd509d7898cbdc0dad0a9bfa7dd97ccfed92d12438c55662d9154"
+    },
+    {
+      "path": "shell.css",
+      "bytes": 39161,
+      "sha256": "37a4c32e8a4469f60f5b518f50a9bbc1cb4f64e4ae36fecdc01bf1c2aaa40938"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 33982,
+      "sha256": "6844ff838eed9d718884c506e7d14c4743cec1019298eaed068f0ded6fe06473"
+    },
+    {
+      "path": "vendor/codemirror/LICENSE",
+      "bytes": 1094,
+      "sha256": "82710bb7c985d56c126fe9e7381f348d70e816a652b4a2d587a820aaeb79f6be"
+    },
+    {
+      "path": "vendor/codemirror/addon/comment/comment.js",
+      "bytes": 9193,
+      "sha256": "70a0f3c39b7aee5295b6564d87b0f888044b9959bbf808611a3ab35e2cda7afe"
+    },
+    {
+      "path": "vendor/codemirror/addon/dialog/dialog.css",
+      "bytes": 507,
+      "sha256": "5df690d771f12118348562dd2a90060433ae2edeccd0908abcaa4480b1e3e468"
+    },
+    {
+      "path": "vendor/codemirror/addon/dialog/dialog.js",
+      "bytes": 5250,
+      "sha256": "f823db8445973fc7be842dbe5278211e8971e7ab9ffd8ce9c403c68171fbe31d"
+    },
+    {
+      "path": "vendor/codemirror/addon/edit/closebrackets.js",
+      "bytes": 6792,
+      "sha256": "27e21e6907753f85aa748e8135b2c8890f10bb395ec72c214a62eb15de07da0d"
+    },
+    {
+      "path": "vendor/codemirror/addon/edit/matchbrackets.js",
+      "bytes": 6626,
+      "sha256": "2bb0fa2c8f676ceffe5ea85f1031dcbce2f4908c5835fce7f1a1729cf3aa0c76"
+    },
+    {
+      "path": "vendor/codemirror/addon/mode/simple.js",
+      "bytes": 8044,
+      "sha256": "e54ad6f1b624e79d3cc588cfe1f7a4275f8fc9a2654d3f2c9db6708e622a1232"
+    },
+    {
+      "path": "vendor/codemirror/addon/search/search.js",
+      "bytes": 10757,
+      "sha256": "8949cd96092b539263f282a5db3041093984488db1a57c19ad35fe6abc5210a7"
+    },
+    {
+      "path": "vendor/codemirror/addon/search/searchcursor.js",
+      "bytes": 12241,
+      "sha256": "4878764a1d5614c9ef5ef3f12a3354771f955251c749f74f2466c92e23bc0a79"
+    },
+    {
+      "path": "vendor/codemirror/lib/codemirror.css",
+      "bytes": 8722,
+      "sha256": "d30aa41229dacba5a631fd45ea0544bfdb07c78992820b67900b109b57095fb2"
+    },
+    {
+      "path": "vendor/codemirror/lib/codemirror.js",
+      "bytes": 398123,
+      "sha256": "6bb54e40daf6a348791102d7a8e5a13bcc0f85a6afce2c21a6a3fc29ed20c9c0"
+    },
+    {
+      "path": "vendor/codemirror/mode/clike/clike.js",
+      "bytes": 37026,
+      "sha256": "01111b5fd832b6f63ff7367062fb73599cb7b4cc9ab0b06268ac19280fa0a42e"
+    },
+    {
+      "path": "vendor/codemirror/mode/dockerfile/dockerfile.js",
+      "bytes": 4739,
+      "sha256": "18cd6214ccf0c89968ac21c77d4f6b05b49916ec0a43c60ad888a88141c51ed6"
+    },
+    {
+      "path": "vendor/codemirror/mode/javascript/javascript.js",
+      "bytes": 37854,
+      "sha256": "66d254d4a7afb93c25c0469ecc09ea2a13315651c66cd3ff5f0e0296671bdd88"
+    },
+    {
+      "path": "vendor/codemirror/mode/powershell/powershell.js",
+      "bytes": 12919,
+      "sha256": "21cea81524c781eee35f8c9dcfc1482cf2c6855f748d8bfd4dd9dcc9249f5974"
+    },
+    {
+      "path": "vendor/codemirror/mode/properties/properties.js",
+      "bytes": 2172,
+      "sha256": "b6e49cd298ed765c05ad348f428acaaa94fc20c337155e04900b7abe843f4975"
+    },
+    {
+      "path": "vendor/codemirror/mode/python/python.js",
+      "bytes": 14723,
+      "sha256": "3500480fdcd43b216ceac65f21dcf7c296cf3175070fec3c9162178116386a06"
+    },
+    {
+      "path": "vendor/codemirror/mode/shell/shell.js",
+      "bytes": 5319,
+      "sha256": "b73ccd9dabbc8f0907225cca08bed1f2887032b74e47553f35520582219277b3"
+    },
+    {
+      "path": "vendor/codemirror/mode/sql/sql.js",
+      "bytes": 48005,
+      "sha256": "50322f6ed76ad336b012f3efb02b80eba1f4426e6c830f312e23c57828fdd801"
+    },
+    {
+      "path": "vendor/codemirror/mode/yaml/yaml.js",
+      "bytes": 3736,
+      "sha256": "4347a984e82dd43cf3c6728df6e0831008737f3b2995c632cb7008f85d3a75b2"
+    },
+    {
+      "path": "vendor/codemirror/studio-modes.js",
+      "bytes": 924,
+      "sha256": "4411dd75772ab8a245501efa778aa86d15f0f004186d7c8914c509bc56408b88"
+    },
+    {
+      "path": "workers/python.js",
+      "bytes": 2926,
+      "sha256": "d0faf627d1911b421aceb55407de17a88af21d1c78e77aa335a9be62a04acd43"
+    }
+  ]
+}

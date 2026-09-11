@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "app": "CodeDELeet",
+  "version": "2.2.0",
+  "recordedAtUTC": "2026-09-10T19:15:07.036272+00:00",
+  "status": "LOCAL_VALIDATION_COMPLETE; REAL_ORIGIN_PROMOTION_PENDING",
+  "testChecksPassed": 242,
+  "testChecksFailed": 0,
+  "environment": {
+    "node": "v22.16.0",
+    "typescript": "Version 5.8.3",
+    "compilerSource": "preinstalled global compiler; exact lockfile version",
+    "python": "3.13.5",
+    "pandas": "2.2.3",
+    "playwright": "1.57.0",
+    "chromium": "144.0.7559.96",
+    "sqlite": "3.46.1",
+    "browserNavigation": "blocked by environment policy",
+    "cleanNpmCi": "BLOCKED: EAI_AGAIN resolving registry.npmjs.org",
+    "dependencyAudit": "NOT RUN; coordinator gate"
+  },
+  "suites": [
+    {
+      "name": "TypeScript typecheck",
+      "command": "npm run check",
+      "status": "PASS",
+      "log": "typecheck-final.log"
+    },
+    {
+      "name": "Build",
+      "command": "npm run build",
+      "status": "PASS",
+      "log": "build-final.log"
+    },
+    {
+      "name": "Node domain/shell/case tests",
+      "command": "npm test",
+      "status": "PASS",
+      "passed": 80,
+      "failed": 0,
+      "log": "unit-final.log"
+    },
+    {
+      "name": "Native/reference contracts",
+      "command": "python tests/fixture_check.py",
+      "status": "PASS",
+      "passed": 42,
+      "failed": 0,
+      "report": "fixture-report.json"
+    },
+    {
+      "name": "All-exercise UI regression",
+      "command": "python tests/ui_smoke.py",
+      "status": "PASS",
+      "passed": 68,
+      "failed": 0,
+      "report": "ui-legacy-report.json"
+    },
+    {
+      "name": "V2.2 shell/case interactions",
+      "command": "python tests/v22_ui.py",
+      "status": "PASS",
+      "passed": 30,
+      "failed": 0,
+      "report": "ui-shell-report.json"
+    },
+    {
+      "name": "Static and local HTTP release integrity",
+      "command": "python scripts/validate_release.py",
+      "status": "PASS",
+      "passed": 22,
+      "failed": 0,
+      "report": "release-integrity-report.json"
+    },
+    {
+      "name": "Real-origin external runtime promotion gate",
+      "command": "python tests/network_runtime_smoke.py",
+      "status": "UNVERIFIED",
+      "report": "network-runtime-report.json",
+      "reason": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:5173/#exercise=sql-paid-revenue\nCall log:\n  - navigating to \"http://127.0.0.1:5173/#exercise=sql-paid-revenue\", waiting until \"domcontentloaded\"\n",
+      "passed": 0,
+      "failed": 0,
+      "note": "No cases executed after navigation was blocked. Zero failures is NOT success."
+    }
+  ],
+  "nativeFixtureBreakdown": {
+    "SQLite portable-reference check": 12,
+    "native CPython/pandas reference": 15,
+    "PySpark source syntax only": 3,
+    "Deepnote mapping contract (not live verification)": 12
+  },
+  "browserErrors": [],
+  "buildTreeSha256": "30072e42733b86eb11051ebc81fef3b096f11b584c71504a7ab65a191435f973",
+  "buildAssets": 62,
+  "screenshots": [
+    "evidence/v22/screenshots/05-authored-case.png",
+    "evidence/v22/screenshots/02-model-designer.png",
+    "evidence/v22/screenshots/06-fluent-soft.png",
+    "evidence/v22/screenshots/07-phone-workspace.png",
+    "evidence/v22/screenshots/01-code-solve.png",
+    "evidence/v22/screenshots/04-systems-compare.png",
+    "evidence/v22/screenshots/03-pipeline-designer.png"
+  ],
+  "additionalRegressionScreenshots": 10,
+  "provenance": "provenance.json",
+  "boundaries": [
+    "Built-file Chromium tests use actual compiled application, CodeMirror, and teaching engines with a file/storage transport harness, not a hosted-origin launch.",
+    "No synthetic SQL/Python runtime success is used. SQLite, native Python, and PySpark syntax checks are labelled separately.",
+    "No GitHub or Netlify read/write/deployment occurred in this pass.",
+    "No clean npm ci or vulnerability audit succeeded; registry DNS was unavailable.",
+    "No browser DuckDB-Wasm/Pyodide/Mermaid cold-load success, live Deepnote workspace access, or production compatibility is asserted."
+  ],
+  "rebuildReproducibility": {
+    "report": "rebuild-reproducibility.json",
+    "filesCompared": 62,
+    "byteIdentical": true
+  }
+}

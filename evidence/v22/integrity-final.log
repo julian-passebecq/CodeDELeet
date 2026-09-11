@@ -1,0 +1,95 @@
+{
+  "passed": 22,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Every public asset equals its dist counterpart",
+      "passed": true
+    },
+    {
+      "name": "All nested compiled relative ES module imports resolve",
+      "passed": true
+    },
+    {
+      "name": "Current documentation and screenshot links resolve",
+      "passed": true
+    },
+    {
+      "name": "No public/build notebook, archive or old companion-download code",
+      "passed": true
+    },
+    {
+      "name": "Build script rejects future public notebook/archive files",
+      "passed": true
+    },
+    {
+      "name": "Package, lockfile and build version agree at 2.2.0",
+      "passed": true
+    },
+    {
+      "name": "Pinned compiler and lockfile agree",
+      "passed": true
+    },
+    {
+      "name": "Bundled CodeMirror license and source retained",
+      "passed": true
+    },
+    {
+      "name": "No environment secrets, dependencies or fonts in served assets",
+      "passed": true
+    },
+    {
+      "name": "Mermaid pin is exactly 11.16.1 in runtime/build metadata",
+      "passed": true
+    },
+    {
+      "name": "All 51 unique exercises and 27 V1 IDs retained",
+      "passed": true
+    },
+    {
+      "name": "Four authored cases use explicit independent tasks",
+      "passed": true
+    },
+    {
+      "name": "Static config remains dist and no serverless runner",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: index.html",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: app/app.js",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: app/shell/layout-controller.js",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: workers/python.js",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: packs/starter.json",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: cases/index.json",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: shell.css",
+      "passed": true
+    },
+    {
+      "name": "Local HTTP bytes and MIME: vendor/codemirror/lib/codemirror.js",
+      "passed": true
+    },
+    {
+      "name": "Old companion download URL returns HTTP 404",
+      "passed": true
+    }
+  ],
+  "boundary": "Static file checks and actual local urllib HTTP bytes/MIME only; browser navigation, CDN and workers are separate."
+}

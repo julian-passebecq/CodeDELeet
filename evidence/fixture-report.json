@@ -1,0 +1,226 @@
+{
+  "environment": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1"
+  },
+  "limitations": [
+    "SQLite is not DuckDB-Wasm.",
+    "Native CPython/pandas is not Pyodide.",
+    "Spark source was not executed.",
+    "Deepnote references were checked inside supplied files, not a live workspace."
+  ],
+  "passed": 42,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "sql-paid-revenue / Base fixture",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "sql-paid-revenue / Empty orders",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "sql-paid-revenue / Same-date tie and repeated paid amount",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "sql-latest-order / Base fixture",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "sql-latest-order / Empty orders",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "sql-latest-order / Same-date tie and repeated paid amount",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "python-aggregate / Two countries",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-aggregate / Empty",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-aggregate / Refund",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-two-sum / Pair",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-two-sum / Duplicate",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-two-sum / Negative",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "python-two-sum / No match",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "spark-dedup",
+      "kind": "PySpark source syntax only",
+      "passed": true
+    },
+    {
+      "name": "pandas-grain / Null amount counts as a row",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "pandas-grain / Empty input",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-quality / Base fixture",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-quality / Empty orders",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-quality / Same-date tie and repeated paid amount",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-cte / Base fixture",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-cte / Empty orders",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-sql-cte / Same-date tie and repeated paid amount",
+      "kind": "SQLite portable-reference check",
+      "passed": true
+    },
+    {
+      "name": "v2-python-batches / Remainder",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-python-batches / Empty",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-python-batches / One large batch",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-python-latest / Out of order",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-python-latest / Stable tie",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-python-latest / Empty",
+      "kind": "native CPython/pandas reference",
+      "passed": true
+    },
+    {
+      "name": "v2-spark-aggregate",
+      "kind": "PySpark source syntax only",
+      "passed": true
+    },
+    {
+      "name": "v2-spark-join",
+      "kind": "PySpark source syntax only",
+      "passed": true
+    },
+    {
+      "name": "sql-paid-revenue / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "sql-latest-order / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "python-aggregate / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "spark-dedup / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "pandas-grain / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "bi-revenue / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "bi-filter-context / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "adf-watermark / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "dag-idempotency / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "v2-python-latest / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "v2-spark-aggregate / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    },
+    {
+      "name": "v2-spark-join / exact notebook section",
+      "kind": "Deepnote mapping",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "mode": "real HTTP origin and external CDN",
+  "baseURL": "http://127.0.0.1:5173",
+  "status": "UNVERIFIED: origin unavailable or navigation blocked",
+  "checks": [],
+  "pageErrors": [],
+  "browserVersion": "144.0.7559.96",
+  "blockingError": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:5173/#exercise=sql-paid-revenue\nCall log:\n  - navigating to \"http://127.0.0.1:5173/#exercise=sql-paid-revenue\", waiting until \"networkidle\"\n",
+  "passed": 0,
+  "failed": 0
+}

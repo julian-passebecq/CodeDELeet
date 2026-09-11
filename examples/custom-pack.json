@@ -1,34 +1,37 @@
 {
-  "schemaVersion": 1,
-  "id": "my-pack",
-  "title": "My personal questions",
+  "schemaVersion": 2,
+  "id": "my-review-pack",
+  "title": "My reviewed interview cases",
   "version": 1,
   "questions": [
     {
-      "id": "my-first-exercise",
+      "id": "my-first-case",
       "version": 1,
-      "title": "My first custom SQL exercise",
+      "title": "My first review case",
       "workspace": "code",
       "topic": "SQL",
+      "technology": "SQL",
       "difficulty": "Easy",
       "minutes": 12,
-      "engine": "sql",
+      "engine": "review",
       "language": "SQL",
-      "summary": "A tiny example showing how to add a repository-first content pack.",
+      "summary": "Return customer_id, name and revenue for every customer.",
       "concept": [
-        "The grain of the output is one row per customer. A LEFT JOIN preserves a customer even when no order matches.",
-        "A filter in WHERE can remove the null-extended rows from a LEFT JOIN. Put the paid-status condition inside the join or inside a conditional SUM."
+        "Keep every customer.",
+        "Exclude cancelled and pending orders."
       ],
-      "task": "Return all customer names, ordered by customer_id.",
+      "task": "Explain why a LEFT JOIN can lose unmatched customers when the right table is filtered in WHERE.",
       "requirements": [
-        "Return one column named name."
+        "Keep every customer.",
+        "Exclude cancelled and pending orders.",
+        "Use exact output column names and customer_id ordering."
       ],
-      "starter": "SELECT name FROM customers ORDER BY customer_id;",
-      "solution": "SELECT name FROM customers ORDER BY customer_id;",
-      "explanation": "Filter the right-hand table inside ON. An unmatched customer still exists in the result, and COALESCE converts their null sum into zero. Tests also include empty orders and repeated amounts.",
+      "starter": "Write your explanation here.",
+      "solution": "A right-table predicate in WHERE can discard the null-extended unmatched rows. Put the match constraint in ON when those left rows must be preserved.",
+      "explanation": "Putting paid status inside ON preserves the null-extended customer row. COALESCE turns a missing sum into zero. The output grain is one customer, not one order.",
       "hints": [
-        "Start with customers, not orders.",
-        "A filter inside ON and one in WHERE do not have the same effect on a LEFT JOIN."
+        "Keep every customer.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
       ],
       "sources": [
         {
@@ -36,8 +39,32 @@
           "url": "https://duckdb.org/docs/stable/sql/introduction"
         }
       ],
-      "dataset": "retail",
-      "ordered": true
+      "renderer": "concept-case",
+      "executionMode": "review",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Keep every customer.",
+        "Exclude cancelled and pending orders.",
+        "Use exact output column names and customer_id ordering."
+      ],
+      "visual": {
+        "type": "sql-join-trace",
+        "steps": [
+          "4 customers",
+          "LEFT JOIN paid orders",
+          "5 joined rows",
+          "GROUP BY customer",
+          "4 customer totals"
+        ],
+        "detail": "Ada matches two paid orders; Cleo and Dan keep one NULL-extended row each. A WHERE filter on o.status would remove them."
+      },
+      "ordered": true,
+      "dataset": "retail"
     }
   ]
 }

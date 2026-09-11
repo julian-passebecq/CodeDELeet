@@ -1,0 +1,40 @@
+name: Production deployment audit
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: codedeleet-production-audit
+  cancel-in-progress: true
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_URL: https://leetdejul.netlify.app
+      UI_MODE: http
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+      - name: Wait for exact deployment; verify all asset bytes and security headers
+        run: python scripts/verify_hosted.py
+      - name: Production workstation, migration and isolated cases
+        run: |
+          python tests/ui_smoke.py
+          python tests/v22_ui.py
+      - name: Real production SQL, Python, worker recovery and diagrams
+        run: python tests/network_runtime_smoke.py
+      - name: Preserve production evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22-production-evidence
+          path: evidence/

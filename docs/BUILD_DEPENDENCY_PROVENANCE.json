@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "release": "2.2.0",
+  "recordedAtUTC": "2026-09-10T19:15:07.036272+00:00",
+  "buildToolchain": {
+    "node": "v22.16.0",
+    "typescript": "Version 5.8.3",
+    "compilerSource": "preinstalled global compiler; exact lockfile version",
+    "python": "3.13.5",
+    "pandas": "2.2.3",
+    "playwright": "1.57.0",
+    "chromium": "144.0.7559.96",
+    "sqlite": "3.46.1",
+    "browserNavigation": "blocked by environment policy",
+    "cleanNpmCi": "BLOCKED: EAI_AGAIN resolving registry.npmjs.org",
+    "dependencyAudit": "NOT RUN; coordinator gate"
+  },
+  "packageLockSha256": "af9fe1a3780ac3a629d08668697ca19fcd6df5ac201c6e9098fa7b516a38137e",
+  "typescriptLockEntry": {
+    "version": "5.8.3",
+    "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz",
+    "integrity": "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==",
+    "dev": true,
+    "license": "Apache-2.0",
+    "bin": {
+      "tsc": "bin/tsc",
+      "tsserver": "bin/tsserver"
+    },
+    "engines": {
+      "node": ">=14.17"
+    }
+  },
+  "lockEntryOrigin": "Inherited exact TypeScript 5.8.3 metadata/integrity from uploaded V2 source; root release version updated to 2.2.0. Not re-fetched from registry in this pass.",
+  "cleanInstallEvidence": "../evidence/v22/npm-ci.log",
+  "buildCommand": "npm run build",
+  "buildResult": "PASS with installed exact-version compiler",
+  "runtimeDependencies": {
+    "codemirror": "5.58.3 bundled from supplied source; LICENSE preserved",
+    "mermaid": "11.16.1 pinned CDN URL; actual CDN rendering UNVERIFIED",
+    "duckdbWasm": "existing explicit browser loader retained; cold start UNVERIFIED",
+    "pyodide": "existing worker loader retained; cold start UNVERIFIED"
+  },
+  "requirementsDev": {
+    "playwright": "1.57.0",
+    "pandas": "2.2.3"
+  },
+  "repositoryOrDeploymentAttempted": false
+}

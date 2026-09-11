@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "schemaVersion": 1,
+      "id": "case-bi-sales",
+      "version": 1,
+      "workspace": "model",
+      "title": "Sales semantic-model case",
+      "feedbackPolicy": "learning",
+      "pages": [
+        {
+          "id": "overview",
+          "title": "Business context",
+          "body": "A sales team needs a customer/product revenue report. Work with the supplied small Sales, DimCustomer and DimProduct teaching model, not a real Power BI service."
+        },
+        {
+          "id": "data",
+          "title": "Tables and grain",
+          "body": "Sales contains order lines; OrderKey may repeat. CustomerKey and ProductKey link dimension members to facts. A line-level Sales key is distinct from an order key.",
+          "table": {
+            "columns": [
+              "Table",
+              "Grain",
+              "Relationship"
+            ],
+            "rows": [
+              [
+                "Sales",
+                "Order line",
+                "CustomerKey and ProductKey"
+              ],
+              [
+                "DimCustomer",
+                "Customer",
+                "Unique CustomerKey"
+              ],
+              [
+                "DimProduct",
+                "Product",
+                "Unique ProductKey"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "rules",
+          "title": "KPI and filter rules",
+          "body": "Revenue is the sum of line Quantity times UnitPrice. Country/category filters should propagate over valid active dimension-to-fact paths. Reference output is not a learner result."
+        },
+        {
+          "id": "exhibits",
+          "title": "Observed symptom",
+          "body": "A country slicer no longer changes the measure after a relationship is deactivated. Explain the relationship path before changing the calculation."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "grain",
+          "title": "Select fact grain",
+          "questionRef": "bi-star-schema",
+          "pageRefs": [
+            "overview",
+            "data"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "measure",
+          "title": "Write the revenue measure",
+          "questionRef": "bi-revenue",
+          "pageRefs": [
+            "data",
+            "rules"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "context",
+          "title": "Investigate filter replacement",
+          "questionRef": "bi-filter-context",
+          "pageRefs": [
+            "rules",
+            "exhibits"
+          ],
+          "artifactScope": "independent"
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "case-code-customer",
+      "version": 1,
+      "workspace": "code",
+      "title": "Customer revenue interview",
+      "feedbackPolicy": "learning",
+      "pages": [
+        {
+          "id": "overview",
+          "title": "Overview",
+          "body": "You are preparing a customer-level report. Keep customers with no paid orders. Each task is an independent interview drill using its referenced exercise fixture."
+        },
+        {
+          "id": "data",
+          "title": "Data dictionary",
+          "body": "customers has one row per customer_id. orders has one row per order_id, with customer_id, order_date, amount and status. Inspect actual small fixture rows from the active task; do not assume monetary units.",
+          "table": {
+            "columns": [
+              "Table",
+              "Grain",
+              "Key",
+              "Watch for"
+            ],
+            "rows": [
+              [
+                "customers",
+                "One customer",
+                "customer_id",
+                "Customers with no paid orders"
+              ],
+              [
+                "orders",
+                "One order",
+                "order_id",
+                "Status filtering and tied order dates"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "rules",
+          "title": "Business rules",
+          "body": "Revenue includes paid orders only. Latest order is selected by order_date descending, then order_id descending. Duplicate dates do not define a deterministic order by themselves."
+        },
+        {
+          "id": "exhibits",
+          "title": "Quality exhibits",
+          "body": "Test empty orders, customers with no matches and repeated dates. A passing base fixture is insufficient when a tie fixture fails."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "revenue",
+          "title": "Preserve customer grain",
+          "questionRef": "sql-paid-revenue",
+          "pageRefs": [
+            "overview",
+            "data",
+            "rules"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "latest",
+          "title": "Resolve date ties",
+          "questionRef": "sql-latest-order",
+          "pageRefs": [
+            "data",
+            "rules",
+            "exhibits"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "batches",
+          "title": "Batch the outbound records",
+          "questionRef": "v2-python-batches",
+          "pageRefs": [
+            "overview",
+            "exhibits"
+          ],
+          "artifactScope": "independent"
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "case-pipeline-release",
+      "version": 1,
+      "workspace": "pipeline",
+      "title": "Safe publication pipeline",
+      "feedbackPolicy": "learning",
+      "pages": [
+        {
+          "id": "overview",
+          "title": "Existing system",
+          "body": "A daily teaching pipeline extracts orders, transforms them, validates quality and publishes a mart. Review dependencies before assuming the run is safe."
+        },
+        {
+          "id": "data",
+          "title": "Source and watermark",
+          "body": "A source watermark restricts extraction; it is not a destination deduplication key. Update it only after successful data handling. No real destination transaction is simulated."
+        },
+        {
+          "id": "rules",
+          "title": "Operational requirements",
+          "body": "Publication must not bypass validation. Failure and retry behavior must be explicit. A join after an intentional branch skip needs a compatible trigger rule."
+        },
+        {
+          "id": "exhibits",
+          "title": "Run evidence",
+          "body": "Use the active task's synthetic logs/grid. Do not attribute old run logs to a newly edited graph. Inspect the failing task and its downstream states.",
+          "table": {
+            "columns": [
+              "Event",
+              "Observed state",
+              "Question"
+            ],
+            "rows": [
+              [
+                "Copy completes",
+                "Staging populated",
+                "Is the destination replay-safe?"
+              ],
+              [
+                "Validation fails",
+                "Publication must wait",
+                "Which edge enforces the boundary?"
+              ],
+              [
+                "Retry repeats interval",
+                "Same business records",
+                "Can the write duplicate them?"
+              ]
+            ]
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "quality",
+          "title": "Repair the quality gate",
+          "questionRef": "dag-data-quality",
+          "pageRefs": [
+            "overview",
+            "rules"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "watermark",
+          "title": "Place the watermark update",
+          "questionRef": "adf-watermark",
+          "pageRefs": [
+            "data",
+            "rules"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "branch",
+          "title": "Join after a skip",
+          "questionRef": "v2-airflow-branch",
+          "pageRefs": [
+            "rules",
+            "exhibits"
+          ],
+          "artifactScope": "independent"
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "case-systems-incident",
+      "version": 1,
+      "workspace": "architecture",
+      "title": "Data-worker change investigation",
+      "feedbackPolicy": "learning",
+      "pages": [
+        {
+          "id": "overview",
+          "title": "Incident brief",
+          "body": "An application update combines a feature branch and changes a data-worker deployment. Investigate each independent supplied artifact; there is no live Git remote or Kubernetes cluster."
+        },
+        {
+          "id": "git",
+          "title": "Git exhibit",
+          "body": "The feature and main branches diverged. Preserve both lines of work when integrating the change. Graph predictions must not mutate HEAD or refs."
+        },
+        {
+          "id": "deployment",
+          "title": "Deployment exhibit",
+          "body": "A Service has no matching endpoints. Compare its selector with the Pod template labels using the active task fixture. A green text check is not a real cluster validation."
+        },
+        {
+          "id": "capacity",
+          "title": "Resource exhibit",
+          "body": "A worker was OOMKilled. Distinguish supplied memory-limit evidence from an actual profiler result. Record what additional observations you would collect.",
+          "table": {
+            "columns": [
+              "Evidence",
+              "Known",
+              "Not established"
+            ],
+            "rows": [
+              [
+                "Git state",
+                "Committed vs working changes",
+                "Remote deployment outcome"
+              ],
+              [
+                "Pod events",
+                "Exit reason and memory limit",
+                "Root cause of memory growth"
+              ],
+              [
+                "Plan fixture",
+                "Proposed resource replacement",
+                "Actual provider apply result"
+              ]
+            ]
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "merge",
+          "title": "Integrate divergent work",
+          "questionRef": "v2-git-merge",
+          "pageRefs": [
+            "overview",
+            "git"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "selector",
+          "title": "Trace the routing mismatch",
+          "questionRef": "v2-k8-selector",
+          "pageRefs": [
+            "deployment"
+          ],
+          "artifactScope": "independent"
+        },
+        {
+          "id": "memory",
+          "title": "Explain the memory failure",
+          "questionRef": "arch-kubernetes",
+          "pageRefs": [
+            "capacity"
+          ],
+          "artifactScope": "independent"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "app": "CodeDELeet",
+  "version": "2.2.0",
+  "contentSchema": [
+    1,
+    2
+  ],
+  "storageSchema": 1,
+  "layoutSchema": 1,
+  "caseSchema": 1,
+  "mermaid": "11.16.1",
+  "baseline": "d3c7c21ba79a082da21925b5ee0dce69212577fe"
+}

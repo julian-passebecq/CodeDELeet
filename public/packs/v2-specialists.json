@@ -1,0 +1,2311 @@
+{
+  "schemaVersion": 2,
+  "id": "studio-v2-specialists",
+  "title": "V2 specialist interview labs",
+  "version": 1,
+  "questions": [
+    {
+      "id": "v2-sql-quality",
+      "version": 1,
+      "title": "Detect duplicate keys before a merge",
+      "workspace": "code",
+      "topic": "SQL",
+      "technology": "SQL",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "sql",
+      "language": "SQL",
+      "summary": "Return customer_id and duplicate_count for customer IDs appearing more than once in orders.",
+      "concept": [
+        "Use COUNT(*) not COUNT(amount).",
+        "Filter groups with more than one row."
+      ],
+      "task": "Return customer_id and duplicate_count for customer IDs appearing more than once in orders. Sort by customer_id.",
+      "requirements": [
+        "Use COUNT(*) not COUNT(amount).",
+        "Filter groups with more than one row.",
+        "State the source grain."
+      ],
+      "starter": "SELECT customer_id\nFROM orders\n-- Group and filter duplicate keys",
+      "solution": "SELECT customer_id, COUNT(*) AS duplicate_count\nFROM orders GROUP BY customer_id HAVING COUNT(*) > 1\nORDER BY customer_id;",
+      "explanation": "GROUP BY changes row grain. HAVING filters groups after aggregation. A MERGE source may need deterministic deduplication, not just detection.",
+      "hints": [
+        "Use COUNT(*) not COUNT(amount).",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "renderer": "sql-editor",
+      "executionMode": "execute",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Use COUNT(*) not COUNT(amount).",
+        "Filter groups with more than one row.",
+        "State the source grain."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "ordered": true,
+      "dataset": "retail",
+      "fixture": {
+        "sqlTests": [
+          {
+            "label": "Base fixture",
+            "overrides": {},
+            "columns": [
+              "customer_id",
+              "duplicate_count"
+            ],
+            "rows": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                2
+              ]
+            ]
+          },
+          {
+            "label": "Empty orders",
+            "overrides": {
+              "orders": []
+            },
+            "columns": [
+              "customer_id",
+              "duplicate_count"
+            ],
+            "rows": []
+          },
+          {
+            "label": "Same-date tie and repeated paid amount",
+            "overrides": {
+              "orders": [
+                {
+                  "order_id": 101,
+                  "customer_id": 1,
+                  "order_date": "2026-01-02",
+                  "amount": 120,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 102,
+                  "customer_id": 1,
+                  "order_date": "2026-01-05",
+                  "amount": 80,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 103,
+                  "customer_id": 2,
+                  "order_date": "2026-01-03",
+                  "amount": 60,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 104,
+                  "customer_id": 2,
+                  "order_date": "2026-01-06",
+                  "amount": 40,
+                  "status": "cancelled"
+                },
+                {
+                  "order_id": 105,
+                  "customer_id": 3,
+                  "order_date": "2026-01-07",
+                  "amount": 90,
+                  "status": "pending"
+                },
+                {
+                  "order_id": 106,
+                  "customer_id": 1,
+                  "order_date": "2026-01-05",
+                  "amount": 80,
+                  "status": "paid"
+                }
+              ]
+            },
+            "columns": [
+              "customer_id",
+              "duplicate_count"
+            ],
+            "rows": [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-sql-cte",
+      "version": 1,
+      "title": "Customers above average paid spend",
+      "workspace": "code",
+      "topic": "SQL",
+      "technology": "SQL",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "sql",
+      "language": "SQL",
+      "summary": "Return customer_id and revenue for customers whose paid total exceeds the average of paid totals among customers with at least one paid order.",
+      "concept": [
+        "Filter paid orders before grouping.",
+        "Average customer totals, not order amounts."
+      ],
+      "task": "Return customer_id and revenue for customers whose paid total exceeds the average of paid totals among customers with at least one paid order. Sort by customer_id.",
+      "requirements": [
+        "Filter paid orders before grouping.",
+        "Average customer totals, not order amounts.",
+        "Do not silently include zero-spend customers."
+      ],
+      "starter": "WITH totals AS (\n -- paid total per customer\n)\nSELECT * FROM totals;",
+      "solution": "WITH totals AS (\n SELECT customer_id, SUM(amount) AS revenue\n FROM orders WHERE status='paid' GROUP BY customer_id\n)\nSELECT customer_id,revenue FROM totals\nWHERE revenue > (SELECT AVG(revenue) FROM totals)\nORDER BY customer_id;",
+      "explanation": "Compute the average at the customer-total grain, not the raw order grain. Customers without paid orders are excluded from this specifically defined average.",
+      "hints": [
+        "Filter paid orders before grouping.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "DuckDB SQL documentation",
+          "url": "https://duckdb.org/docs/stable/sql/introduction"
+        }
+      ],
+      "renderer": "sql-editor",
+      "executionMode": "execute",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Filter paid orders before grouping.",
+        "Average customer totals, not order amounts.",
+        "Do not silently include zero-spend customers."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "ordered": true,
+      "dataset": "retail",
+      "fixture": {
+        "sqlTests": [
+          {
+            "label": "Base fixture",
+            "overrides": {},
+            "columns": [
+              "customer_id",
+              "revenue"
+            ],
+            "rows": [
+              [
+                1,
+                200.0
+              ]
+            ]
+          },
+          {
+            "label": "Empty orders",
+            "overrides": {
+              "orders": []
+            },
+            "columns": [
+              "customer_id",
+              "revenue"
+            ],
+            "rows": []
+          },
+          {
+            "label": "Same-date tie and repeated paid amount",
+            "overrides": {
+              "orders": [
+                {
+                  "order_id": 101,
+                  "customer_id": 1,
+                  "order_date": "2026-01-02",
+                  "amount": 120,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 102,
+                  "customer_id": 1,
+                  "order_date": "2026-01-05",
+                  "amount": 80,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 103,
+                  "customer_id": 2,
+                  "order_date": "2026-01-03",
+                  "amount": 60,
+                  "status": "paid"
+                },
+                {
+                  "order_id": 104,
+                  "customer_id": 2,
+                  "order_date": "2026-01-06",
+                  "amount": 40,
+                  "status": "cancelled"
+                },
+                {
+                  "order_id": 105,
+                  "customer_id": 3,
+                  "order_date": "2026-01-07",
+                  "amount": 90,
+                  "status": "pending"
+                },
+                {
+                  "order_id": 106,
+                  "customer_id": 1,
+                  "order_date": "2026-01-05",
+                  "amount": 80,
+                  "status": "paid"
+                }
+              ]
+            },
+            "columns": [
+              "customer_id",
+              "revenue"
+            ],
+            "rows": [
+              [
+                1,
+                280.0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-python-batches",
+      "version": 1,
+      "title": "Batch records without losing the final chunk",
+      "workspace": "code",
+      "topic": "Python",
+      "technology": "Python",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "python",
+      "language": "Python",
+      "summary": "Implement solve(records,size).",
+      "concept": [
+        "Keep the final short batch.",
+        "Do not mutate records."
+      ],
+      "task": "Implement solve(records,size). Return batches as lists. A final short batch must be kept; size <= 0 raises ValueError (tested separately in explanation).",
+      "requirements": [
+        "Keep the final short batch.",
+        "Do not mutate records.",
+        "Handle empty input."
+      ],
+      "starter": "def solve(records, size):\n    # Validate size and return batches\n    return []",
+      "solution": "def solve(records, size):\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    return [records[i:i + size] for i in range(0, len(records), size)]",
+      "explanation": "Slice boundaries naturally keep the short final batch. A generator variant can reduce retained output memory but does not by itself make a materialized source streaming.",
+      "hints": [
+        "Keep the final short batch.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Python data structures",
+          "url": "https://docs.python.org/3/tutorial/datastructures.html"
+        }
+      ],
+      "renderer": "code-editor",
+      "executionMode": "execute",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Keep the final short batch.",
+        "Do not mutate records.",
+        "Handle empty input."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "entrypoint": "solve",
+      "pythonTests": [
+        {
+          "label": "Remainder",
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5
+            ]
+          ]
+        },
+        {
+          "label": "Empty",
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "label": "One large batch",
+          "args": [
+            [
+              1,
+              2
+            ],
+            9
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v2-python-latest",
+      "version": 1,
+      "title": "Latest revision from API records",
+      "workspace": "code",
+      "topic": "Python",
+      "technology": "Python",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "python",
+      "language": "Python",
+      "summary": "Implement solve(records).",
+      "concept": [
+        "One record per id.",
+        "Highest revision wins."
+      ],
+      "task": "Implement solve(records). Keep the highest revision for each id and return records sorted by id. Equal revisions keep the first record.",
+      "requirements": [
+        "One record per id.",
+        "Highest revision wins.",
+        "First wins equal revisions."
+      ],
+      "starter": "def solve(records):\n    latest = {}\n    # Key by id; compare revision\n    return []",
+      "solution": "def solve(records):\n    latest = {}\n    for row in records:\n        old = latest.get(row[\"id\"])\n        if old is None or row[\"revision\"] > old[\"revision\"]:\n            latest[row[\"id\"]] = row\n    return [latest[k] for k in sorted(latest)]",
+      "explanation": "A dictionary stores one candidate per key. Using > rather than >= makes the tie policy explicit. Return records without mutating input.",
+      "hints": [
+        "One record per id.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Python data structures",
+          "url": "https://docs.python.org/3/tutorial/datastructures.html"
+        }
+      ],
+      "renderer": "code-editor",
+      "executionMode": "execute",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [
+        {
+          "type": "exercise",
+          "label": "Open companion notebook",
+          "url": "",
+          "exerciseRef": "C1. Latest record per key",
+          "notebook": "01 - Python Core Interview Arena"
+        }
+      ],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "One record per id.",
+        "Highest revision wins.",
+        "First wins equal revisions."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "entrypoint": "solve",
+      "pythonTests": [
+        {
+          "label": "Out of order",
+          "args": [
+            [
+              {
+                "id": 2,
+                "revision": 1
+              },
+              {
+                "id": 1,
+                "revision": 2
+              },
+              {
+                "id": 1,
+                "revision": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "revision": 2
+            },
+            {
+              "id": 2,
+              "revision": 1
+            }
+          ]
+        },
+        {
+          "label": "Stable tie",
+          "args": [
+            [
+              {
+                "id": 1,
+                "revision": 1,
+                "value": "first"
+              },
+              {
+                "id": 1,
+                "revision": 1,
+                "value": "second"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "revision": 1,
+              "value": "first"
+            }
+          ]
+        },
+        {
+          "label": "Empty",
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    },
+    {
+      "id": "v2-spark-aggregate",
+      "version": 1,
+      "title": "Revenue and event count in PySpark",
+      "workspace": "code",
+      "topic": "PySpark",
+      "technology": "PySpark",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PySpark",
+      "summary": "Build result with customer_id, revenue and event_count from events.",
+      "concept": [
+        "Group by customer_id.",
+        "Built-in sum, not Python UDF."
+      ],
+      "task": "Build result with customer_id, revenue and event_count from events. Use built-in aggregations; count rows even when amount is null.",
+      "requirements": [
+        "Group by customer_id.",
+        "Built-in sum, not Python UDF.",
+        "Count all rows."
+      ],
+      "starter": "from pyspark.sql import functions as F\n\nresult = (events\n    .groupBy(\"customer_id\")\n    # Add named aggregates\n)",
+      "solution": "from pyspark.sql import functions as F\nresult = (events.groupBy(\"customer_id\")\n .agg(F.sum(\"amount\").alias(\"revenue\"),\n      F.count(\"*\").alias(\"event_count\")))",
+      "explanation": "groupBy causes an aggregation shuffle unless compatible partitioning already satisfies the plan. count(\"*\") counts rows; count(\"amount\") excludes null amounts. This is review, never browser Spark execution.",
+      "hints": [
+        "Group by customer_id.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Spark DataFrame API",
+          "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html"
+        }
+      ],
+      "renderer": "pyspark-editor",
+      "executionMode": "review",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [
+        {
+          "type": "exercise",
+          "label": "Open companion notebook",
+          "url": "",
+          "exerciseRef": "B2. groupBy + agg",
+          "notebook": "03 - PySpark DataFrame Interview Arena"
+        }
+      ],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Group by customer_id.",
+        "Built-in sum, not Python UDF.",
+        "Count all rows."
+      ],
+      "visual": {
+        "type": "pyspark-transformations",
+        "steps": [
+          "3 events",
+          "Partial aggregate",
+          "Exchange by key",
+          "Final aggregate",
+          "2 customers"
+        ],
+        "detail": "Built-in aggregations expose the work to the Spark optimizer."
+      },
+      "fixture": {
+        "tables": {
+          "events": [
+            {
+              "customer_id": 1,
+              "event_time": "2026-01-02",
+              "event_id": 101,
+              "amount": 10
+            },
+            {
+              "customer_id": 1,
+              "event_time": "2026-01-02",
+              "event_id": 102,
+              "amount": 15
+            },
+            {
+              "customer_id": 2,
+              "event_time": "2026-01-01",
+              "event_id": 103,
+              "amount": 7
+            }
+          ]
+        },
+        "schema": "customer_id: long, event_time: string, event_id: long, amount: double",
+        "expected": [
+          {
+            "customer_id": 1,
+            "revenue": 25,
+            "event_count": 2
+          },
+          {
+            "customer_id": 2,
+            "revenue": 7,
+            "event_count": 1
+          }
+        ],
+        "plan": "Scan -> partial HashAggregate -> Exchange customer_id -> final HashAggregate",
+        "planNotice": "Illustrative plan, not captured from a running Spark session."
+      }
+    },
+    {
+      "id": "v2-spark-join",
+      "version": 1,
+      "title": "A left join that preserves unmatched facts",
+      "workspace": "code",
+      "topic": "PySpark",
+      "technology": "PySpark",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PySpark",
+      "summary": "Enrich events with a small customer dimension by customer_id.",
+      "concept": [
+        "Left join, not inner.",
+        "Check dimension uniqueness."
+      ],
+      "task": "Enrich events with a small customer dimension by customer_id. Keep unmatched events and explain why duplicate dimension keys would multiply facts.",
+      "requirements": [
+        "Left join, not inner.",
+        "Check dimension uniqueness.",
+        "Validate size before broadcasting."
+      ],
+      "starter": "from pyspark.sql import functions as F\n\n# Enrich events using customers",
+      "solution": "result = events.join(F.broadcast(customers), \"customer_id\", \"left\")\n# Validate customer_id uniqueness in customers before trusting row counts.",
+      "explanation": "Broadcasting is a plan choice, not a correctness guarantee. The dimension must fit broadcast memory and have the intended key uniqueness. A left join preserves facts but can still multiply them.",
+      "hints": [
+        "Left join, not inner.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Spark DataFrame API",
+          "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html"
+        }
+      ],
+      "renderer": "pyspark-editor",
+      "executionMode": "review",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [
+        {
+          "type": "exercise",
+          "label": "Open companion notebook",
+          "url": "",
+          "exerciseRef": "C1. Join a dimension",
+          "notebook": "03 - PySpark DataFrame Interview Arena"
+        }
+      ],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Left join, not inner.",
+        "Check dimension uniqueness.",
+        "Validate size before broadcasting."
+      ],
+      "visual": {
+        "type": "sql-join-trace",
+        "steps": [
+          "3 facts",
+          "1 unique dimension key",
+          "Left broadcast join",
+          "3 enriched facts"
+        ],
+        "detail": "An inner join would drop customer 2; duplicate dimension keys would multiply customer 1 events."
+      },
+      "fixture": {
+        "tables": {
+          "events": [
+            {
+              "customer_id": 1,
+              "event_time": "2026-01-02",
+              "event_id": 101,
+              "amount": 10
+            },
+            {
+              "customer_id": 1,
+              "event_time": "2026-01-02",
+              "event_id": 102,
+              "amount": 15
+            },
+            {
+              "customer_id": 2,
+              "event_time": "2026-01-01",
+              "event_id": 103,
+              "amount": 7
+            }
+          ],
+          "customers": [
+            {
+              "customer_id": 1,
+              "country": "NO"
+            }
+          ]
+        },
+        "schema": "customer_id: long, event_time: string, event_id: long, amount: double",
+        "expected": [
+          {
+            "customer_id": 1,
+            "event_time": "2026-01-02",
+            "event_id": 101,
+            "amount": 10,
+            "country": "NO"
+          },
+          {
+            "customer_id": 1,
+            "event_time": "2026-01-02",
+            "event_id": 102,
+            "amount": 15,
+            "country": "NO"
+          },
+          {
+            "customer_id": 2,
+            "event_time": "2026-01-01",
+            "event_id": 103,
+            "amount": 7,
+            "country": null
+          }
+        ],
+        "plan": "Illustrative: Scan events -> BroadcastHashJoin LeftOuter <- BroadcastExchange customers",
+        "planNotice": "Illustrative plan, not captured from a running Spark session."
+      }
+    },
+    {
+      "id": "v2-airflow-branch",
+      "version": 1,
+      "title": "Join after a skipped branch",
+      "workspace": "pipeline",
+      "topic": "Airflow",
+      "technology": "Airflow",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "JSON",
+      "summary": "The optional branch is skipped.",
+      "concept": [
+        "Require at least one successful parent.",
+        "Block actual failures."
+      ],
+      "task": "The optional branch is skipped. Configure the final join so that it runs when at least one parent succeeds and none failed. Compare all_success and none_failed_min_one_success.",
+      "requirements": [
+        "Require at least one successful parent.",
+        "Block actual failures.",
+        "Do not treat skipped as success."
+      ],
+      "starter": "# Use synchronized graph/config for trigger rules.",
+      "solution": "Set join.triggerRule to none_failed_min_one_success. Do not use all_done when a failed prerequisite must block publication.",
+      "explanation": "A skipped branch is not a failure, but all_success will not accept it. none_failed_min_one_success encodes the desired condition.",
+      "hints": [
+        "Require at least one successful parent.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Airflow DAG concepts",
+          "url": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"
+        }
+      ],
+      "renderer": "dag-editor",
+      "executionMode": "simulate",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Require at least one successful parent.",
+        "Block actual failures.",
+        "Do not treat skipped as success."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "graph": {
+          "nodes": [
+            {
+              "id": "extract",
+              "label": "Extract",
+              "role": "task",
+              "x": 30,
+              "y": 40
+            },
+            {
+              "id": "required",
+              "label": "Required branch",
+              "role": "task",
+              "x": 260,
+              "y": 40
+            },
+            {
+              "id": "optional",
+              "label": "Optional branch",
+              "role": "task",
+              "x": 260,
+              "y": 190,
+              "skip": true
+            },
+            {
+              "id": "join",
+              "label": "Publish join",
+              "role": "task",
+              "x": 490,
+              "y": 100,
+              "triggerRule": "all_success"
+            }
+          ],
+          "edges": [
+            {
+              "id": "e1",
+              "from": "extract",
+              "to": "required"
+            },
+            {
+              "id": "e2",
+              "from": "extract",
+              "to": "optional"
+            },
+            {
+              "id": "e3",
+              "from": "required",
+              "to": "join"
+            },
+            {
+              "id": "e4",
+              "from": "optional",
+              "to": "join"
+            }
+          ]
+        },
+        "targetTask": "join"
+      }
+    },
+    {
+      "id": "v2-dbt-failure",
+      "version": 1,
+      "title": "Follow a failing dbt build artifact",
+      "workspace": "pipeline",
+      "topic": "dbt",
+      "technology": "dbt",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "text",
+      "summary": "A uniqueness test on stg_orders failed.",
+      "concept": [
+        "Identify the failing node.",
+        "Trace affected downstream consumers."
+      ],
+      "task": "A uniqueness test on stg_orders failed. Inspect the artifact-shaped fixtures and explain why revenue must not be published. Repair the SQL deduplication approach in your answer.",
+      "requirements": [
+        "Identify the failing node.",
+        "Trace affected downstream consumers.",
+        "State a deterministic latest-record and test policy."
+      ],
+      "starter": "WITH ranked AS (\n SELECT *, ROW_NUMBER() OVER (\n  PARTITION BY order_id ORDER BY updated_at DESC, ingestion_id DESC\n ) AS rn\n FROM {{ source(\"raw\", \"orders\") }}\n)\n-- Keep one deterministic row",
+      "solution": "WITH ranked AS (\n SELECT *, ROW_NUMBER() OVER (\n  PARTITION BY order_id ORDER BY updated_at DESC, ingestion_id DESC\n ) AS rn\n FROM {{ source(\"raw\", \"orders\") }}\n)\nSELECT * EXCLUDE(rn) FROM ranked WHERE rn = 1;\n-- Rerun unique and not_null tests before publishing.",
+      "explanation": "A failed test needs an investigation into source grain and change semantics. Silently dropping duplicates can hide upstream contract errors. These fixtures do not compile Jinja or execute dbt.",
+      "hints": [
+        "Identify the failing node.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "dbt incremental models",
+          "url": "https://docs.getdbt.com/docs/build/incremental-models"
+        }
+      ],
+      "renderer": "pipeline-investigation",
+      "executionMode": "review",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Identify the failing node.",
+        "Trace affected downstream consumers.",
+        "State a deterministic latest-record and test policy."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "manifest": {
+          "metadata": {
+            "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v12.json",
+            "note": "Curated subset, not a full manifest"
+          },
+          "nodes": {
+            "model.demo.stg_orders": {
+              "resource_type": "model",
+              "depends_on": {
+                "nodes": [
+                  "source.demo.raw.orders"
+                ]
+              },
+              "config": {
+                "materialized": "view"
+              }
+            },
+            "test.demo.unique_stg_orders": {
+              "resource_type": "test",
+              "depends_on": {
+                "nodes": [
+                  "model.demo.stg_orders"
+                ]
+              }
+            },
+            "model.demo.fct_revenue": {
+              "resource_type": "model",
+              "depends_on": {
+                "nodes": [
+                  "model.demo.stg_orders"
+                ]
+              },
+              "config": {
+                "materialized": "incremental",
+                "unique_key": "customer_id"
+              }
+            }
+          }
+        },
+        "run_results": {
+          "results": [
+            {
+              "unique_id": "model.demo.stg_orders",
+              "status": "success",
+              "execution_time": 1.2
+            },
+            {
+              "unique_id": "test.demo.unique_stg_orders",
+              "status": "fail",
+              "failures": 2
+            },
+            {
+              "unique_id": "model.demo.fct_revenue",
+              "status": "skipped",
+              "execution_time": 0
+            }
+          ]
+        },
+        "graph": {
+          "nodes": [
+            {
+              "id": "raw",
+              "label": "raw.orders",
+              "role": "source",
+              "x": 30,
+              "y": 40
+            },
+            {
+              "id": "staging",
+              "label": "stg_orders",
+              "role": "model",
+              "x": 260,
+              "y": 40
+            },
+            {
+              "id": "test",
+              "label": "unique(order_id)",
+              "role": "test fail: 2",
+              "x": 490,
+              "y": 40
+            },
+            {
+              "id": "mart",
+              "label": "fct_revenue",
+              "role": "skipped",
+              "x": 260,
+              "y": 190
+            }
+          ],
+          "edges": [
+            {
+              "id": "a",
+              "from": "raw",
+              "to": "staging"
+            },
+            {
+              "id": "b",
+              "from": "staging",
+              "to": "test"
+            },
+            {
+              "id": "c",
+              "from": "staging",
+              "to": "mart"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "v2-spark-files",
+      "version": 1,
+      "title": "Small files without a fake speed estimate",
+      "workspace": "architecture",
+      "topic": "Spark performance",
+      "technology": "Spark performance",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "text",
+      "summary": "Inspect this file-heavy stage.",
+      "concept": [
+        "Use file and task evidence.",
+        "Do not claim skew without a distribution."
+      ],
+      "task": "Inspect this file-heavy stage. Distinguish scheduling and file-open overhead from a skew claim. Explain a compaction plan and how to measure improvement.",
+      "requirements": [
+        "Use file and task evidence.",
+        "Do not claim skew without a distribution.",
+        "Measure scan overhead before and after."
+      ],
+      "starter": "# Diagnosis and measurement plan",
+      "solution": "Many tiny files and comparable task durations suggest investigating file/listing overhead. Compact to a workload-appropriate file size and measure metadata time, scan tasks and bytes. Avoid promising a universal target size or exact speedup.",
+      "explanation": "The absence of a long task tail weakens a skew diagnosis here. File layout choices depend on write frequency, downstream queries and partition pruning.",
+      "hints": [
+        "Use file and task evidence.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Spark SQL performance tuning",
+          "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+        }
+      ],
+      "renderer": "performance-investigation",
+      "executionMode": "review",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Use file and task evidence.",
+        "Do not claim skew without a distribution.",
+        "Measure scan overhead before and after."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "metrics": {
+          "Input": "8 GB",
+          "Files": "80,000",
+          "Median file": "100 KB",
+          "Tasks": "80,000",
+          "Median task": "0.6 s",
+          "Slowest task": "0.9 s",
+          "Spill": "0 GB",
+          "Scheduler delay": "Fixture indicates high overhead"
+        },
+        "tasks": [
+          {
+            "task": 1,
+            "duration_s": 0.54,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 2,
+            "duration_s": 0.58,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 3,
+            "duration_s": 0.62,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 4,
+            "duration_s": 0.66,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 5,
+            "duration_s": 0.7,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 6,
+            "duration_s": 0.74,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 7,
+            "duration_s": 0.78,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          },
+          {
+            "task": 8,
+            "duration_s": 0.8200000000000001,
+            "read_GB": 0.0001,
+            "spill_GB": 0
+          }
+        ],
+        "plan": "FileScan parquet [date partition] -> Project -> Write",
+        "diagnoses": [
+          {
+            "id": "files",
+            "label": "Investigate small-file and scheduling overhead",
+            "correct": true
+          },
+          {
+            "id": "compact",
+            "label": "Evaluate compaction and measure scan overhead",
+            "correct": true
+          },
+          {
+            "id": "skew",
+            "label": "The evidence proves a hot-key skew problem",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-tofu-replacement",
+      "version": 1,
+      "title": "Review a destructive replacement plan",
+      "workspace": "architecture",
+      "topic": "OpenTofu",
+      "technology": "OpenTofu",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "HCL",
+      "summary": "The plan fixture replaces a storage bucket after a name change.",
+      "concept": [
+        "Identify delete/create replacement.",
+        "Do not run apply."
+      ],
+      "task": "The plan fixture replaces a storage bucket after a name change. Identify delete/create, explain state implications, and add a prevent_destroy safeguard to the example HCL.",
+      "requirements": [
+        "Identify delete/create replacement.",
+        "Do not run apply.",
+        "Protect data and design migration."
+      ],
+      "starter": "resource \"aws_s3_bucket\" \"lake\" {\n  bucket = \"analytics-lake-v2\"\n}",
+      "solution": "resource \"aws_s3_bucket\" \"lake\" {\n  bucket = \"analytics-lake-v2\"\n  lifecycle { prevent_destroy = true }\n}\n# Investigate a migration rather than blindly applying replacement.",
+      "explanation": "prevent_destroy blocks destructive plans while the configuration remains applicable; it is not a backup. The plan is a fixed JSON fixture and is not recomputed when you edit HCL.",
+      "hints": [
+        "Identify delete/create replacement.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "OpenTofu state",
+          "url": "https://opentofu.org/docs/language/state/"
+        }
+      ],
+      "renderer": "config-editor",
+      "executionMode": "analyze",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Identify delete/create replacement.",
+        "Do not run apply.",
+        "Protect data and design migration."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "plan": {
+          "format_version": "1.2",
+          "resource_changes": [
+            {
+              "address": "aws_s3_bucket.lake",
+              "change": {
+                "actions": [
+                  "delete",
+                  "create"
+                ],
+                "before": {
+                  "bucket": "analytics-lake-v1"
+                },
+                "after": {
+                  "bucket": "analytics-lake-v2"
+                },
+                "replace_paths": [
+                  [
+                    "bucket"
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "checks": [
+          {
+            "label": "Destruction safeguard is explicit",
+            "pattern": "prevent_destroy\\s*=\\s*true"
+          }
+        ],
+        "graph": {
+          "nodes": [
+            {
+              "id": "bucket",
+              "label": "Bucket replacement",
+              "role": "delete + create",
+              "x": 30,
+              "y": 60
+            },
+            {
+              "id": "policy",
+              "label": "Access policy",
+              "role": "dependent",
+              "x": 270,
+              "y": 60
+            }
+          ],
+          "edges": [
+            {
+              "id": "e",
+              "from": "bucket",
+              "to": "policy"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "v2-k8-selector",
+      "version": 1,
+      "title": "Why does the Service have no endpoints?",
+      "workspace": "architecture",
+      "topic": "Kubernetes",
+      "technology": "Kubernetes",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "YAML",
+      "summary": "The Pod template has app: worker, but the Service selects app: api.",
+      "concept": [
+        "Match app: worker.",
+        "Keep targetPort 8080 for the fixture."
+      ],
+      "task": "The Pod template has app: worker, but the Service selects app: api. Repair the selector and describe readiness and port checks.",
+      "requirements": [
+        "Match app: worker.",
+        "Keep targetPort 8080 for the fixture.",
+        "Explain readiness separately."
+      ],
+      "starter": "apiVersion: v1\nkind: Service\nmetadata:\n  name: worker\nspec:\n  selector:\n    app: api\n  ports:\n    - port: 80\n      targetPort: 8080",
+      "solution": "apiVersion: v1\nkind: Service\nmetadata:\n  name: worker\nspec:\n  selector:\n    app: worker\n  ports:\n    - port: 80\n      targetPort: 8080",
+      "explanation": "The selector must match pod labels, not merely the Deployment name. Readiness and targetPort must also be checked. This analyzer inspects the fixture pattern, not a Kubernetes API.",
+      "hints": [
+        "Match app: worker.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Kubernetes resource management",
+          "url": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+        }
+      ],
+      "renderer": "config-editor",
+      "executionMode": "analyze",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Match app: worker.",
+        "Keep targetPort 8080 for the fixture.",
+        "Explain readiness separately."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "events": [
+          {
+            "reason": "NoEndpoints",
+            "message": "Service selector app=api matches 0 pods"
+          },
+          {
+            "reason": "PodReady",
+            "message": "worker-7 labels app=worker, port 8080"
+          }
+        ],
+        "logs": "worker-7: listening on 0.0.0.0:8080\nreadiness: ok\n",
+        "checks": [
+          {
+            "label": "Selector matches the Pod label",
+            "pattern": "selector:\\s*\\n\\s*app:\\s*worker"
+          },
+          {
+            "label": "Target port matches listening process",
+            "pattern": "targetPort:\\s*8080"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-docker-cache",
+      "version": 1,
+      "title": "Stop reinstalling dependencies for every edit",
+      "workspace": "architecture",
+      "topic": "Docker",
+      "technology": "Docker",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Dockerfile",
+      "summary": "The Dockerfile copies all source before installing requirements.",
+      "concept": [
+        "Copy requirements before pip install.",
+        "Copy changing source after dependency installation."
+      ],
+      "task": "The Dockerfile copies all source before installing requirements. Reorder layers for reuse and run the final container as non-root.",
+      "requirements": [
+        "Copy requirements before pip install.",
+        "Copy changing source after dependency installation.",
+        "Use a non-root user."
+      ],
+      "starter": "FROM python:3.12-slim\nWORKDIR /app\nCOPY . .\nRUN pip install --no-cache-dir -r requirements.txt\nCMD [\"python\", \"pipeline.py\"]",
+      "solution": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nUSER 10001\nCMD [\"python\", \"pipeline.py\"]",
+      "explanation": "Separating the dependency manifest from frequently edited source preserves the install layer when only application code changes. Exclude secrets and irrelevant files using .dockerignore; non-root permissions still need testing.",
+      "hints": [
+        "Copy requirements before pip install.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Docker build best practices",
+          "url": "https://docs.docker.com/build/building/best-practices/"
+        }
+      ],
+      "renderer": "config-editor",
+      "executionMode": "analyze",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Copy requirements before pip install.",
+        "Copy changing source after dependency installation.",
+        "Use a non-root user."
+      ],
+      "visual": {
+        "type": "docker-layers",
+        "steps": [
+          "Base image",
+          "COPY requirements",
+          "Install dependencies",
+          "COPY application",
+          "Non-root runtime"
+        ],
+        "detail": "A changed layer invalidates subsequent cached layers. Keep frequently changing input later."
+      },
+      "fixture": {
+        "layers": [
+          {
+            "layer": "FROM python:3.12-slim",
+            "invalidated": "Only when base changes"
+          },
+          {
+            "layer": "COPY . .",
+            "invalidated": "Any source edit"
+          },
+          {
+            "layer": "RUN pip install",
+            "invalidated": "Also invalidated by earlier source copy"
+          }
+        ],
+        "checks": [
+          {
+            "label": "Cache-friendly dependency ordering",
+            "kind": "docker-order"
+          },
+          {
+            "label": "Non-root user",
+            "pattern": "USER\\s+(?!root\\b|0\\b)\\S+"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-bash-csv",
+      "version": 1,
+      "title": "Count paid rows in a CSV fixture",
+      "workspace": "architecture",
+      "topic": "Bash",
+      "technology": "Bash",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Bash",
+      "summary": "Count paid CSV rows by country without modifying sales.csv.",
+      "concept": [
+        "Exclude the header and non-paid rows.",
+        "Group adjacent country names before uniq."
+      ],
+      "task": "Count paid CSV rows by country without modifying sales.csv. The fixture has simple unquoted country/amount/status fields. General CSV parsing needs a CSV-aware tool.",
+      "requirements": [
+        "Exclude the header and non-paid rows.",
+        "Group adjacent country names before uniq.",
+        "Know when text tools are unsafe for CSV."
+      ],
+      "starter": "",
+      "solution": "cat data/sales.csv | grep ',paid' | cut -d, -f1 | sort | uniq -c",
+      "explanation": "Filter paid rows, extract country, sort adjacent equal keys and count them. This text pipeline is safe for this simple fixture, not arbitrary quoted CSV.",
+      "hints": [
+        "Exclude the header and non-paid rows.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "GNU Bash manual",
+          "url": "https://www.gnu.org/software/bash/manual/bash.html"
+        }
+      ],
+      "renderer": "terminal",
+      "executionMode": "simulate",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Exclude the header and non-paid rows.",
+        "Group adjacent country names before uniq.",
+        "Know when text tools are unsafe for CSV."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "shell": "bash",
+        "goal": "paid-country"
+      }
+    },
+    {
+      "id": "v2-powershell-csv",
+      "version": 1,
+      "title": "Filter CSV objects, not text fragments",
+      "workspace": "architecture",
+      "topic": "PowerShell",
+      "technology": "PowerShell",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PowerShell",
+      "summary": "Import sales.csv, keep status paid, and select country and amount.",
+      "concept": [
+        "Use Import-Csv.",
+        "Filter the status property."
+      ],
+      "task": "Import sales.csv, keep status paid, and select country and amount. Inspect the output type. Do not use Bash grep as a substitute.",
+      "requirements": [
+        "Use Import-Csv.",
+        "Filter the status property.",
+        "Keep object records through Select-Object."
+      ],
+      "starter": "",
+      "solution": "Import-Csv data/sales.csv | Where-Object { $_.status -eq \"paid\" } | Select-Object country,amount",
+      "explanation": "Import-Csv yields objects with named string properties. Where-Object filters those objects and Select-Object shapes properties. Numeric comparisons should use explicit casts when needed.",
+      "hints": [
+        "Use Import-Csv.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "PowerShell pipelines",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines"
+        }
+      ],
+      "renderer": "terminal",
+      "executionMode": "simulate",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Use Import-Csv.",
+        "Filter the status property.",
+        "Keep object records through Select-Object."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "shell": "powershell",
+        "goal": "paid-objects"
+      }
+    },
+    {
+      "id": "v2-powershell-json",
+      "version": 1,
+      "title": "Expand an API array and keep active records",
+      "workspace": "architecture",
+      "topic": "PowerShell",
+      "technology": "PowerShell",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "PowerShell",
+      "summary": "Read data/api.json, parse JSON, expand items, and keep active objects.",
+      "concept": [
+        "Convert JSON before filtering.",
+        "Expand the items property."
+      ],
+      "task": "Read data/api.json, parse JSON, expand items, and keep active objects. No network request is needed.",
+      "requirements": [
+        "Convert JSON before filtering.",
+        "Expand the items property.",
+        "Retain only status active."
+      ],
+      "starter": "",
+      "solution": "Get-Content data/api.json | ConvertFrom-Json | Select-Object -ExpandProperty items | Where-Object { $_.status -eq \"active\" }",
+      "explanation": "JSON parsing creates properties and arrays. ExpandProperty turns the items array into the pipeline sequence, then Where-Object tests each object.",
+      "hints": [
+        "Convert JSON before filtering.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "PowerShell pipelines",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines"
+        }
+      ],
+      "renderer": "terminal",
+      "executionMode": "simulate",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Convert JSON before filtering.",
+        "Expand the items property.",
+        "Retain only status active."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "fixture": {
+        "shell": "powershell",
+        "goal": "active-json"
+      }
+    },
+    {
+      "id": "v2-git-stage",
+      "version": 1,
+      "title": "Commit only the intended pipeline change",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Stage and commit pipeline.py, but keep notes.md out of the commit.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "Stage and commit pipeline.py, but keep notes.md out of the commit. Inspect the working tree, index and diff before committing.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git status\ngit add pipeline.py\ngit diff --cached\ngit commit -m \"Validate pipeline\"",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "staging",
+        "goal": "staged-only"
+      }
+    },
+    {
+      "id": "v2-git-merge",
+      "version": 1,
+      "title": "Merge two lines of work without rewriting history",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Merge feature into main.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "Merge feature into main. Inspect the resulting commit parents and verify that the feature branch remains at E.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git status\ngit merge feature",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "merge",
+        "goal": "merge"
+      }
+    },
+    {
+      "id": "v2-git-rebase",
+      "version": 1,
+      "title": "Replay a feature branch on the new main",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "While on feature, rebase onto main.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "While on feature, rebase onto main. Compare old D/E with the new IDs and inspect the new parent chain.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git rebase main",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "rebase",
+        "goal": "rebase"
+      }
+    },
+    {
+      "id": "v2-git-fetch",
+      "version": 1,
+      "title": "Fetch is not pull",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Fetch the remote fixture.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "Fetch the remote fixture. origin/main should advance to R while local main and working files stay at C. Then explain the difference from pull.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git fetch",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "remote",
+        "goal": "fetch"
+      }
+    },
+    {
+      "id": "v2-git-conflict",
+      "version": 1,
+      "title": "Resolve a merge conflict and complete the graph",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "Merge feature into main.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "Merge feature into main. Resolve pipeline.py with the file editor, stage it, and make the merge commit. Do not leave conflict markers.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git merge feature\n# Edit pipeline.py in Working tree\ngit add pipeline.py\ngit commit -m \"Resolve validation merge\"",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "conflict",
+        "goal": "merge"
+      }
+    },
+    {
+      "id": "v2-git-detached",
+      "version": 1,
+      "title": "Give detached work a branch name",
+      "workspace": "architecture",
+      "topic": "Git",
+      "technology": "Git",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "Shell",
+      "summary": "HEAD is detached at B.",
+      "concept": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree."
+      ],
+      "task": "HEAD is detached at B. Create and switch to rescue so future commits have a branch ref. Select B in the graph to inspect it.",
+      "requirements": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "starter": "",
+      "solution": "git switch -c rescue",
+      "explanation": "The graph is generated from the same simulated commit snapshots and refs as the terminal. Merge preserves parent histories; rebase creates new commit identities. This is deterministic teaching state, not the host Git binary.",
+      "hints": [
+        "Inspect HEAD and branch refs.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Git book: branching and merging",
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        }
+      ],
+      "renderer": "git-visual",
+      "executionMode": "simulate",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Inspect HEAD and branch refs.",
+        "Verify index and working tree.",
+        "Explain whether history is preserved or rewritten."
+      ],
+      "visual": {
+        "type": "git-commit-graph",
+        "steps": [
+          "Working files",
+          "git add -> index",
+          "git commit -> snapshot",
+          "Branch ref / HEAD"
+        ],
+        "detail": "Refs point to commit identities; they are not folders. The staged snapshot can differ from working files."
+      },
+      "fixture": {
+        "git": "detached",
+        "goal": "rescue"
+      }
+    },
+    {
+      "id": "v2-cloud-compare",
+      "version": 1,
+      "title": "Choose a platform from constraints",
+      "workspace": "architecture",
+      "topic": "Cloud architecture",
+      "technology": "Cloud architecture",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "graph",
+      "language": "text",
+      "summary": "Design for 4 TB/day, latency under 5 minutes, EU PII residency and a SQL-heavy BI team.",
+      "concept": [
+        "Ingestion, storage, semantic and report roles.",
+        "Explicit PII access / residency boundary."
+      ],
+      "task": "Design for 4 TB/day, latency under 5 minutes, EU PII residency and a SQL-heavy BI team. Compare Fabric and Databricks without treating platform names as a design.",
+      "requirements": [
+        "Ingestion, storage, semantic and report roles.",
+        "Explicit PII access / residency boundary.",
+        "Explain cost and operational trade-offs."
+      ],
+      "starter": "source[Sources] -> ingest[Ingestion]\ningest -> store[Governed storage]\nstore -> semantic[Semantic serving]\nsemantic -> report[BI]\n# Add monitoring and access boundaries.",
+      "solution": "Define ingestion latency, replay and quality gates, a governed curated store, semantic serving and monitoring.\nFabric may fit integrated Power BI operations; Databricks may fit complex Spark transformations. Validate region support, governance, team capability, cost and workload benchmarks.",
+      "explanation": "Objective structure checks are separate from subjective trade-offs. A connected diagram cannot prove residency, cost or a latency SLA.",
+      "hints": [
+        "Ingestion, storage, semantic and report roles.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Azure architecture center",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/"
+        }
+      ],
+      "renderer": "architecture-editor",
+      "executionMode": "review",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Ingestion, storage, semantic and report roles.",
+        "Explicit PII access / residency boundary.",
+        "Explain cost and operational trade-offs."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Inspect input",
+          "State the invariant",
+          "Transform or repair",
+          "Validate the result"
+        ],
+        "detail": "Trace the invariant across each step. A diagram is not a substitute for execution."
+      },
+      "template": "fabric",
+      "fixture": {
+        "constraints": {
+          "Daily volume": "4 TB",
+          "Latency": "< 5 min",
+          "Retention": "7 years",
+          "PII": "Yes",
+          "Residency": "EU",
+          "Team": "SQL-heavy",
+          "Cost sensitivity": "High"
+        },
+        "comparison": [
+          {
+            "criterion": "Primary workload",
+            "Fabric": "Integrated analytics + BI",
+            "Databricks": "Engineering + Spark workloads"
+          },
+          {
+            "criterion": "Decision evidence",
+            "Fabric": "Measure semantic refresh and ingestion path",
+            "Databricks": "Measure pipeline and serving path"
+          },
+          {
+            "criterion": "Not inferred",
+            "Fabric": "Automatic low cost or residency compliance",
+            "Databricks": "Automatic scalability or exactly-once semantics"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-concept-watermark",
+      "version": 1,
+      "title": "A watermark is not a deduplication key",
+      "workspace": "pipeline",
+      "topic": "Airflow",
+      "technology": "Airflow",
+      "difficulty": "Medium",
+      "minutes": 12,
+      "engine": "review",
+      "language": "text",
+      "summary": "The copy succeeded but the watermark write failed.",
+      "concept": [
+        "Separate progress from row identity.",
+        "Make replay idempotent."
+      ],
+      "task": "The copy succeeded but the watermark write failed. The next run repeats the interval. Explain how to avoid lost rows and duplicates, including late arrivals.",
+      "requirements": [
+        "Separate progress from row identity.",
+        "Make replay idempotent.",
+        "Describe a late-arrival policy."
+      ],
+      "starter": "Read boundary:\nWrite strategy:\nCommit boundary:\nLate-arrival policy:",
+      "solution": "Capture an upper boundary before extraction; use an overlap/lookback or CDC policy for late updates. Deduplicate by stable business key and version, then commit destination and advance control state after validation. Retrying the same range must be safe.",
+      "explanation": "A watermark tracks extraction progress. It does not prevent duplicated target rows. Exactly-once business results require a complete correctness argument across failure boundaries.",
+      "hints": [
+        "Separate progress from row identity.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Airflow DAG concepts",
+          "url": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"
+        }
+      ],
+      "renderer": "concept-case",
+      "executionMode": "review",
+      "interviewPriority": "high",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Separate progress from row identity.",
+        "Make replay idempotent.",
+        "Describe a late-arrival policy."
+      ],
+      "visual": {
+        "type": "flow",
+        "steps": [
+          "Read old/high bounds",
+          "Extract bounded interval",
+          "Idempotent target write",
+          "Validate",
+          "Advance watermark"
+        ],
+        "detail": "If the last step fails, replay the interval safely; never skip ahead before the target is valid."
+      }
+    },
+    {
+      "id": "v2-concept-shuffle",
+      "version": 1,
+      "title": "Which transformation needs data movement?",
+      "workspace": "code",
+      "topic": "PySpark",
+      "technology": "PySpark",
+      "difficulty": "Easy",
+      "minutes": 12,
+      "engine": "review",
+      "language": "text",
+      "summary": "Choose the operation most likely to require redistributing records across executors when input is not already suitably partitioned.",
+      "concept": [
+        "Distinguish transformation from action.",
+        "State the grouping-key requirement."
+      ],
+      "task": "Choose the operation most likely to require redistributing records across executors when input is not already suitably partitioned. Explain your choice.",
+      "requirements": [
+        "Distinguish transformation from action.",
+        "State the grouping-key requirement.",
+        "Verify the actual plan."
+      ],
+      "starter": "Your reasoning:",
+      "solution": "groupBy(customer_id).sum(amount) generally requires an exchange so records with the same key can meet. A select or a simple filter is normally narrow. The actual optimized physical plan is authoritative.",
+      "explanation": "A shuffle redistributes records across partitions. An action triggers execution but is not itself a synonym for a shuffle. Existing partitioning and optimizer choices can change the actual plan.",
+      "hints": [
+        "Distinguish transformation from action.",
+        "State the output grain, failure boundary, or state transition before choosing a tool."
+      ],
+      "sources": [
+        {
+          "label": "Spark DataFrame API",
+          "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html"
+        }
+      ],
+      "renderer": "multi-choice-reasoning",
+      "executionMode": "review",
+      "interviewPriority": "essential",
+      "followUps": [
+        "What changes when the input is empty, duplicated, late, or retried?",
+        "Which observation would validate your answer in a real environment?"
+      ],
+      "deepnoteLinks": [],
+      "deepnoteEmbedUrl": null,
+      "rubric": [
+        "Distinguish transformation from action.",
+        "State the grouping-key requirement.",
+        "Verify the actual plan."
+      ],
+      "visual": {
+        "type": "spark-stage",
+        "steps": [
+          "Input partitions",
+          "Exchange by customer",
+          "Grouped records",
+          "Aggregate"
+        ],
+        "detail": "Records sharing a group key must be co-located for the final aggregation."
+      },
+      "fixture": {
+        "options": [
+          {
+            "id": "select",
+            "label": "select(\"customer_id\")"
+          },
+          {
+            "id": "group",
+            "label": "groupBy(\"customer_id\").sum(\"amount\")"
+          },
+          {
+            "id": "filter",
+            "label": "filter(amount > 0)"
+          }
+        ],
+        "answer": "group"
+      }
+    }
+  ]
+}

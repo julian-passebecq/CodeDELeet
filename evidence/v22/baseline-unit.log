@@ -1,0 +1,367 @@
+
+> codedeleet-v2@2.0.0 test
+> npm run build && node --test tests/*.test.mjs
+
+
+> codedeleet-v2@2.0.0 build
+> tsc -p tsconfig.json && node scripts/build.mjs
+
+Built static site in dist. No serverless functions or secrets required.
+TAP version 13
+# Subtest: Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+ok 1 - Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+  ---
+  duration_ms: 4.199649
+  type: 'test'
+  ...
+# Subtest: All 13 renderer contracts are represented and execution claims are bounded
+ok 2 - All 13 renderer contracts are represented and execution claims are bounded
+  ---
+  duration_ms: 1.011832
+  type: 'test'
+  ...
+# Subtest: V1 migration preserves every existing field and does not mutate input
+ok 3 - V1 migration preserves every existing field and does not mutate input
+  ---
+  duration_ms: 1.928372
+  type: 'test'
+  ...
+# Subtest: Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+ok 4 - Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+  ---
+  duration_ms: 0.706183
+  type: 'test'
+  ...
+# Subtest: Equal timestamp never overwrites current draft
+ok 5 - Equal timestamp never overwrites current draft
+  ---
+  duration_ms: 0.157357
+  type: 'test'
+  ...
+# Subtest: Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+ok 6 - Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+  ---
+  duration_ms: 1.416742
+  type: 'test'
+  ...
+# Subtest: Pack upgrade does not erase progress or orphan saved additions
+ok 7 - Pack upgrade does not erase progress or orphan saved additions
+  ---
+  duration_ms: 0.31898
+  type: 'test'
+  ...
+# Subtest: Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+ok 8 - Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+  ---
+  duration_ms: 0.301063
+  type: 'test'
+  ...
+# Subtest: Unreadable storage is surfaced instead of silently reset
+ok 9 - Unreadable storage is surfaced instead of silently reset
+  ---
+  duration_ms: 0.59152
+  type: 'test'
+  ...
+# Subtest: Specialist imports cannot acquire a misleading execution badge
+ok 10 - Specialist imports cannot acquire a misleading execution badge
+  ---
+  duration_ms: 0.508325
+  type: 'test'
+  ...
+# Subtest: Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+ok 11 - Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+  ---
+  duration_ms: 0.446602
+  type: 'test'
+  ...
+# Subtest: Blank or unsafe Deepnote mappings render no live link
+ok 12 - Blank or unsafe Deepnote mappings render no live link
+  ---
+  duration_ms: 0.17273
+  type: 'test'
+  ...
+# Subtest: Layout clamps bounds and HTML escaping covers payloads
+ok 13 - Layout clamps bounds and HTML escaping covers payloads
+  ---
+  duration_ms: 0.182564
+  type: 'test'
+  ...
+# Subtest: Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+ok 14 - Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+  ---
+  duration_ms: 0.852203
+  type: 'test'
+  ...
+# Subtest: Result comparison respects row order and duplicate multiplicity
+ok 15 - Result comparison respects row order and duplicate multiplicity
+  ---
+  duration_ms: 0.196415
+  type: 'test'
+  ...
+# Subtest: Staging commits only the index and preserves untracked notes
+ok 16 - Staging commits only the index and preserves untracked notes
+  ---
+  duration_ms: 2.814906
+  type: 'test'
+  ...
+# Subtest: Commit does not include working changes made after staging
+ok 17 - Commit does not include working changes made after staging
+  ---
+  duration_ms: 0.331369
+  type: 'test'
+  ...
+# Subtest: Divergent merge creates a two-parent commit without rewriting histories
+ok 18 - Divergent merge creates a two-parent commit without rewriting histories
+  ---
+  duration_ms: 1.449501
+  type: 'test'
+  ...
+# Subtest: Fast-forward moves the branch and creates no merge object
+ok 19 - Fast-forward moves the branch and creates no merge object
+  ---
+  duration_ms: 0.469506
+  type: 'test'
+  ...
+# Subtest: Rebase replays linear feature commits with new IDs and original provenance
+ok 20 - Rebase replays linear feature commits with new IDs and original provenance
+  ---
+  duration_ms: 0.785582
+  type: 'test'
+  ...
+# Subtest: Fetch imports remote objects and tracking refs, not local files or branch
+ok 21 - Fetch imports remote objects and tracking refs, not local files or branch
+  ---
+  duration_ms: 1.137511
+  type: 'test'
+  ...
+# Subtest: Pull only fast-forwards; divergence is explicit and atomic
+ok 22 - Pull only fast-forwards; divergence is explicit and atomic
+  ---
+  duration_ms: 1.599808
+  type: 'test'
+  ...
+# Subtest: Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+ok 23 - Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+  ---
+  duration_ms: 0.71761
+  type: 'test'
+  ...
+# Subtest: Staged conflict markers are rejected by the teaching guard
+ok 24 - Staged conflict markers are rejected by the teaching guard
+  ---
+  duration_ms: 0.613073
+  type: 'test'
+  ...
+# Subtest: reset --soft changes the appropriate layers
+ok 25 - reset --soft changes the appropriate layers
+  ---
+  duration_ms: 0.657029
+  type: 'test'
+  ...
+# Subtest: reset --mixed changes the appropriate layers
+ok 26 - reset --mixed changes the appropriate layers
+  ---
+  duration_ms: 0.27879
+  type: 'test'
+  ...
+# Subtest: reset --hard changes the appropriate layers
+ok 27 - reset --hard changes the appropriate layers
+  ---
+  duration_ms: 0.327342
+  type: 'test'
+  ...
+# Subtest: Restore --staged keeps the working change and ordinary restore resets a tracked working file
+ok 28 - Restore --staged keeps the working change and ordinary restore resets a tracked working file
+  ---
+  duration_ms: 0.421044
+  type: 'test'
+  ...
+# Subtest: Detached work can be rescued with a named branch
+ok 29 - Detached work can be rescued with a named branch
+  ---
+  duration_ms: 0.292009
+  type: 'test'
+  ...
+# Subtest: Revert creates inverse commit rather than deleting the original
+ok 30 - Revert creates inverse commit rather than deleting the original
+  ---
+  duration_ms: 0.211278
+  type: 'test'
+  ...
+# Subtest: Stash has explicit tracked/untracked behavior
+ok 31 - Stash has explicit tracked/untracked behavior
+  ---
+  duration_ms: 0.384308
+  type: 'test'
+  ...
+# Subtest: Unsafe/unsupported commands fail without changing semantic state and have visible errors
+ok 32 - Unsafe/unsupported commands fail without changing semantic state and have visible errors
+  ---
+  duration_ms: 1.030681
+  type: 'test'
+  ...
+# Subtest: Dependency cycle is rejected before simulation
+ok 33 - Dependency cycle is rejected before simulation
+  ---
+  duration_ms: 2.147522
+  type: 'test'
+  ...
+# Subtest: DAG repair removes bypass and failure blocks downstream until a retry
+ok 34 - DAG repair removes bypass and failure blocks downstream until a retry
+  ---
+  duration_ms: 1.347257
+  type: 'test'
+  ...
+# Subtest: Skip propagation and none_failed_min_one_success behave distinctly
+ok 35 - Skip propagation and none_failed_min_one_success behave distinctly
+  ---
+  duration_ms: 0.573082
+  type: 'test'
+  ...
+# Subtest: ADF Failed/Completed conditions are evaluated against upstream status
+ok 36 - ADF Failed/Completed conditions are evaluated against upstream status
+  ---
+  duration_ms: 0.319481
+  type: 'test'
+  ...
+# Subtest: Custom diagram roundtrip preserves retry metadata and edges
+ok 37 - Custom diagram roundtrip preserves retry metadata and edges
+  ---
+  duration_ms: 1.178383
+  type: 'test'
+  ...
+# Subtest: Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+ok 38 - Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+  ---
+  duration_ms: 0.797379
+  type: 'test'
+  ...
+# Subtest: Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+ok 39 - Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+  ---
+  duration_ms: 2.900224
+  type: 'test'
+  ...
+# Subtest: Inactive customer relationship stops country filter propagation
+ok 40 - Inactive customer relationship stops country filter propagation
+  ---
+  duration_ms: 0.240652
+  type: 'test'
+  ...
+# Subtest: DAX unsupported syntax and implicit context transition reject explicitly
+ok 41 - DAX unsupported syntax and implicit context transition reject explicitly
+  ---
+  duration_ms: 0.622587
+  type: 'test'
+  ...
+# Subtest: Model grain and active dimension paths are checked separately
+ok 42 - Model grain and active dimension paths are checked separately
+  ---
+  duration_ms: 0.727174
+  type: 'test'
+  ...
+# Subtest: Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+ok 43 - Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.765522
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+ok 44 - Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.200622
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+ok 45 - Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.280923
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+ok 46 - Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.442355
+  type: 'test'
+  ...
+# Subtest: Bash log pipeline preserves original line numbers and ignores case
+ok 47 - Bash log pipeline preserves original line numbers and ignores case
+  ---
+  duration_ms: 2.11986
+  type: 'test'
+  ...
+# Subtest: Bash country aggregation runs through text streams
+ok 48 - Bash country aggregation runs through text streams
+  ---
+  duration_ms: 0.506452
+  type: 'test'
+  ...
+# Subtest: head/tail support explicit files without -n, and zero requested lines
+ok 49 - head/tail support explicit files without -n, and zero requested lines
+  ---
+  duration_ms: 0.236886
+  type: 'test'
+  ...
+# Subtest: A no-match pipeline contains no fake error rows
+ok 50 - A no-match pipeline contains no fake error rows
+  ---
+  duration_ms: 0.727224
+  type: 'test'
+  ...
+# Subtest: PowerShell CSV pipeline retains objects with string properties
+ok 51 - PowerShell CSV pipeline retains objects with string properties
+  ---
+  duration_ms: 1.265884
+  type: 'test'
+  ...
+# Subtest: PowerShell explicit cast performs numeric rather than lexical comparison
+ok 52 - PowerShell explicit cast performs numeric rather than lexical comparison
+  ---
+  duration_ms: 0.346101
+  type: 'test'
+  ...
+# Subtest: PowerShell JSON expansion filters complete objects
+ok 53 - PowerShell JSON expansion filters complete objects
+  ---
+  duration_ms: 1.328149
+  type: 'test'
+  ...
+# Subtest: PowerShell Group-Object retains grouped objects and counts
+ok 54 - PowerShell Group-Object retains grouped objects and counts
+  ---
+  duration_ms: 0.429556
+  type: 'test'
+  ...
+# Subtest: CSV roundtrip handles quoted commas and escaped quotes
+ok 55 - CSV roundtrip handles quoted commas and escaped quotes
+  ---
+  duration_ms: 0.874185
+  type: 'test'
+  ...
+# Subtest: Virtual writes change only the cloned virtual filesystem
+ok 56 - Virtual writes change only the cloned virtual filesystem
+  ---
+  duration_ms: 0.343007
+  type: 'test'
+  ...
+# Subtest: Shells are distinct and unsafe/network/subshell commands fail without file changes
+ok 57 - Shells are distinct and unsafe/network/subshell commands fail without file changes
+  ---
+  duration_ms: 0.657699
+  type: 'test'
+  ...
+# Subtest: Pipeline splitting respects quoted pipe and PowerShell blocks
+ok 58 - Pipeline splitting respects quoted pipe and PowerShell blocks
+  ---
+  duration_ms: 0.283918
+  type: 'test'
+  ...
+1..58
+# tests 58
+# suites 0
+# pass 58
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 135.932172

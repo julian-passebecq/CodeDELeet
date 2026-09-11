@@ -1,43 +1,55 @@
-# CodeDELeet
+# CodeDELeet V2.2
 
-**Open-source personal interview lab for data engineering, analytics engineering, BI and cloud systems.**
+A local-first data-engineering interview workstation. Four labs, twelve compositional layout presets, 51 preserved exercises, four authored case studies, and bounded specialist teaching engines. No credentials, backend execution service, or production cloud connection.
 
-Live site: https://leetdejul.netlify.app/
+![Code Solve - actual built application](evidence/v22/screenshots/01-code-solve.png)
 
-The v0.1 prototype uses four specialist practice workspaces rather than forcing every topic into a single LeetCode-style code editor:
+## What changed
 
-- **Code Lab** — SQL, Python, pandas, PySpark syntax/review, T-SQL, BigQuery SQL, Git and Linux.
-- **Model Lab** — dimensional modeling, Power BI/DAX concepts, KPI/filter context and semantic-model reasoning.
-- **Pipeline Lab** — Airflow, Azure Data Factory, dbt, retries, dependencies, quality gates and idempotency.
-- **Systems Lab** — Fabric, Databricks, BigQuery, Terraform/OpenTofu, Kubernetes/Docker, Spark performance and table formats.
+The shared shell has a compact lab navigator, per-lab quick filters, three presets per lab, a 48px tool rail, temporary Focus, four themes, and independently docked output. Layout changes retain the actual CodeMirror document and undo history. Output remains independent of Notes, Explanation and References; stale attempts are visibly marked after inputs change.
 
-## Current status
+| Lab | Preset 1 | Preset 2 | Preset 3 |
+|---|---|---|---|
+| Code | Solve | Data & Debug | Case Study |
+| Model / BI | Model Designer | Measures & Data | Case Study |
+| Pipeline | Pipeline Designer | Run Investigator | Case Study |
+| Systems / Cloud | Workbench | Compare & Diagnose | Case Study |
 
-The full v0.1 source is now committed on `main` and Netlify publishes the committed `public/` directory.
+Choosing a Case Study **preset** does not start an authored case. Open an authored case explicitly from the navigator. Its exhibit pages and task navigation are independent. Case answers never silently overwrite standalone answers; explicit copying creates a recoverable checkpoint.
 
-Validation on the merged source:
+## Run and build
 
-- TypeScript type-check: **pass**
-- Build: **pass**
-- Node tests: **pass**
-- Python/server tests: **pass**
-- Chromium embedded UI smoke tests: **pass**
-- Netlify production deploy: **ready**
+```sh
+npm ci --ignore-scripts
+npm run check
+npm run build
+node scripts/serve.mjs dist
+```
 
-The application intentionally distinguishes real execution from analysis/simulation. SQL has a local execution path; DAX, DAGs, Spark performance and cloud/system exercises are bounded teaching simulations or reasoning exercises unless a real engine is explicitly connected.
+The prebuilt `dist/` needs only static file hosting. Build configuration remains `npm run build`, publish `dist`. No deploy was performed. Keep production untouched until the coordinator completes the promotion gate.
 
-## Project documents
+## Test
 
-- `docs/AUDIT_2026-09-10.md` — product/UX and workspace audit.
-- `docs/RESEARCH_SHORTLIST_2026-09-10.md` — open-source libraries worth considering.
-- `docs/PRO_MODEL_NEXT_PASS.md` — bounded implementation brief for the next coding pass.
-- `docs/RELEASE_STATUS_2026-09-10.md` — post-push GitHub/CI/Netlify status.
-- `docs/ARCHITECTURE.md` — current architecture.
-- `docs/CONTENT_PACKS.md` — exercise-pack format and extension path.
-- `.github/workflows/ci.yml` — automated core and UI validation.
+```sh
+npm test
+python tests/fixture_check.py
+python tests/ui_smoke.py
+python tests/v22_ui.py
+# Start the static server in another terminal before these:
+python scripts/validate_release.py
+python tests/network_runtime_smoke.py
+```
 
-## Product direction
+Install `requirements-dev.txt` and Playwright Chromium for browser tests. The deterministic UI harness loads the actual compiled modules, bundled editor, CSS and fixture data into Chromium; it substitutes file transport and browser storage. It does **not** substitute SQL/Python execution. The separate network test requires a real navigable HTTP origin and external runtime downloads.
 
-The next release should prioritize a **one-screen interview-lab shell** over adding hundreds of questions: question/data/schema on the left, editor or interactive canvas on the right, and a collapsible lower drawer for Results / Explanation / Visual / Notes / History. Each exercise should declare both a renderer and an execution contract so specialized labs can evolve without becoming four hard-coded page types.
+## Execution boundaries
 
-MIT-licensed original project code and exercises. Vendor names identify learning topics only; the project is not affiliated with Microsoft, Databricks, Google, dbt Labs, Apache Software Foundation, HashiCorp, OpenTofu or LeetCode.
+SQL uses the real DuckDB-Wasm adapter. Python/basic pandas uses the real Pyodide worker. Both load only on explicit use. PySpark is guided review, not an in-browser Spark cluster. DAX, DAG, Git, Bash/PowerShell and infrastructure checks are explicitly limited teaching implementations or supplied evidence. Mermaid is pinned to 11.16.1, loaded on demand; offline SVG canvases remain available.
+
+Deepnote is links-only, with safe explicit URL validation and optional public preview metadata. No private notebook archive is shipped publicly. App previews are not editable notebooks.
+
+## Documentation and evidence
+
+[Start here](00_START_HERE.md) · [Audit and migration](docs/V2_2_AUDIT.md) · [Test report](docs/V2_2_TEST_REPORT.md) · [Known limitations](docs/KNOWN_LIMITATIONS.md) · [Coordinator handoff](docs/NEXT_AI_HANDOFF.md) · [Architecture](docs/V2_2_ARCHITECTURE.md) · [Screenshot gallery](evidence/v22/gallery.html)
+
+Historical V2 documents, when retained under `docs/history/v2/`, describe the previous release and are not current instructions or test claims. Synthetic fixtures and original teaching content remain in the built-in bank. Application code is MIT; see [third-party notices](THIRD_PARTY_NOTICES.md) and [security boundaries](SECURITY.md).
