@@ -9,6 +9,8 @@ from browser_support import launch_browser
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = os.getenv('BASE_URL', 'http://127.0.0.1:5173').rstrip('/')
+SHOTS = ROOT / 'evidence/v22/runtime'
+SHOTS.mkdir(parents=True, exist_ok=True)
 report = {'mode': 'real HTTP origin and external CDN', 'baseURL': BASE,
           'status': 'not-started', 'checks': [], 'pageErrors': []}
 
@@ -60,6 +62,8 @@ try:
             assert f'{expected} / {expected} checks' in text, text
             assert ('DuckDB-Wasm' if q['engine'] == 'sql' else 'CPython / Pyodide') in text, text
             assert 'Attempt not completed' not in text, text
+            if q['id'] in {'sql-paid-revenue', 'python-aggregate', 'pandas-grain'}:
+                page.screenshot(path=str(SHOTS / (q['id'] + '.png')))
 
         for q in qs:
             if q.get('executionMode') == 'execute':
@@ -98,11 +102,17 @@ try:
             'architecture': 'architecture-beta\n service db(database)[Warehouse]\n service api(server)[Ingestion]\n api:R -- L:db',
         }
         for name, source in diagrams.items():
-            def diagram(source=source):
+            def diagram(source=source, name=name):
                 go('arch-fabric'); page.locator('#layout-mode').select_option('work'); page.locator('[data-lab-tab="Mermaid"]').click()
                 page.locator('#mermaid-source').fill(source)
                 page.locator('[data-action="render-mermaid"]').click()
-                page.locator('#mermaid-output svg').wait_for(timeout=35000)
+                # Architecture icons contain their own SVGs. Require the single root diagram,
+                # not an ambiguous descendant selector or an arbitrary .first() match.
+                root = page.locator('#mermaid-output > svg')
+                root.wait_for(state='visible', timeout=35000)
+                assert root.count() == 1, 'Expected exactly one root Mermaid diagram'
+                assert root.get_attribute('aria-roledescription') != 'error', 'Mermaid rendered an error diagram'
+                page.screenshot(path=str(SHOTS / ('mermaid-' + name + '.png')))
             check('Real CDN Mermaid: ' + name, diagram)
         report['status'] = 'PASS' if all(x['passed'] for x in report['checks']) and not report['pageErrors'] else 'FAIL'
         browser.close()
