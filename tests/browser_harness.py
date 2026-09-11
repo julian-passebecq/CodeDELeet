@@ -23,7 +23,7 @@ def module_url(name):
 def open_app(page,exercise='sql-paid-revenue',store=None,route=None):
     if os.getenv('UI_MODE')=='http':
         if store is not None:page.add_init_script('localStorage.setItem("data-practice-studio.v1",'+json.dumps(json.dumps(store))+');')
-        page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#exercise='+exercise,wait_until='domcontentloaded')
+        page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#'+(route if route is not None else 'exercise='+exercise),wait_until='domcontentloaded')
         page.locator('#question-body').wait_for(state='attached')
         return
     css='\n'.join((DIST/file).read_text() for file in ['styles.css','vendor/codemirror/lib/codemirror.css','vendor/codemirror/addon/dialog/dialog.css','shell.css'])
