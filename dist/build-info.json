@@ -1,6 +1,6 @@
 {
   "app": "CodeDELeet",
-  "version": "2.2.0",
+  "version": "2.4.0",
   "contentSchema": [
     1,
     2
@@ -9,5 +9,7 @@
   "layoutSchema": 1,
   "caseSchema": 1,
   "mermaid": "11.16.1",
-  "baseline": "d3c7c21ba79a082da21925b5ee0dce69212577fe"
+  "baseline": "a4aad2e4ad5fe3163c5ad725456ea7e84df28964",
+  "lessonSchema": 1,
+  "navigationVersion": 1
 }

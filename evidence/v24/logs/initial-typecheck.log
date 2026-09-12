@@ -1,0 +1,5 @@
+
+> codedeleet-v2@2.4.0 check
+> tsc -p tsconfig.json --noEmit
+
+src/lessons/progress.ts(42,29): error TS2783: 'status' is specified more than once, so this usage will be overwritten.

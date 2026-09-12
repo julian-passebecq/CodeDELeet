@@ -1,0 +1,140 @@
+{
+  "suite": "V2.2 built-file browser contracts",
+  "browser": "144.0.7559.96",
+  "viewport": "1600x1000 (additional 1920x1080,1024x768,390x844)",
+  "checks": [
+    {
+      "name": "New session: compact shell, 48px rail, real editor, no empty output or revealed solution",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: code/work; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: code/inspect; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: code/case; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: model/work; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: model/inspect; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: model/case; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: pipeline/work; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: pipeline/inspect; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: pipeline/case; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: architecture/work; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: architecture/inspect; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Preset renders: architecture/case; no implicit authored-case session",
+      "passed": true
+    },
+    {
+      "name": "Mode/theme/tool/Focus changes retain the identical editor, cursor and undo stack",
+      "passed": true
+    },
+    {
+      "name": "Focus temporarily maximizes and restores exact sizes, dock, tool and expansion",
+      "passed": true
+    },
+    {
+      "name": "Four independent output anchors, persistent check badge, per-mode resize and tools",
+      "passed": true
+    },
+    {
+      "name": "Output becomes stale only after input changes; failing count remains visible",
+      "passed": true
+    },
+    {
+      "name": "Tools default overlay, safely pin, keyboard resize, switch exclusively and retain Notes",
+      "passed": true
+    },
+    {
+      "name": "Laptop fallback uses overlay/mobile surfaces without corrupting desktop preferences",
+      "passed": true
+    },
+    {
+      "name": "Pipeline node selection, graph edits, retries and camera survive modes",
+      "passed": true
+    },
+    {
+      "name": "Unapplied graph JSON survives modes; simulation opens real fixture grid/timeline/logs",
+      "passed": true
+    },
+    {
+      "name": "Model inspector exposes typed columns, PK/FK, grain and active single-direction relationship",
+      "passed": true
+    },
+    {
+      "name": "Git commits and unsaved working editor, plus object-terminal sessions, survive modes",
+      "passed": true
+    },
+    {
+      "name": "Authored case: page/task cursors independent; all case drafts isolated from standalone",
+      "passed": true
+    },
+    {
+      "name": "Deliberate copy and checkpoint restoration never overwrite standalone answer",
+      "passed": true
+    },
+    {
+      "name": "Case session, page/task cursor and saved answers survive a fresh application boot",
+      "passed": true
+    },
+    {
+      "name": "Four themes apply without domain reset; terminal inheritance and override/settings persist",
+      "passed": true
+    },
+    {
+      "name": "Blank companion hidden; safe mapping works; unsafe import is rejected without replacing it",
+      "passed": true
+    },
+    {
+      "name": "V1 upgrade keeps byte-equivalent recovery snapshot and all personal draft fields",
+      "passed": true
+    },
+    {
+      "name": "Phone tabs preserve notes, keep terminal usable and show navigator on request",
+      "passed": true
+    }
+  ],
+  "passed": 30,
+  "failed": 0,
+  "pageErrors": [],
+  "screenshots": [
+    "evidence/v22/screenshots/02-model-designer.png",
+    "evidence/v22/screenshots/05-authored-case.png",
+    "evidence/v22/screenshots/06-fluent-soft.png",
+    "evidence/v22/screenshots/04-systems-compare.png",
+    "evidence/v22/screenshots/01-code-solve.png",
+    "evidence/v22/screenshots/03-pipeline-designer.png",
+    "evidence/v22/screenshots/07-phone-workspace.png"
+  ],
+  "executionBoundary": "Real compiled UI/CodeMirror/teaching engines; file transport and storage adapter supplied by harness. No mocked SQL/Python runtime or CDN success."
+}

@@ -1,0 +1,85 @@
+{
+  "version": "2.4.0",
+  "capturedUTC": "2026-09-12T21:58:10.507766+00:00",
+  "scope": "Reported checks in completed local suites; external blocked gates excluded. Built-file tests do not imply real-origin/CDN runtime success.",
+  "testChecksPassed": 440,
+  "testChecksFailed": 0,
+  "families": [
+    {
+      "name": "Node domain/state/shell/learning",
+      "command": "npm test",
+      "passed": 136,
+      "failed": 0,
+      "evidence": "logs/final/unit-tests.log"
+    },
+    {
+      "name": "Native fixtures",
+      "command": "python tests/fixture_check.py",
+      "passed": 42,
+      "failed": 0,
+      "evidence": "regression/fixture-report.json"
+    },
+    {
+      "name": "Legacy full UI",
+      "command": "python tests/ui_smoke.py",
+      "passed": 68,
+      "failed": 0,
+      "evidence": "regression/ui-legacy-report.json"
+    },
+    {
+      "name": "V2.2 shell/cases",
+      "command": "python tests/v22_ui.py",
+      "passed": 30,
+      "failed": 0,
+      "evidence": "regression/ui-shell-report.json"
+    },
+    {
+      "name": "V2.3 compact",
+      "command": "python tests/v23_ui.py",
+      "passed": 30,
+      "failed": 0,
+      "evidence": "regression/acceptance-report.json"
+    },
+    {
+      "name": "V2.3 measured layouts",
+      "command": "python tests/v23_layout.py",
+      "passed": 16,
+      "failed": 0,
+      "evidence": "regression/V23_LAYOUT_METRICS.json"
+    },
+    {
+      "name": "V2.4 acceptance",
+      "command": "python tests/v24_acceptance.py",
+      "passed": 83,
+      "failed": 0,
+      "evidence": "V24_ACCEPTANCE_REPORT.json"
+    },
+    {
+      "name": "Hosted verifier units",
+      "command": "python -m unittest discover -s tests -p test_hosted_verifier.py -v",
+      "passed": 9,
+      "failed": 0,
+      "evidence": "logs/final/hosted-verifier-unit.log"
+    },
+    {
+      "name": "Static/local HTTP integrity",
+      "command": "python scripts/validate_release.py",
+      "passed": 26,
+      "failed": 0,
+      "evidence": "regression/release-integrity-report.json"
+    }
+  ],
+  "blockedCommands": [
+    "served-ui-smoke",
+    "served-v22-shell",
+    "served-v23-compact",
+    "served-v24-acceptance",
+    "real-runtime-workers-mermaid",
+    "clean-install",
+    "offline-install",
+    "dependency-audit"
+  ],
+  "hostedPreview": "NOT ATTEMPTED: user explicitly prohibits GitHub and Netlify operations; no deployment or hosted-runtime pass is claimed.",
+  "localStatus": "PASS",
+  "promotionStatus": "EXTERNAL GATES BLOCKED / NOT ATTEMPTED"
+}

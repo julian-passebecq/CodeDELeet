@@ -1,55 +1,86 @@
-# Coordinator handoff - CodeDELeet V2.2
+# Coordinator handoff - CodeDELeet V2.4
 
-## Ownership and baseline
+The completed source tree and one complete source ZIP are the implementation,
+not a patch or instructions-only package. Start at [00_START_HERE](../00_START_HERE.md)
+and [V24_TEST_REPORT](V24_TEST_REPORT.md). The local branch is
+`v2.4-learning-navigation-pro`; the supplied ZIP declares upstream
+`a4aad2e4ad5fe3163c5ad725456ea7e84df28964`, without a Git object database to verify it.
+[Source preservation](../evidence/v24/SOURCE_PRESERVATION.json) records exact bytes.
+No remote read, push, merge, PR or deployment was performed.
 
-This implementation used the uploaded `CodeDELeet_V2_Full_Source.zip` and V2.2 handoff as authority. No GitHub/Netlify connector, repository write, branch creation or deployment was performed. You own integration and any deployment separately authorized in your conversation. Keep production unchanged until the gates below pass.
+## Integration boundaries
 
-The ZIP is a complete source tree, not a patch. Extract its contents at the branch root. Use `src/`, `public/packs/`, `public/cases/`, and scripts as source; `public/app/` and `dist/` are generated. Avoid nesting another project folder. Preserve licenses and the existing static `netlify.toml`; no backend/serverless service is introduced.
+Preserve `src/`, `public/`, the generated `public/app/` and `dist/`, the existing
+static configuration and bundled licenses. No serverless runtime was added.
+The private handoff/reference folder is not part of the candidate. Do not add it.
+Do not use historical V2.2/V2.3 summaries to infer this candidate's current status.
+The authoritative run manifest is `evidence/v24/FINAL_TEST_RUN.json` and the current
+build inventory is `evidence/v24/build-files.json`.
 
-## Reconcile current branch safely
+Keep all 51 exercise IDs, 13 renderers, four authored cases, isolated case-task
+artifacts, 12 presets and four themes. New lab icons always open homes. The global
+Practice/Learn switch is not a layout selector. BI serving has no dedicated Practice
+exercise. Do not fill that gap by renaming or silently moving an existing ID.
 
-The supplied source was V2.0.0 and still contained the old public notebook ZIP and Mermaid 11.4.1. This pass removes that archive, pins Mermaid 11.16.1 and makes the build reject notebook/archive assets. If your branch already has independent V2.1 hardening, preserve it; do not restore the old `public/companion/` path or downgrade the pin. The current app keeps the original storage key, all 51 exercise IDs and all 27 V1 IDs.
-
-## Reproduce deterministic evidence
+## Reproduce local validation
 
 ```sh
 npm ci --ignore-scripts
+npm audit --audit-level=high
 npm run check
 npm test
 python -m pip install -r requirements-dev.txt
 python -m playwright install --with-deps chromium
+python -m unittest discover -s tests -p test_hosted_verifier.py -v
 python tests/fixture_check.py
 python tests/ui_smoke.py
 python tests/v22_ui.py
+python tests/v23_ui.py
+python tests/v23_layout.py
+python tests/v24_acceptance.py
+python scripts/verify_rebuild.py
 ```
 
-Run `node scripts/serve.mjs dist` in another terminal, then `python scripts/validate_release.py` to check local asset/MIME delivery and release invariants. The delivered tests record JSON under `evidence/v22/`. Browser smoke scripts capture actual application screenshots, not mockups.
+Run browser suites serially. Do not change/rebuild compiled modules mid-suite.
+V2.3 layout comparisons use the included historical baseline metrics; V2.4's
+new six-width measurements and screenshots are separate.
 
-## Required real-origin promotion gate
+Start `node scripts/serve.mjs dist` in another terminal, then run:
 
 ```sh
-# Server running at localhost:5173 or set BASE_URL to an isolated preview.
+python scripts/validate_release.py
+UI_MODE=http python tests/ui_smoke.py
+UI_MODE=http python tests/v22_ui.py
+UI_MODE=http python tests/v23_ui.py
+UI_MODE=http python tests/v24_acceptance.py
 python tests/network_runtime_smoke.py
 ```
 
-Use `UI_MODE=http python tests/ui_smoke.py` for the full original interaction suite on the served build. In PowerShell set `$env:UI_MODE='http'` and optionally `$env:BASE_URL='...'` before invoking Python. A blocked setup exits 2 and records **UNVERIFIED**, never PASS. All loader waits use DOM/content readiness rather than `networkidle`.
+PowerShell uses `$env:UI_MODE='http'`. Real runtime smoke includes all retained
+SQL/Python reference runs, cancellation/restart, timeout, origin persistence and
+three Mermaid forms. No simulator may replace those gates. Hosted byte/header
+verification uses `scripts/verify_hosted.py` only after a separately authorized
+preview exists; no preview or production deployment was requested in this pass.
 
-Verify actual reference execution for every executable SQL/Python/basic-pandas exercise, cold downloads, invalid queries, syntax errors, cancellation/timeouts and a successful subsequent worker run. The network script covers browser storage reload and Mermaid flowchart, ER and architecture-beta with the pinned version. Inspect CSP/headers in the hosted environment so the existing CDN/worker requirements are allowed without broadening unrelated privileges. No such hosted verification is claimed by this delivery.
+## Remaining external gates
 
-The local source/compiler checks used the installed exact TypeScript 5.8.3. A registry DNS failure prevented a clean `npm ci` in the implementation environment; perform that clean install and your dependency audit here.
+The completed local pass does not clear registry, browser-origin or external-CDN
+restrictions. Repeat clean install, npm audit, served-origin UI and real runtime
+checks on this exact candidate in an allowed environment before promotion. Any
+future authorized preview must be verified against its exact commit and build
+bytes. A passing prior deployment is not evidence for V2.4.
 
-## Migration acceptance
+Export actual user progress from its original origin before integration. Test
+V2.3-to-V2.4 and V2.4 round trips with standalone drafts, case sessions, lesson
+completion/section/notes and custom packs. The automated tests use disposable
+state, never the user's live browser data. Unknown safe lesson IDs must survive
+merge; equal timestamps retain local data.
 
-Export actual user progress from the current origin first. Import it into the isolated preview through Settings > Merge backup. Check standalone code, notes, virtual Git/shell state, bookmarks, confidence and attempts; then create/edit a case task, move exhibits/tasks, export/reimport and verify both scopes. Case mode alone must not create an authored session. Explicit standalone copying must checkpoint, not silently overwrite, a case answer.
+## Packaging
 
-On first V2.2 boot an eligible older stored value is copied to `.pre-v22`. `.pre-v2` behavior remains. The original unreadable value is never silently replaced: saving is blocked and raw export is offered. Different preview domains have independent localStorage.
-
-## UI checks before promotion
-
-Inspect Code Solve/Data & Debug, wide Model Designer, DAX Measures & Data, Pipeline Designer/Grid/Timeline/Logs, and Systems Compare. Check all four themes, terminal override, right-rail overlay/pin, all output anchors, exact Focus restoration and a phone-sized view. A narrow viewport must not rewrite desktop preferences. Output should say stale after evaluated inputs change but not after note/theme edits. No giant output region should be present before the first run.
-
-See [known limitations](KNOWN_LIMITATIONS.md) for teaching-engine boundaries and deferred broader specialist coverage. These are deliberate limits, not evidence of real cloud/Git execution.
-
-## Repackage without remote operations
-
-After rerunning the tests, use `python scripts/package_release.py --out /path/to/output`. The standard-library packager writes source, static-build and evidence ZIPs, checks every archive byte/CRC and source-manifest entry, and records hashes. It reads existing test evidence; it does not replace a fresh CI run and never uploads or deploys. The default output is the excluded `release-artifacts/` directory.
+`scripts/package_release.py --out /outside/the/repository` emits one complete
+`CodeDELeet_V2_4_Complete.zip`, with source, build and evidence inside it, plus a
+small verification JSON and checksum file. It verifies the current tested build
+inventory and refuses private folders, archives/notebooks, fonts, environment
+files, symlinks and stale/failed local test summaries. Packaging does not run tests,
+contact a repository or deploy anything. Blocked external gates remain explicit.

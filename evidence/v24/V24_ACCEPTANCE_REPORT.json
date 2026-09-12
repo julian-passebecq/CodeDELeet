@@ -1,0 +1,498 @@
+{
+  "suite": "V2.4 Learning + Navigation acceptance",
+  "browser": "Chromium",
+  "transport": "built-file import-map harness: real compiled modules, CSS, CodeMirror; fixture fetch/storage only",
+  "checks": [
+    {
+      "name": "A: Practice -> Learn -> Practice restores exact exercise, editor instance, cursor, undo and draft",
+      "passed": true,
+      "seconds": 0.545
+    },
+    {
+      "name": "A/G: practice code icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.211
+    },
+    {
+      "name": "A/G: practice model icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.166
+    },
+    {
+      "name": "A/G: practice pipeline icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.139
+    },
+    {
+      "name": "A/G: practice architecture icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.139
+    },
+    {
+      "name": "A/G: learn code icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.186
+    },
+    {
+      "name": "A/G: learn model icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.169
+    },
+    {
+      "name": "A/G: learn pipeline icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.12
+    },
+    {
+      "name": "A/G: learn architecture icon opens five-card lab home, never an arbitrary exercise",
+      "passed": true,
+      "seconds": 0.131
+    },
+    {
+      "name": "A: practice category sql-patterns grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.65
+    },
+    {
+      "name": "A: practice category python-dataframes grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.646
+    },
+    {
+      "name": "A: practice category spark-distributed grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.622
+    },
+    {
+      "name": "A: practice category developer-workflow grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.647
+    },
+    {
+      "name": "A: practice category interview-patterns grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.634
+    },
+    {
+      "name": "A: practice category dimensional-grain grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.63
+    },
+    {
+      "name": "A: practice category relationships-context grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.634
+    },
+    {
+      "name": "A: practice category measures-dax grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.696
+    },
+    {
+      "name": "A: practice category model-performance grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.633
+    },
+    {
+      "name": "A: practice category bi-serving grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.634
+    },
+    {
+      "name": "A: practice category dag-orchestration grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.637
+    },
+    {
+      "name": "A: practice category incremental-cdc grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.639
+    },
+    {
+      "name": "A: practice category quality-contracts grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.657
+    },
+    {
+      "name": "A: practice category retries-observability grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.633
+    },
+    {
+      "name": "A: practice category elt-deployment grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.688
+    },
+    {
+      "name": "A: practice category lakehouse-serving grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.636
+    },
+    {
+      "name": "A: practice category platform-tradeoffs grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.651
+    },
+    {
+      "name": "A: practice category spark-compute grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.612
+    },
+    {
+      "name": "A: practice category security-governance grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.658
+    },
+    {
+      "name": "A: practice category cost-operations grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.65
+    },
+    {
+      "name": "A: learn category sql-patterns grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.626
+    },
+    {
+      "name": "A: learn category python-dataframes grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.661
+    },
+    {
+      "name": "A: learn category spark-distributed grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.738
+    },
+    {
+      "name": "A: learn category developer-workflow grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.613
+    },
+    {
+      "name": "A: learn category interview-patterns grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.631
+    },
+    {
+      "name": "A: learn category dimensional-grain grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.617
+    },
+    {
+      "name": "A: learn category relationships-context grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.634
+    },
+    {
+      "name": "A: learn category measures-dax grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.644
+    },
+    {
+      "name": "A: learn category model-performance grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.624
+    },
+    {
+      "name": "A: learn category bi-serving grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.647
+    },
+    {
+      "name": "A: learn category dag-orchestration grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.722
+    },
+    {
+      "name": "A: learn category incremental-cdc grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.612
+    },
+    {
+      "name": "A: learn category quality-contracts grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.621
+    },
+    {
+      "name": "A: learn category retries-observability grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.613
+    },
+    {
+      "name": "A: learn category elt-deployment grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.605
+    },
+    {
+      "name": "A: learn category lakehouse-serving grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.631
+    },
+    {
+      "name": "A: learn category platform-tradeoffs grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.636
+    },
+    {
+      "name": "A: learn category spark-compute grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.612
+    },
+    {
+      "name": "A: learn category security-governance grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.701
+    },
+    {
+      "name": "A: learn category cost-operations grouped / breadcrumb / fresh boot",
+      "passed": true,
+      "seconds": 0.632
+    },
+    {
+      "name": "A: Home -> Category -> Exercise -> Back / Back / Forward / Forward preserves draft",
+      "passed": true,
+      "seconds": 0.27
+    },
+    {
+      "name": "A/F: Old case/task URL, breadcrumb and Practice/Learn resume keep case contract",
+      "passed": true,
+      "seconds": 0.625
+    },
+    {
+      "name": "D/E: render and self-check code-sql-grain-joins",
+      "passed": true,
+      "seconds": 0.396
+    },
+    {
+      "name": "D/E: render and self-check code-python-collections-dataframes",
+      "passed": true,
+      "seconds": 0.415
+    },
+    {
+      "name": "D/E: render and self-check code-spark-transformations-shuffles",
+      "passed": true,
+      "seconds": 0.405
+    },
+    {
+      "name": "D/E: render and self-check code-git-working-tree-index-head",
+      "passed": true,
+      "seconds": 0.392
+    },
+    {
+      "name": "D/E: render and self-check code-interview-dedup-latest-row",
+      "passed": true,
+      "seconds": 0.383
+    },
+    {
+      "name": "D/E: render and self-check model-grain-star-schema",
+      "passed": true,
+      "seconds": 0.383
+    },
+    {
+      "name": "D/E: render and self-check model-relationships-filter-context",
+      "passed": true,
+      "seconds": 0.384
+    },
+    {
+      "name": "D/E: render and self-check model-dax-measure-context",
+      "passed": true,
+      "seconds": 0.383
+    },
+    {
+      "name": "D/E: render and self-check model-performance-cardinality",
+      "passed": true,
+      "seconds": 0.386
+    },
+    {
+      "name": "D/E: render and self-check model-fabric-serving-path",
+      "passed": true,
+      "seconds": 0.397
+    },
+    {
+      "name": "D/E: render and self-check pipeline-dag-dependencies",
+      "passed": true,
+      "seconds": 0.402
+    },
+    {
+      "name": "D/E: render and self-check pipeline-incremental-idempotent",
+      "passed": true,
+      "seconds": 0.399
+    },
+    {
+      "name": "D/E: render and self-check pipeline-quality-contracts",
+      "passed": true,
+      "seconds": 0.384
+    },
+    {
+      "name": "D/E: render and self-check pipeline-retries-observability",
+      "passed": true,
+      "seconds": 0.383
+    },
+    {
+      "name": "D/E: render and self-check pipeline-dbt-elt-deployment",
+      "passed": true,
+      "seconds": 0.384
+    },
+    {
+      "name": "D/E: render and self-check systems-lakehouse-serving",
+      "passed": true,
+      "seconds": 0.401
+    },
+    {
+      "name": "D/E: render and self-check systems-platform-tradeoffs",
+      "passed": true,
+      "seconds": 0.4
+    },
+    {
+      "name": "D/E: render and self-check systems-spark-distributed-compute",
+      "passed": true,
+      "seconds": 0.401
+    },
+    {
+      "name": "D/E: render and self-check systems-security-governance",
+      "passed": true,
+      "seconds": 0.399
+    },
+    {
+      "name": "D/E: render and self-check systems-cost-reliability-operations",
+      "passed": true,
+      "seconds": 0.402
+    },
+    {
+      "name": "E/I: actual browser screenshots for all 14 block kinds, code/table/diagram scenarios",
+      "passed": true,
+      "seconds": 2.123
+    },
+    {
+      "name": "E/F/H: outline / copy / completion / notes / reload / related Practice remain separate",
+      "passed": true,
+      "seconds": 2.292
+    },
+    {
+      "name": "F: actual browser export blob -> file input merge -> old backup import preserves both modes",
+      "passed": true,
+      "seconds": 1.887
+    },
+    {
+      "name": "G: custom pack fallback, five-card invariant, grouped search and bookmark/empty queues",
+      "passed": true,
+      "seconds": 0.542
+    },
+    {
+      "name": "C: semantic rail order / active state / Theme and Focus normalize safely on Learn switch",
+      "passed": true,
+      "seconds": 0.454
+    },
+    {
+      "name": "B/J: 1600x900 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.705
+    },
+    {
+      "name": "B/J: 1366x768 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.839
+    },
+    {
+      "name": "B/J: 1190x800 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.661
+    },
+    {
+      "name": "B/J: 1024x768 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.568
+    },
+    {
+      "name": "B/J: 768x1024 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.683
+    },
+    {
+      "name": "B/J: 390x844 deterministic nav / modes / tools / focus / ARIA / widths / overflow",
+      "passed": true,
+      "seconds": 1.833
+    },
+    {
+      "name": "C/E: all four existing themes style lessons, and settings/layout reset is safe without a workstation",
+      "passed": true,
+      "seconds": 0.776
+    }
+  ],
+  "passed": 83,
+  "failed": 0,
+  "pageErrors": [],
+  "blockScreenshots": [
+    {
+      "kind": "intro",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-intro.png"
+    },
+    {
+      "kind": "concept",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-concept.png"
+    },
+    {
+      "kind": "diagram",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-diagram.png"
+    },
+    {
+      "kind": "steps",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-steps.png"
+    },
+    {
+      "kind": "code",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-code.png"
+    },
+    {
+      "kind": "table",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-table.png"
+    },
+    {
+      "kind": "workedExample",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-workedExample.png"
+    },
+    {
+      "kind": "whenToUse",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-whenToUse.png"
+    },
+    {
+      "kind": "pitfall",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-pitfall.png"
+    },
+    {
+      "kind": "checkpoint",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-checkpoint.png"
+    },
+    {
+      "kind": "keyTakeaways",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-keyTakeaways.png"
+    },
+    {
+      "kind": "relatedPractice",
+      "lesson": "code-sql-grain-joins",
+      "screenshot": "screenshots/block-relatedPractice.png"
+    },
+    {
+      "kind": "comparison",
+      "lesson": "code-git-working-tree-index-head",
+      "screenshot": "screenshots/block-comparison.png"
+    },
+    {
+      "kind": "bullets",
+      "lesson": "model-fabric-serving-path",
+      "screenshot": "screenshots/block-bullets.png"
+    }
+  ],
+  "status": "PASS"
+}

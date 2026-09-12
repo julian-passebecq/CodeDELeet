@@ -1,6 +1,6 @@
 {
   "name": "codedeleet-v2",
-  "version": "2.2.0",
+  "version": "2.4.0",
   "private": true,
   "type": "module",
   "description": "CodeDELeet - local-first data engineering interview workstation",
@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "npm run build && node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "build": "tsc -p tsconfig.json && node scripts/build.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/validate-learning.mjs && node scripts/build.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test tests/*.test.mjs",
     "test:ui": "python tests/ui_smoke.py",
@@ -16,7 +16,11 @@
     "preview": "node scripts/serve.mjs dist",
     "test:network": "python tests/network_runtime_smoke.py",
     "test:shell": "python tests/v22_ui.py",
-    "test:integrity": "python scripts/validate_release.py"
+    "test:integrity": "python scripts/validate_release.py",
+    "test:compact": "python tests/v23_ui.py",
+    "test:layout": "python tests/v23_layout.py",
+    "test:learning": "node --test tests/learning.test.mjs",
+    "test:v24": "python tests/v24_acceptance.py"
   },
   "devDependencies": {
     "typescript": "5.8.3"

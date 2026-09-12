@@ -19,3 +19,12 @@ Pinned versions describe the source URLs used by this build, not a claim of curr
 The app uses original neutral line icons and original conceptual SVG diagrams, not copied vendor logos, Power BI screenshots or official architecture images. Official documentation is linked in each exercise's Sources. A citation/link is not a claim that an illustration is official or that documentation images are licensed for redistribution.
 
 Private notebook and older source archives from the previous delivery are not redistributed in V2.2. Deepnote reference labels remain metadata only.
+
+## V2.3 compact-shell pass
+
+No new third-party runtime dependency, icon pack, font, engine or vendor asset was
+added. The header uses the existing neutral icon vocabulary plus one original
+Theme glyph. The supplied offline research archives and prototype are private
+implementation references and are not included in this source/build release.
+A historical nested trainer ZIP from the baseline reference directory is also
+omitted; it is not required by the application. Existing license files remain.

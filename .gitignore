@@ -7,3 +7,9 @@ __pycache__/
 *.pyc
 
 release-artifacts/
+
+# Private implementation research is never release content.
+OFFLINE_REFERENCE_LIBRARY_DO_NOT_PUBLISH/
+REFERENCE_INDEX/
+PROTOTYPE/
+*Handoff*.zip

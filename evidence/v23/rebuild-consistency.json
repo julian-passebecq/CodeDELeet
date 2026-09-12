@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "rebuiltAssets": 64,
+  "changedAssets": [],
+  "sameMembership": true,
+  "buildTreeSHA256": "641ccccce7ba0678fd9456603236c65402fa227ecb47e78705704d8566b0b847",
+  "compiler": "TypeScript 5.8.3",
+  "capturedAtUTC": "2026-09-11T11:33:36.596772+00:00",
+  "scope": "Second source rebuild matched all tested generated assets byte-for-byte; no hosted proof inferred."
+}

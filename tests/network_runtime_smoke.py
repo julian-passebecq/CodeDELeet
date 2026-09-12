@@ -103,7 +103,7 @@ try:
         }
         for name, source in diagrams.items():
             def diagram(source=source, name=name):
-                go('arch-fabric'); page.locator('#layout-mode').select_option('work'); page.locator('[data-lab-tab="Mermaid"]').click()
+                go('arch-fabric'); page.locator('button[data-mode="work"]').click(); page.locator('[data-lab-tab="Mermaid"]').click()
                 page.locator('#mermaid-source').fill(source)
                 page.locator('[data-action="render-mermaid"]').click()
                 # Architecture icons contain their own SVGs. Require the single root diagram,

@@ -76,7 +76,7 @@ with sync_playwright() as p:
         page.locator('[data-action="focus"]').click();assert page.locator('#app').get_attribute('data-focus')=='true';page.locator('[data-action="focus"]').click();no_overflow(page)
     check('Keyboard split resize, drawer collapse and focus mode work',layout)
     def filters():
-        go(page,'sql-paid-revenue');page.locator('#difficulty').select_option('Medium');titles=page.locator('[data-question]').all_text_contents();assert titles and all('Medium' in t for t in titles)
+        go(page,'sql-paid-revenue');page.locator('#navigator-filters summary').click();page.locator('#difficulty').select_option('Medium');titles=page.locator('[data-question]').all_text_contents();assert titles and all('Medium' in t for t in titles)
         first=page.locator('[data-question]').first;first.click();assert page.locator('#difficulty').input_value()=='Medium'
         page.locator('#difficulty').select_option('All levels');page.locator('#search').fill('does-not-exist');assert page.locator('[data-question]').count()==0;page.locator('#search').fill('')
     check('Library filtering survives selecting an exercise',filters)
@@ -113,7 +113,7 @@ with sync_playwright() as p:
         page.locator('#graph-config').fill(json.dumps(g));page.locator('[data-action="apply-graph"]').click();page.locator('[data-action="run"]').click();assert 'success' in page.locator('#drawer-body').inner_text();click_tab(page,'lab','Workspace');assert page.locator('[data-node="quality"]').count()==1;snap(page,'05-dag-retry-run.png')
     check('Graph JSON roundtrip, repaired quality gate and retry simulation',dag)
     def dax():
-        go(page,'bi-revenue');page.locator('#layout-mode').select_option('inspect');setcode(page,BYID['bi-revenue']['solution']);page.locator('#country').select_option('Norway');page.locator('[data-action="run"]').click();assert page.locator('#kpi-value').inner_text()=='300';assert '1 / 1 checks' in page.locator('#drawer-body').inner_text();snap(page,'06-dax-filter-context.png')
+        go(page,'bi-revenue');page.locator('button[data-mode="inspect"]').click();setcode(page,BYID['bi-revenue']['solution']);page.locator('#country').select_option('Norway');page.locator('[data-action="run"]').click();assert page.locator('#kpi-value').inner_text()=='300';assert '1 / 1 checks' in page.locator('#drawer-body').inner_text();snap(page,'06-dax-filter-context.png')
     check('DAX subset evaluates through editor and active country filter',dax)
     def config():
         go(page,'v2-k8-selector');setcode(page,BYID['v2-k8-selector']['solution']);page.locator('[data-action="run"]').click();assert '2 / 2 checks' in page.locator('#drawer-body').inner_text();click_tab(page,'lab','Evidence');assert 'Supplied evidence, not regenerated output' in page.locator('#lab-content').inner_text();snap(page,'07-kubernetes-evidence.png')
@@ -139,7 +139,7 @@ with sync_playwright() as p:
     check('V1 browser boot retains draft, settings, notes and a pre-upgrade snapshot',migration)
     def mobile():
         mobile_context=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,device_scale_factor=1)
-        m=mobile_context.new_page();m.set_default_timeout(3000);m.on('pageerror',lambda e:errors.append(str(e)));open_app(m,'v2-powershell-csv');no_overflow(m);assert m.locator('#terminal-command').is_visible();m.locator('[data-mobile="question"]').click();assert m.locator('#question-body').is_visible();assert not m.locator('#terminal-command').is_visible();m.locator('[data-mobile="tools"]').click();m.locator('#notes').fill('Mobile note');m.locator('[data-mobile="lab"]').click();assert not m.locator('#tool-panel').is_visible();m.locator('#terminal-command').click();snap(m,'10-mobile-workspace.png');m.locator('.topbar [data-shell="nav-toggle"]').click();m.wait_for_function('document.querySelector(".library").getBoundingClientRect().x>=-1',timeout=3000);mobile_context.close()
+        m=mobile_context.new_page();m.set_default_timeout(3000);m.on('pageerror',lambda e:errors.append(str(e)));open_app(m,'v2-powershell-csv');no_overflow(m);assert m.locator('#terminal-command').is_visible();m.locator('[data-mobile="question"]').click();assert m.locator('#question-body').is_visible();assert not m.locator('#terminal-command').is_visible();m.locator('[data-mobile="tools"]').click();m.locator('#notes').fill('Mobile note');m.locator('[data-mobile="lab"]').click();assert not m.locator('#tool-panel').is_visible();m.locator('#terminal-command').click();snap(m,'10-mobile-workspace.png');m.locator('.compact-header [data-shell="nav-toggle"]').click();m.wait_for_function('document.querySelector(".library").getBoundingClientRect().x>=-1',timeout=3000);mobile_context.close()
     check('390px mobile tabs, notes, shell and exercise drawer are usable',mobile)
     # UI network tests intentionally belong to network_runtime_smoke.py, not this harness.
     browser.close()

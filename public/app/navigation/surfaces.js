@@ -1,0 +1,83 @@
+/** Discovery + contextual navigation, independent of runtime/editor rendering. */
+import { WORKSPACES, escapeHTML as e } from '../core.js';
+import { blockTitle } from '../lessons/validate.js';
+import { lessonHTML } from '../lessons/renderer.js';
+import { icon, options } from '../ui.js';
+import { association, categoriesFor, categoryFor } from './taxonomy.js';
+const lessonList = (c) => c.lessons.filter(l => l.workspace === c.nav.workspace);
+const questionsFor = (c) => c.questions.filter(q => q.workspace === c.nav.workspace);
+export function matches(q, c) {
+    const d = c.store.drafts[q.id] ?? {}, term = c.search.toLowerCase().trim();
+    return (!term || [q.title, q.topic, q.summary, q.id, q.technology, q.concept.join(' '), association(q).subcategory, categoryFor(q.workspace, association(q).categoryId)?.title].join(' ').toLowerCase().includes(term)) && (c.difficulty === 'All levels' || q.difficulty === c.difficulty) && (c.technology === 'All topics' || q.technology === c.technology) && (!c.concept || q.concept.join(' ').toLowerCase().includes(c.concept.toLowerCase())) && (c.priority === 'All priorities' || q.interviewPriority === c.priority) && (c.queue === 'All exercises' || c.queue === 'Bookmarked' && !!d.bookmark || c.queue === 'Review queue' && (d.status === 'review' || d.confidence === 'Review') || c.queue === 'Unfinished' && d.status !== 'completed');
+}
+function exerciseRow(q, c) {
+    const d = c.store.drafts[q.id] ?? {}, active = c.nav.exerciseId === q.id;
+    return `<div role="listitem"><button class="exercise-item ${active ? 'selected' : ''}" data-question="${e(q.id)}" aria-current="${active ? 'true' : 'false'}"><span class="exercise-status ${d.status === 'completed' ? 'done' : ''}">${d.status === 'completed' ? icon('check') : ''}</span><span class="exercise-item-copy"><strong>${e(q.title)}</strong><span><b class="level ${q.difficulty.toLowerCase()}">${q.difficulty}</b><span>${e(q.technology ?? q.topic)}</span><span>${e(d.status ?? 'not-started')}</span></span>${c.search ? '<small class="match-reason">Matches &ldquo;' + e(c.search) + '&rdquo; in title, topic, concept or category</small>' : ''}</span>${d.bookmark ? '<span class="tiny-bookmark">' + icon('bookmark') + '</span>' : ''}</button></div>`;
+}
+export function groupedExercises(list, c) {
+    if (!list.length)
+        return `<div class="empty small"><h3>No exercises match</h3><p>Try a broader search or explore the full lab.</p><button class="secondary" data-clear-filters>Clear filters</button><button class="text-button" data-nav-home>Back to lab home</button></div>`;
+    return categoriesFor(c.nav.workspace).map(cat => { const items = list.filter(q => association(q).categoryId === cat.id); if (!items.length)
+        return ''; return `<section class="exercise-category-group" data-result-category="${cat.id}"><h3>${e(cat.title)}</h3>${[...new Set(items.map(q => association(q).subcategory))].map(sub => `<section class="exercise-subgroup" data-subcategory="${e(sub)}"><h4>${e(sub)}</h4><div role="list">${items.filter(q => association(q).subcategory === sub).map(q => exerciseRow(q, c)).join('')}</div></section>`).join('')}</section>`; }).join('');
+}
+export function caseCards(c) {
+    const cases = c.cases.filter(x => x.workspace === c.nav.workspace);
+    return `<section class="home-cases" id="home-cases"><div class="section-heading"><h2>Case studies</h2><span class="muted">Separate, multi-task attempts</span></div>${cases.map(x => { const session = c.store.caseSessions?.[x.id]; const done = Object.values(session?.drafts ?? {}).filter((d) => d.status === 'completed').length; return `<button class="case-library-item" data-open-case="${e(x.id)}"><strong>${e(x.title)}</strong><span>${x.tasks.length} tasks / ${x.pages.length} exhibits / ${done} complete</span></button>`; }).join('') || '<p class="muted">No authored case for this lab yet.</p>'}</section>`;
+}
+function cards(c) {
+    const learn = c.nav.appMode === 'learn';
+    return '<div class="category-grid" aria-label="Five primary categories">' + categoriesFor(c.nav.workspace).map(cat => {
+        const qs = questionsFor(c).filter(q => association(q).categoryId === cat.id), ls = lessonList(c).filter(l => l.categoryId === cat.id), total = learn ? ls.length : qs.length, done = learn ? ls.filter(l => c.store.settings.learning?.progress[l.id]?.status === 'completed').length : qs.filter(q => c.store.drafts[q.id]?.status === 'completed').length;
+        return `<button class="category-card" data-category-card="${cat.id}" data-nav-category="${cat.id}"><div class="category-card-head"><span class="category-icon">${icon(cat.icon)}</span><span class="category-number">0${cat.order + 1}</span></div><h2>${e(cat.title)}</h2><p>${e(cat.description)}</p><div class="category-card-footer"><span>${done} / ${total} ${learn ? 'lessons' : 'exercises'} complete</span><span aria-hidden="true">&rarr;</span></div><div class="progress-track" aria-hidden="true"><span style="width:${total ? 100 * done / total : 0}%"></span></div>${!total ? '<small>Learn the concept while Practice grows</small>' : ''}</button>`;
+    }).join('') + '</div>';
+}
+function lessonRows(list, c) {
+    return list.map(l => `<button class="lesson-list-row" data-lesson="${e(l.id)}"><span><strong>${e(l.title)}</strong><small>${e(l.summary)}</small></span><span>${l.minutes} min / ${e(c.store.settings.learning?.progress[l.id]?.status ?? 'not-started')} &rarr;</span></button>`).join('');
+}
+export function breadcrumb(c) {
+    const cat = categoryFor(c.nav.workspace, c.nav.categoryId);
+    return `<nav class="surface-breadcrumb" aria-label="Location"><span class="mode-badge">${c.nav.appMode === 'learn' ? 'Learn' : 'Practice'}</span><button class="text-button" data-nav-home> ${e(WORKSPACES[c.nav.workspace].title)}</button>${cat ? '<span aria-hidden="true">/</span><button class="text-button" data-nav-category="' + cat.id + '">' + e(cat.title) + '</button>' : ''}</nav>`;
+}
+export function discoveryHTML(c) {
+    const learn = c.nav.appMode === 'learn', lab = WORKSPACES[c.nav.workspace], cat = categoryFor(c.nav.workspace, c.nav.categoryId), ls = lessonList(c), qs = questionsFor(c);
+    if (c.nav.surface === 'lesson') {
+        const lesson = c.lessons.find(l => l.id === c.nav.lessonId);
+        return breadcrumb(c) + lessonHTML(lesson, c.store.settings.learning?.progress[lesson.id], c.questions, ls);
+    }
+    if (cat) {
+        const items = qs.filter(q => association(q).categoryId === cat.id), lessons = ls.filter(l => l.categoryId === cat.id);
+        const total = learn ? lessons.length : items.length, done = learn ? lessons.filter(l => c.store.settings.learning?.progress[l.id]?.status === 'completed').length : items.filter(q => c.store.drafts[q.id]?.status === 'completed').length;
+        const remembered = c.store.settings.practiceNavigation?.lastExerciseByLab[c.nav.workspace], next = items.find(q => q.id === remembered && c.store.drafts[q.id]?.status !== 'completed') ?? items.find(q => c.store.drafts[q.id]?.status !== 'completed');
+        const progress = `<div class="category-progress" data-category-progress><span><strong>${done} / ${total}</strong> ${learn ? 'lessons' : 'exercises'} complete</span>${!learn && next ? `<button class="secondary" data-category-continue data-question="${e(next.id)}">${c.store.drafts[next.id] ? 'Continue' : 'Start'}: ${e(next.title)} &rarr;</button>` : ''}</div>`;
+        const relatedCases = c.cases.filter(x => x.tasks.some(t => items.some(q => q.id === t.questionRef)));
+        return `<div class="discovery-inner">${breadcrumb(c)}<header class="home-heading"><div><span class="eyebrow">${learn ? 'LEARN' : 'PRACTICE'} / CATEGORY ${cat.order + 1} OF 5</span><h1 tabindex="-1">${e(cat.title)}</h1><p>${e(cat.description)}</p></div><button class="secondary" data-app-mode>${learn ? 'Practice this category' : 'Learn this category'}</button></header>${progress}${learn ? '<div class="lesson-category-list">' + lessonRows(lessons, c) + '</div>' : `<div class="search-entry"><label for="surface-search">Search this category</label><div class="search-entry-row"><input id="surface-search" type="search" value="${e(c.search)}" maxlength="200" placeholder="Title, concept or technology"><button class="secondary" data-search-lab>Search whole lab</button><button class="secondary" data-open-filters>Filters</button></div></div><div id="discovery-results">${items.length ? groupedExercises(items.filter(q => matches(q, c)), c) : '<div class="empty"><h2>Build the mental model first</h2><p>This category has a seed lesson, but no dedicated Practice exercise yet. Existing exercise IDs have not been repurposed.</p>' + lessonRows(lessons, c) + '</div>'}</div>`}${!learn && relatedCases.length ? caseCards({ ...c, cases: relatedCases }) : ''}</div>`;
+    }
+    const done = learn ? ls.filter(l => c.store.settings.learning?.progress[l.id]?.status === 'completed').length : qs.filter(q => c.store.drafts[q.id]?.status === 'completed').length, total = learn ? ls.length : qs.length;
+    const lastLesson = c.store.settings.learning?.lastLessonByLab[c.nav.workspace], remembered = c.store.settings.practiceNavigation?.lastExerciseByLab[c.nav.workspace] ?? c.store.settings.lastQuestion, lastQ = qs.find(q => q.id === remembered), lastL = ls.find(l => l.id === lastLesson);
+    const resume = learn ? (lastL ? `<button class="continue-card" data-lesson="${e(lastL.id)}"><span class="eyebrow">CONTINUE LEARNING</span><strong>${e(lastL.title)}</strong><span>${e(c.store.settings.learning?.progress[lastL.id]?.status ?? 'in-progress')} &rarr;</span></button>` : `<button class="continue-card" data-lesson="${e(ls[0]?.id)}"><span class="eyebrow">RECOMMENDED START</span><strong>${e(ls[0]?.title)}</strong><span>Build the mental model &rarr;</span></button>`) : (lastQ ? `<button class="continue-card" data-question="${e(lastQ.id)}"><span class="eyebrow">CONTINUE PRACTICE</span><strong>${e(lastQ.title)}</strong><span>${e(categoryFor(lastQ.workspace, association(lastQ).categoryId)?.title)} &rarr;</span></button>` : `<div class="continue-card"><span class="eyebrow">START WITH A CATEGORY</span><strong>Choose a focused path below</strong><span>Your last exercise will appear here.</span></div>`);
+    return `<div class="discovery-inner" data-lab-home="${c.nav.workspace}">${breadcrumb(c)}<header class="home-heading"><div><span class="eyebrow">${learn ? 'UNDERSTAND IT. THEN TRY IT.' : 'A CLEAR PATH TO YOUR NEXT CHALLENGE.'}</span><h1 tabindex="-1">${e(lab.title)}</h1><p>${learn ? 'Build practical mental models with original examples, diagrams and self-checks.' : e(lab.subtitle) + '. Choose a category, solve a task, then inspect your reasoning.'}</p></div><div class="home-progress"><strong>${done}<span> / ${total}</span></strong><span>${learn ? 'lessons' : 'exercises'} complete</span></div></header><div class="resume-row">${resume}<div class="home-shortcuts">${learn ? `<button class="text-button" data-app-mode>Open Practice &rarr;</button>${lastL ? '<button class="text-button" data-lesson="' + e(ls[0]?.id) + '">Recommended starting lesson</button>' : ''}` : ['Bookmarked', 'Review queue', 'Unfinished'].map(queue => '<button class="text-button" data-nav-queue="' + queue + '">' + queue + '</button>').join('')}<button class="text-button" data-nav-search>${icon('search')} Search ${learn ? 'lessons' : 'exercises'}</button></div></div>${cards(c)}<section class="home-discovery" id="home-discovery"><div class="section-heading"><h2>${learn ? 'Lessons by category' : c.queue !== 'All exercises' ? e(c.queue) : c.search ? 'Search results' : 'Explore exercises'}</h2>${!learn ? '<button class="text-button" data-open-filters>Filters</button>' : ''}</div><label class="sr-only" for="surface-search">Search ${learn ? 'lessons' : 'exercises'}</label><input id="surface-search" type="search" value="${e(c.search)}" maxlength="200" placeholder="Search by title, concept or technology"><div id="discovery-results">${learn ? categoriesFor(c.nav.workspace).map(category => { const lessons = ls.filter(l => l.categoryId === category.id && (!c.search || (l.title + ' ' + l.summary + ' ' + category.title).toLowerCase().includes(c.search.toLowerCase()))); return lessons.length ? '<section class="lesson-category-group"><h3>' + e(category.title) + '</h3>' + lessonRows(lessons, c) + '</section>' : ''; }).join('') || '<div class="empty">No lessons match. <button class="secondary" data-clear-filters>Clear filters</button></div>' : groupedExercises(qs.filter(q => matches(q, c)), c)}</div></section>${!learn ? caseCards(c) : ''}</div>`;
+}
+export function navigatorHTML(c) {
+    const learn = c.nav.appMode === 'learn', cat = categoryFor(c.nav.workspace, c.nav.categoryId), lesson = c.lessons.find(l => l.id === c.nav.lessonId);
+    let html = `<div class="nav-context-heading"><span class="eyebrow">${learn ? 'LEARN' : 'PRACTICE'} NAVIGATOR</span><h2>${e(WORKSPACES[c.nav.workspace].title)}</h2><button class="text-button" data-nav-home>Back to lab home</button></div><nav class="category-nav" aria-label="${learn ? 'Learning' : 'Practice'} categories">${categoriesFor(c.nav.workspace).map(category => `<button data-nav-category="${category.id}" aria-current="${cat?.id === category.id ? 'page' : 'false'}"><span class="category-number">${category.order + 1}</span>${e(category.title)}</button>`).join('')}</nav>`;
+    if (learn) {
+        if (cat) {
+            html += `<section class="nav-lessons"><h3>${e(cat.title)}</h3>${lessonRows(lessonList(c).filter(l => l.categoryId === cat.id), c)}</section>`;
+        }
+        if (lesson)
+            html += `<nav class="lesson-outline" aria-label="Lesson outline"><h3>In this lesson</h3>${lesson.blocks.map(b => `<button data-lesson-section-link="${e(b.id)}" aria-current="${c.store.settings.learning?.progress[lesson.id]?.lastSection === b.id ? 'location' : 'false'}">${e(blockTitle(b))}</button>`).join('')}</nav>`;
+        return html;
+    }
+    html += `<div class="nav-shortcuts"><button class="text-button" data-nav-search>Search exercises</button><button class="text-button" data-nav-queue="Bookmarked">Bookmarks</button><button class="text-button" data-nav-queue="Review queue">Review queue</button><button class="text-button" data-nav-queue="Unfinished">Unfinished</button><button class="text-button" data-nav-cases>Case studies</button></div>`;
+    return html;
+}
+export function filterHTML(c) {
+    return `<details class="navigator-filters" id="navigator-filters"><summary>Search and filters</summary><div class="search-wrap">${icon('search')}<input id="search" type="search" maxlength="200" placeholder="Search this context..." value="${e(c.search)}" aria-label="Search exercises"></div><div class="quick-filters" id="quick-filters"></div><div class="filter-row"><select id="difficulty" aria-label="Difficulty">${options(['All levels', 'Easy', 'Medium', 'Hard'], c.difficulty)}</select><select id="queue" aria-label="Practice queue">${options(['All exercises', 'Bookmarked', 'Review queue', 'Unfinished'], c.queue)}</select></div><div class="library-filters"><label>Technology<select id="technology" aria-label="Technology">${options(['All topics', ...new Set(questionsFor(c).map(q => q.technology))], c.technology)}</select></label><label>Concept<input id="concept-filter" value="${e(c.concept)}" placeholder="e.g. grain or retry" aria-label="Concept filter"></label><label>Interview priority<select id="priority-filter" aria-label="Interview priority">${options(['All priorities', 'essential', 'high', 'medium', 'low'], c.priority)}</select></label></div><button class="text-button" data-clear-filters>Clear filters</button><button class="text-button" data-search-lab>Search whole lab</button></details>`;
+}
+export function nearbyExercises(c) {
+    const q = c.questions.find(q => q.id === c.nav.exerciseId), cat = c.nav.categoryId;
+    const all = questionsFor(c).filter(q => !cat || association(q).categoryId === cat);
+    if (q && c.nav.surface === 'exercise' && !c.search && c.queue === 'All exercises')
+        return all.filter(x => association(x).subcategory === association(q).subcategory && matches(x, c));
+    return all.filter(q => matches(q, c));
+}

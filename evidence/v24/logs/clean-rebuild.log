@@ -1,0 +1,6 @@
+
+> codedeleet-v2@2.4.0 build
+> tsc -p tsconfig.json && node scripts/validate-learning.mjs && node scripts/build.mjs
+
+Learning gate passed: 51 stable exercises, 20 categories, 20 validated lessons.
+Built static site in dist. No serverless functions or secrets required.

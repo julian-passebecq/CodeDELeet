@@ -1,0 +1,89 @@
+PASS A: Practice -> Learn -> Practice restores exact exercise, editor instance, cursor, undo and draft
+PASS A/G: practice code icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: practice model icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: practice pipeline icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: practice architecture icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: learn code icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: learn model icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: learn pipeline icon opens five-card lab home, never an arbitrary exercise
+PASS A/G: learn architecture icon opens five-card lab home, never an arbitrary exercise
+PASS A: practice category sql-patterns grouped / breadcrumb / fresh boot
+PASS A: practice category python-dataframes grouped / breadcrumb / fresh boot
+PASS A: practice category spark-distributed grouped / breadcrumb / fresh boot
+PASS A: practice category developer-workflow grouped / breadcrumb / fresh boot
+PASS A: practice category interview-patterns grouped / breadcrumb / fresh boot
+PASS A: practice category dimensional-grain grouped / breadcrumb / fresh boot
+PASS A: practice category relationships-context grouped / breadcrumb / fresh boot
+PASS A: practice category measures-dax grouped / breadcrumb / fresh boot
+PASS A: practice category model-performance grouped / breadcrumb / fresh boot
+PASS A: practice category bi-serving grouped / breadcrumb / fresh boot
+PASS A: practice category dag-orchestration grouped / breadcrumb / fresh boot
+PASS A: practice category incremental-cdc grouped / breadcrumb / fresh boot
+PASS A: practice category quality-contracts grouped / breadcrumb / fresh boot
+PASS A: practice category retries-observability grouped / breadcrumb / fresh boot
+PASS A: practice category elt-deployment grouped / breadcrumb / fresh boot
+PASS A: practice category lakehouse-serving grouped / breadcrumb / fresh boot
+PASS A: practice category platform-tradeoffs grouped / breadcrumb / fresh boot
+PASS A: practice category spark-compute grouped / breadcrumb / fresh boot
+PASS A: practice category security-governance grouped / breadcrumb / fresh boot
+PASS A: practice category cost-operations grouped / breadcrumb / fresh boot
+PASS A: learn category sql-patterns grouped / breadcrumb / fresh boot
+PASS A: learn category python-dataframes grouped / breadcrumb / fresh boot
+PASS A: learn category spark-distributed grouped / breadcrumb / fresh boot
+PASS A: learn category developer-workflow grouped / breadcrumb / fresh boot
+PASS A: learn category interview-patterns grouped / breadcrumb / fresh boot
+PASS A: learn category dimensional-grain grouped / breadcrumb / fresh boot
+PASS A: learn category relationships-context grouped / breadcrumb / fresh boot
+PASS A: learn category measures-dax grouped / breadcrumb / fresh boot
+PASS A: learn category model-performance grouped / breadcrumb / fresh boot
+PASS A: learn category bi-serving grouped / breadcrumb / fresh boot
+PASS A: learn category dag-orchestration grouped / breadcrumb / fresh boot
+PASS A: learn category incremental-cdc grouped / breadcrumb / fresh boot
+PASS A: learn category quality-contracts grouped / breadcrumb / fresh boot
+PASS A: learn category retries-observability grouped / breadcrumb / fresh boot
+PASS A: learn category elt-deployment grouped / breadcrumb / fresh boot
+PASS A: learn category lakehouse-serving grouped / breadcrumb / fresh boot
+PASS A: learn category platform-tradeoffs grouped / breadcrumb / fresh boot
+PASS A: learn category spark-compute grouped / breadcrumb / fresh boot
+PASS A: learn category security-governance grouped / breadcrumb / fresh boot
+PASS A: learn category cost-operations grouped / breadcrumb / fresh boot
+PASS A: Home -> Category -> Exercise -> Back / Back / Forward / Forward preserves draft
+PASS A/F: Old case/task URL, breadcrumb and Practice/Learn resume keep case contract
+PASS D/E: render and self-check code-sql-grain-joins
+PASS D/E: render and self-check code-python-collections-dataframes
+PASS D/E: render and self-check code-spark-transformations-shuffles
+PASS D/E: render and self-check code-git-working-tree-index-head
+PASS D/E: render and self-check code-interview-dedup-latest-row
+PASS D/E: render and self-check model-grain-star-schema
+PASS D/E: render and self-check model-relationships-filter-context
+PASS D/E: render and self-check model-dax-measure-context
+PASS D/E: render and self-check model-performance-cardinality
+PASS D/E: render and self-check model-fabric-serving-path
+PASS D/E: render and self-check pipeline-dag-dependencies
+PASS D/E: render and self-check pipeline-incremental-idempotent
+PASS D/E: render and self-check pipeline-quality-contracts
+PASS D/E: render and self-check pipeline-retries-observability
+PASS D/E: render and self-check pipeline-dbt-elt-deployment
+PASS D/E: render and self-check systems-lakehouse-serving
+PASS D/E: render and self-check systems-platform-tradeoffs
+PASS D/E: render and self-check systems-spark-distributed-compute
+PASS D/E: render and self-check systems-security-governance
+PASS D/E: render and self-check systems-cost-reliability-operations
+PASS E/I: actual browser screenshots for all 14 block kinds, code/table/diagram scenarios
+PASS E/F/H: outline / copy / completion / notes / reload / related Practice remain separate
+PASS F: actual browser export blob -> file input merge -> old backup import preserves both modes
+PASS G: custom pack fallback, five-card invariant, grouped search and bookmark/empty queues
+PASS C: semantic rail order / active state / Theme and Focus normalize safely on Learn switch
+PASS B/J: 1600x900 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS B/J: 1366x768 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS B/J: 1190x800 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS B/J: 1024x768 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS B/J: 768x1024 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS B/J: 390x844 deterministic nav / modes / tools / focus / ARIA / widths / overflow
+PASS C/E: all four existing themes style lessons, and settings/layout reset is safe without a workstation
+{
+  "status": "PASS",
+  "passed": 83,
+  "failed": 0,
+  "pageErrors": []
+}

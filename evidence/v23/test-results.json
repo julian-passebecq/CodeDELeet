@@ -1,0 +1,116 @@
+{
+  "version": "2.3.0",
+  "capturedAtUTC": "2026-09-11T11:33:11.244226+00:00",
+  "scope": "Local implementation validation, not a remote CI or deployment claim",
+  "baselineCommit": "4212550ca4260390b5a756d81882c3a75a5f912b",
+  "environment": {
+    "node": "v22.16.0",
+    "npm": "10.9.2",
+    "typescript": "Version 5.8.3",
+    "python": "3.13.5",
+    "chromium": "144.0.7559.96",
+    "dependencyInstall": "Installed exact compiler available; clean registry installation blocked"
+  },
+  "families": [
+    {
+      "name": "Domain, layout and case units",
+      "command": "npm test",
+      "passed": 88,
+      "failed": 0,
+      "evidence": "logs/unit.log"
+    },
+    {
+      "name": "Hosted verifier negative cases",
+      "command": "python -m unittest discover -s tests -p test_hosted_verifier.py",
+      "passed": 9,
+      "failed": 0,
+      "evidence": "logs/verifier.log"
+    },
+    {
+      "name": "Native fixture/reference checks",
+      "command": "python tests/fixture_check.py",
+      "passed": 42,
+      "failed": 0,
+      "evidence": "fixture-report.json"
+    },
+    {
+      "name": "Existing exercise browser regressions",
+      "command": "python tests/ui_smoke.py",
+      "passed": 68,
+      "failed": 0,
+      "evidence": "ui-legacy-report.json"
+    },
+    {
+      "name": "Existing V2.2 shell and cases",
+      "command": "python tests/v22_ui.py",
+      "passed": 30,
+      "failed": 0,
+      "evidence": "ui-shell-report.json"
+    },
+    {
+      "name": "V2.3 compact-shell acceptance",
+      "command": "python tests/v23_ui.py",
+      "passed": 30,
+      "failed": 0,
+      "evidence": "acceptance-report.json"
+    },
+    {
+      "name": "V2.3 measured viewport/lab comparisons",
+      "command": "python tests/v23_layout.py",
+      "passed": 16,
+      "failed": 0,
+      "evidence": "V23_LAYOUT_METRICS.json"
+    },
+    {
+      "name": "Static/local-HTTP release integrity",
+      "command": "python scripts/validate_release.py",
+      "passed": 22,
+      "failed": 0,
+      "evidence": "release-integrity-report.json"
+    }
+  ],
+  "testChecksPassed": 305,
+  "testChecksFailed": 0,
+  "typecheck": "PASS",
+  "build": "PASS",
+  "status": "PASS_LOCAL_WITH_BLOCKED_RELEASE_GATES",
+  "blockedGates": [
+    {
+      "gate": "Clean npm ci",
+      "reason": "EAI_AGAIN registry.npmjs.org",
+      "exitCode": 1,
+      "evidence": "logs/install.log"
+    },
+    {
+      "gate": "Current npm vulnerability audit",
+      "reason": "Registry audit endpoint DNS failure",
+      "exitCode": 1,
+      "evidence": "logs/audit.log"
+    },
+    {
+      "gate": "Real-origin SQL/Python/Mermaid runtime",
+      "reason": "Chromium URL navigation blocked by environment (ERR_BLOCKED_BY_ADMINISTRATOR), including localhost",
+      "exitCode": 2,
+      "evidence": "network-runtime-report.json"
+    },
+    {
+      "gate": "Served-origin versions of all three UI suites",
+      "reason": "Same navigation policy; no served browser assertions executed",
+      "evidence": [
+        "logs/ui-http.log",
+        "logs/shell-http.log",
+        "logs/compact-http.log",
+        "http-attempt/acceptance-report.json"
+      ]
+    },
+    {
+      "gate": "Netlify preview/production asset, header and browser checks",
+      "reason": "Not attempted; explicitly reserved for coordinator",
+      "evidence": null
+    }
+  ],
+  "noRemoteOperations": true,
+  "privateReferenceLibraryIncluded": false,
+  "comparability": "305 passing named test/check cases across different test families, not 305 browser-runtime executions. None of the blocked gates contributes a pass.",
+  "finalRun": "Complete serial run after the mobile navigator accessibility correction; no functional application change after final run; packaging metadata is generated afterward."
+}

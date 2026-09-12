@@ -1,13 +1,38 @@
-import { resolveLayout } from './layout-controller.js';
+import { resolveLayout, resolveNavigator } from './layout-controller.js';
 /** Reparent existing panel nodes; never remount an editor or a domain engine. */
 export function applyShellDOM(p, lab, ui) {
     const r = resolveLayout(p, lab, window.innerWidth, ui), root = document.querySelector('#app'), ws = document.querySelector('#workstation'), stage = document.querySelector('#workstation-stage');
     root.dataset.nav = r.navWidth === 0 ? 'hidden' : r.navWidth === 56 ? 'compact' : 'full';
     root.style.setProperty('--nav-width', r.navWidth + 'px');
     root.dataset.focus = String(ui.focus);
+    const nav = resolveNavigator(p, innerWidth, ui);
+    root.dataset.navState = nav.state;
+    root.style.setProperty('--nav-overlay-width', nav.overlayWidth + 'px');
+    root.style.setProperty('--header-height', document.querySelector('#exercise-header').getBoundingClientRect().height + 'px');
+    document.body.classList.toggle('library-open', nav.state === 'overlay' || nav.state === 'drawer');
+    const library = document.querySelector('#exercise-library');
+    library.inert = nav.state === 'hidden';
+    if (nav.state === 'overlay' || nav.state === 'drawer') {
+        library.setAttribute('role', 'dialog');
+        library.setAttribute('aria-modal', 'true');
+    }
+    else {
+        library.removeAttribute('role');
+        library.removeAttribute('aria-modal');
+    }
+    const backdrop = document.querySelector('#nav-backdrop');
+    if (backdrop)
+        backdrop.hidden = nav.state !== 'overlay' && nav.state !== 'drawer';
+    document.querySelectorAll('[data-shell="nav-toggle"]').forEach(button => { button.setAttribute('aria-expanded', String(nav.expanded)); button.setAttribute('title', nav.expanded ? 'Close navigator' : 'Open navigator'); button.setAttribute('aria-label', nav.expanded ? 'Close navigator' : 'Open navigator'); });
     stage.dataset.pinned = String(r.pinned);
     stage.dataset.tool = ui.tool ?? '';
     stage.style.setProperty('--tool-width', r.toolWidth + 'px');
+    if (!ws) {
+        const tool = document.querySelector('#tool-panel');
+        tool.hidden = !ui.tool;
+        tool.style.width = r.toolWidth + 'px';
+        return;
+    }
     ws.dataset.mode = r.preset.slot;
     ws.dataset.lab = lab;
     ws.dataset.context = String(r.context);

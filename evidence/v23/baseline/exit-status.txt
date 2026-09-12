@@ -1,0 +1,12 @@
+install exit=1
+audit exit=1
+typecheck exit=0
+unit exit=0
+fixtures exit=0
+verifier exit=0
+ui exit=0
+shell exit=0
+integrity exit=0
+ui-http exit=1
+shell-http exit=1
+network exit=2

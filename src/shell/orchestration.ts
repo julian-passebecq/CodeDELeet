@@ -12,10 +12,12 @@ import type { ViewContext } from '../renderers/context.js';
 import * as systemsViews from '../renderers/systems-view.js';
 import { applyShellDOM } from '../shell/dom-layout.js';
 import type { ModeSlot,OutputAnchor,OutputSize,Presentation,ThemeId,ToolId } from '../shell/layout-controller.js';
-import { activePreferences,resolveLayout,setOutputSize,switchMode,toggleFocus } from '../shell/layout-controller.js';
+import { activePreferences,resolveLayout,setOutputSize,switchMode,toggleFocus,toggleNavigator } from '../shell/layout-controller.js';
 import type { RunStatus } from '../shell/output-dock.js';
 import { answerFingerprint,runSummary } from '../shell/output-dock.js';
 import { applyTheme } from '../shell/themes.js';
+import { themePanelHTML, syncThemeChoices } from './theme-panel.js';
+import { THEME_DATA } from './theme-data.js';
 import { railHTML,toolHeader } from '../shell/tool-rail.js';
 import type { DeepnoteLink,Draft,Fixtures,Graph,Question,Store,Workspace } from '../types.js';
 import { notice,options,pre,table } from '../ui.js';
@@ -74,8 +76,12 @@ export interface Bridge {
   patch: (p: Partial<Draft>, immediate?: boolean) => void;
   resize: (event: PointerEvent, kind: "column" | "drawer" | "tool") => void;
 }
-export function applyLayout(ctx: Bridge): void { applyTheme(ctx.presentation); applyShellDOM(ctx.presentation, ctx.workspace, ctx.shellState); const selector = document.querySelector<HTMLSelectElement>('#theme-select'); if (selector)
-    selector.value = ctx.presentation.theme; ctx.editorPool.refresh(ctx.draftKey()); }
+export function applyLayout(ctx: Bridge): void {
+    applyTheme(ctx.presentation);
+    syncThemeChoices(ctx.presentation.theme);
+    applyShellDOM(ctx.presentation, ctx.workspace, ctx.shellState);
+    ctx.editorPool.refresh(ctx.draftKey());
+}
 
 // Shared shell orchestration. Domain engines remain in their original modules.
 export function companionLinks(ctx: Bridge): DeepnoteLink[] { return validDeepnoteLinks(ctx.current, { ...ctx.mapping, ...ctx.store.settings.deepnoteMap }); }
@@ -88,6 +94,7 @@ export function updateRunBadge(ctx: Bridge): void {
         return;
     const s = runSummary(ctx.runState, answerFingerprint(ctx.draft(), ctx.current.starter));
     badge.textContent = s.label;
+    badge.title = s.label + ' - Open output';
     badge.className = 'run-status ' + s.state;
     badge.setAttribute('aria-label', 'Run status: ' + s.label + '. Open output');
     const old = document.querySelector<HTMLElement>('#stale-marker');
@@ -99,7 +106,13 @@ export function updateRunBadge(ctx: Bridge): void {
         old?.remove();
 }
 
-export function renderRail(ctx: Bridge): void { ctx.$('#tool-rail').innerHTML = railHTML(ctx.presentation, ctx.workspace, ctx.shellState, ctx.companionLinks().length > 0 || !!safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true), ['semantic-model', 'dag-editor', 'architecture-editor'].includes(ctx.current.renderer!)); }
+export function renderRail(ctx: Bridge): void {
+    const rail = ctx.$('#tool-rail'), focused = document.activeElement as HTMLElement | null;
+    const key = focused && rail.contains(focused) ? ['data-mode', 'data-tool', 'data-action', 'data-shell'].find(k => focused.hasAttribute(k)) : undefined;
+    const value = key ? focused!.getAttribute(key) : null;
+    rail.innerHTML = railHTML(ctx.presentation, ctx.workspace, ctx.shellState, ctx.companionLinks().length > 0 || !!safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true), ['semantic-model', 'dag-editor', 'architecture-editor'].includes(ctx.current.renderer!));
+    if (key && value) rail.querySelector<HTMLElement>(`[${key}="${value}"]`)?.focus({ preventScroll: true });
+}
 
 export function renderTool(ctx: Bridge, force = false): void {
     const panel = ctx.$('#tool-panel'), body = ctx.$('#tool-body'), tool = ctx.shellState.tool;
@@ -122,7 +135,9 @@ export function renderTool(ctx: Bridge, force = false): void {
             body.innerHTML = notice('Inspector', 'Select a model table, node or relationship in the canvas.');
         return;
     }
-    if (tool === 'Explanation')
+    if (tool === 'Theme')
+        body.innerHTML = themePanelHTML(ctx.presentation.theme);
+    else if (tool === 'Explanation')
         body.innerHTML = ctx.explanationPanel();
     else if (tool === 'Visual')
         body.innerHTML = ctx.visualPanel() + codeViews.tracePanel(ctx.current, ctx.fixtures);
@@ -139,16 +154,28 @@ export function renderTool(ctx: Bridge, force = false): void {
 export function openTool(ctx: Bridge, tool: ToolId, keep = false): void {
     if (tool === 'Deepnote' && !ctx.companionLinks().length && !safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true))
         return;
+    if(innerWidth<1200)ctx.shellState.navOverlay=false;
     const previous = ctx.shellState.tool;
     ctx.shellState.tool = !keep && previous === tool && (innerWidth >= 1080 || ctx.shellState.mobile === 'tools') ? null : tool;
     ctx.shellState.toolExpanded = false;
     if (ctx.shellState.tool && innerWidth < 1080)
         ctx.shellState.mobile = 'tools';
+    if (!ctx.shellState.tool && innerWidth < 1080) ctx.shellState.mobile = 'artifact';
     ctx.renderRail();
     ctx.renderTool();
     ctx.applyLayout();
     if (ctx.shellState.tool && previous !== ctx.shellState.tool)
-        document.querySelector<HTMLElement>('#tool-header [data-shell="tool-close"]')?.focus({ preventScroll: true });
+        document.querySelector<HTMLElement>(ctx.shellState.tool === 'Theme' ? '#tool-body input:checked' : '#tool-header [data-shell="tool-close"]')?.focus({ preventScroll: true });
+}
+
+export function closeTool(ctx: Bridge): void {
+    const tool = ctx.shellState.tool;
+    ctx.shellState.tool = null;
+    ctx.shellState.mobile = 'artifact';
+    ctx.renderRail();
+    ctx.renderTool();
+    ctx.applyLayout();
+    document.querySelector<HTMLElement>(`#tool-rail [data-tool="${tool}"]`)?.focus({ preventScroll: true });
 }
 
 export function renderCaseParts(ctx: Bridge): void {
@@ -263,10 +290,7 @@ export function handleShellClick(ctx: Bridge, button: HTMLElement): boolean {
         return false;
     const m = activePreferences(ctx.presentation, ctx.workspace);
     if (action === 'nav-toggle') {
-        if (innerWidth < 760)
-            document.body.classList.toggle('library-open');
-        else
-            ctx.presentation.navCollapsed = !ctx.presentation.navCollapsed;
+        toggleNavigator(ctx.presentation,ctx.shellState,innerWidth);
     }
     if (action === 'all-exercises') {
         ctx.search = '';
@@ -295,12 +319,7 @@ export function handleShellClick(ctx: Bridge, button: HTMLElement): boolean {
     }
     if (action === 'output-close')
         setOutputSize(ctx.presentation, ctx.workspace, ctx.shellState, 'closed');
-    if (action === 'tool-close') {
-        const tool = ctx.shellState.tool;
-        ctx.shellState.tool = null;
-        ctx.shellState.mobile = 'artifact';
-        setTimeout(() => document.querySelector<HTMLElement>(`[data-tool="${tool}"]`)?.focus({ preventScroll: true }), 0);
-    }
+    if (action === 'tool-close') { closeTool(ctx); return true; }
     if (action === 'tool-expand')
         ctx.shellState.toolExpanded = !ctx.shellState.toolExpanded;
     if (action === 'tool-pin') {
@@ -318,14 +337,20 @@ export function handleShellClick(ctx: Bridge, button: HTMLElement): boolean {
     ctx.renderDrawer();
     ctx.applyLayout();
     ctx.persist(true);
+    if(action==='nav-toggle'&&ctx.shellState.navOverlay)document.querySelector<HTMLElement>('#exercise-library [data-nav-home]')?.focus({preventScroll:true});
     return true;
 }
 
 export function handleShellChange(ctx: Bridge, t: HTMLInputElement): boolean {
     const m = activePreferences(ctx.presentation, ctx.workspace);
-    if (t.id === 'theme-select')
+    if (t.name === 'app-theme') {
+        if (!Object.hasOwn(THEME_DATA, t.value)) return true;
         ctx.presentation.theme = t.value as ThemeId;
-    else if (t.id === 'layout-mode') {
+        ctx.applyLayout();
+        ctx.persist(true);
+        return true;
+    }
+    if (t.id === 'layout-mode') {
         ctx.changeMode(t.value as ModeSlot);
         return true;
     }
@@ -372,6 +397,7 @@ export function handleShellChange(ctx: Bridge, t: HTMLInputElement): boolean {
 
 export function bindSplitters(ctx: Bridge): void {
     for (const [id, kind] of [['column-separator', 'column'], ['drawer-separator', 'drawer'], ['tool-separator', 'tool']] as const) {
+        if(!ctx.$('#'+id))continue;
         ctx.$('#' + id).onpointerdown = ev => ctx.resize(ev, kind);
         ctx.$('#' + id).onkeydown = ev => {
             if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(ev.key))

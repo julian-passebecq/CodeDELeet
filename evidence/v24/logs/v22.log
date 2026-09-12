@@ -1,0 +1,81 @@
+PASS New session: compact shell, 48px rail, real editor, no empty output or revealed solution
+PASS Preset renders: code/work; no implicit authored-case session
+PASS Preset renders: code/inspect; no implicit authored-case session
+PASS Preset renders: code/case; no implicit authored-case session
+PASS Preset renders: model/work; no implicit authored-case session
+PASS Preset renders: model/inspect; no implicit authored-case session
+PASS Preset renders: model/case; no implicit authored-case session
+PASS Preset renders: pipeline/work; no implicit authored-case session
+PASS Preset renders: pipeline/inspect; no implicit authored-case session
+PASS Preset renders: pipeline/case; no implicit authored-case session
+PASS Preset renders: architecture/work; no implicit authored-case session
+PASS Preset renders: architecture/inspect; no implicit authored-case session
+PASS Preset renders: architecture/case; no implicit authored-case session
+PASS Mode/theme/tool/Focus changes retain the identical editor, cursor and undo stack
+PASS Focus temporarily maximizes and restores exact sizes, dock, tool and expansion
+PASS Four independent output anchors, persistent check badge, per-mode resize and tools
+PASS Output becomes stale only after input changes; failing count remains visible
+PASS Tools default overlay, safely pin, keyboard resize, switch exclusively and retain Notes
+PASS Laptop fallback uses overlay/mobile surfaces without corrupting desktop preferences
+PASS Pipeline node selection, graph edits, retries and camera survive modes
+PASS Unapplied graph JSON survives modes; simulation opens real fixture grid/timeline/logs
+PASS Model inspector exposes typed columns, PK/FK, grain and active single-direction relationship
+PASS Git commits and unsaved working editor, plus object-terminal sessions, survive modes
+PASS Authored case: page/task cursors independent; all case drafts isolated from standalone
+PASS Deliberate copy and checkpoint restoration never overwrite standalone answer
+FAIL Case session, page/task cursor and saved answers survive a fresh application boot Traceback (most recent call last):
+  File "/mnt/data/workspace/CodeDELeet/tests/v22_ui.py", line 16, in check
+    fn();assert errors[before:]==[],errors[before:];checks.append({'name':name,'passed':True});print('PASS',name,flush=True)
+    ~~^^
+  File "/mnt/data/workspace/CodeDELeet/tests/v22_ui.py", line 114, in case_reload
+    saved=state(p);case=next(c for c in CASES if c['workspace']=='code');other=context.new_page();other.on('dialog',lambda d:d.accept());other.on('pageerror',lambda e:errors.append(str(e)));open_app(other,store=saved,route='');assert other.locator('#case-task').input_value()==case['tasks'][0]['id'];assert code(other)=='SELECT 82 AS case_answer;';other.close()
+                                                                                                                                                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/sync_api/_generated.py", line 17129, in input_value
+    self._sync(self._impl_obj.input_value(timeout=timeout))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/_impl/_sync_base.py", line 115, in _sync
+    return task.result()
+           ~~~~~~~~~~~^^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/_impl/_locator.py", line 484, in input_value
+    return await self._frame.input_value(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/_impl/_frame.py", line 789, in input_value
+    return await self._channel.send(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        "inputValue", self._timeout, locals_to_params(locals())
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/opt/pyvenv/lib/python3.13/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Locator.input_value: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("#case-task")
+
+
+PASS Four themes apply without domain reset; terminal inheritance and override/settings persist
+FAIL Blank companion hidden; safe mapping works; unsafe import is rejected without replacing it Traceback (most recent call last):
+  File "/mnt/data/workspace/CodeDELeet/tests/v22_ui.py", line 16, in check
+    fn();assert errors[before:]==[],errors[before:];checks.append({'name':name,'passed':True});print('PASS',name,flush=True)
+    ~~^^
+  File "/mnt/data/workspace/CodeDELeet/tests/v22_ui.py", line 124, in safe_links
+    go(p,'spark-dedup');assert p.locator('#tool-rail [data-tool="Deepnote"]').count()==0;p.locator('[data-action="settings"]').click();payload={'schemaVersion':1,'links':{'spark-dedup':[{'type':'exercise','label':'Configured companion','url':'https://deepnote.com/project/explicit-user-choice'}]}};p.locator('#map-import').set_input_files({'name':'safe.json','mimeType':'application/json','buffer':json.dumps(payload).encode()});tool(p,'Deepnote');link=p.locator('#tool-body a[href^="https://deepnote.com/project/"]');assert link.count()==1;assert 'noopener' in link.get_attribute('rel');close_tool(p);p.locator('[data-action="settings"]').click();payload['links']['spark-dedup'][0]['url']='https://deepnote.com.evil.invalid/app/fake';p.locator('#map-import').set_input_files({'name':'unsafe.json','mimeType':'application/json','buffer':json.dumps(payload).encode()});assert p.locator('#modal').is_visible();assert 'Unsafe' in p.locator('#toast').inner_text();p.locator('[aria-label="Close settings"]').click();tool(p,'Deepnote');assert link.count()==1;close_tool(p)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+PASS V1 upgrade keeps byte-equivalent recovery snapshot and all personal draft fields
+PASS Phone tabs preserve notes, keep terminal usable and show navigator on request
+{
+  "passed": 28,
+  "failed": 2,
+  "pageErrors": []
+}
