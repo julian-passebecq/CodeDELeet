@@ -56,6 +56,8 @@ jobs:
               target.locator('[data-action="settings"]').click();target.locator('#backup-import').set_input_files({'name':'v23.json','mimeType':'application/json','buffer':json.dumps(old).encode()});expect(target.locator('#modal')).not_to_be_visible();merged=saved(target)
               assert merged['drafts']['preserved-old']['notes']=='old backup imported';assert merged['settings']['learning']['progress'][LESSONS[0]['id']]['status']=='completed';target.close()
           '''
+          lines = replacement.splitlines()
+          replacement = lines[0] + '\n' + '\n'.join('    ' + line for line in lines[1:]) + '\n'
           s = s[:start] + replacement + s[end:]
           p.write_text(s)
           PY
