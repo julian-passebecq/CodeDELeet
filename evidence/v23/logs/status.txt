@@ -1,0 +1,13 @@
+typecheck=0
+unit=0
+fixtures=0
+verifier=0
+compact=0
+ui=0
+shell=0
+metrics=0
+integrity=0
+network=2
+ui-http=1
+shell-http=1
+compact-http=1

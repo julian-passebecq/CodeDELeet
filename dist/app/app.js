@@ -1,3 +1,4 @@
+import { renderHeaderDOM } from './shell/header.js';
 import { ensureSession, patchTask, selectTask, taskDraft, validateCase } from './case-study/controller.js';
 import { caseReferences } from './case-study/view.js';
 import { configurationChecks, gitGoal, modelChecks, terminalGoal } from './checks.js';
@@ -19,7 +20,7 @@ import * as readingViews from './shell/reading-panels.js';
 import { scaffold } from './shell/scaffold.js';
 import * as settingsViews from './shell/settings.js';
 import { runTerminal, terminalFixture } from './terminal.js';
-import { chips, download, icon, notice, options, pre } from './ui.js';
+import { chips, download, icon, notice, pre } from './ui.js';
 const $ = (s) => document.querySelector(s);
 let builtins = [], fixtures = {}, mapping = {}, store = emptyStore(), questions = [], current;
 let workspace = 'code', search = '', difficulty = 'All levels', technology = 'All topics', queue = 'All exercises', conceptFilter = '', priorityFilter = 'All priorities';
@@ -104,8 +105,8 @@ function labelMode() { const q = current; if (q.executionMode === 'execute')
     return 'TEACHING MODEL / DAX SUBSET'; return `${q.executionMode?.toUpperCase()} / ${q.renderer === 'terminal' ? 'VIRTUAL SHELL' : q.renderer === 'git-visual' ? 'VIRTUAL GIT' : q.renderer === 'config-editor' ? 'TEXT CHECKS' : 'FIXTURE'}`; }
 function actionLabel() { return busy ? 'Cancel' : current.renderer === 'git-visual' || current.renderer === 'terminal' ? 'Check goal' : current.executionMode === 'execute' ? 'Run & test' : current.renderer === 'dag-editor' ? 'Simulate' : current.renderer === 'semantic-model' ? 'Evaluate' : current.renderer === 'config-editor' ? 'Analyze' : 'Record review'; }
 function renderHeader() {
-    const d = draft(), siblings = filtered(), i = siblings.findIndex(q => q.id === current.id), mode = presentation.modes[workspace], r = runSummary(runState, answerFingerprint(d, current.starter));
-    $('#exercise-header').innerHTML = `<div class="exercise-title"><div class="breadcrumb">${e(current.technology)} <span class="level ${current.difficulty.toLowerCase()}">${current.difficulty}</span>${activeCase ? '<span class="chip">Case attempt</span>' : ''}</div><h1>${e(current.title)}</h1><span class="mode-label">${e(labelMode())}</span></div><div class="exercise-actions"><select id="layout-mode" aria-label="Lab layout">${options(['work', 'inspect', 'case'], mode, Object.fromEntries(['work', 'inspect', 'case'].map(x => [x, presetFor(workspace, x).label])))}</select><button class="icon-button ${d.bookmark ? 'is-bookmarked' : ''}" data-action="bookmark" aria-label="Bookmark exercise" aria-pressed="${!!d.bookmark}">${icon('bookmark')}</button><button class="timer-button" data-action="timer" aria-label="Start or pause practice timer">${icon('clock')}<span id="timer-value">${clockText()}</span></button><div class="navigation-buttons"><button class="icon-button previous" data-action="previous" aria-label="Previous exercise" ${activeCase || i <= 0 ? 'disabled' : ''}>${icon('chevron')}</button><button class="icon-button" data-action="next" aria-label="Next exercise" ${activeCase || i < 0 || i >= siblings.length - 1 ? 'disabled' : ''}>${icon('chevron')}</button></div><div class="run-cluster"><button class="primary run-button" data-action="run">${icon(busy ? 'close' : 'play')}<span>${actionLabel()}</span></button><button id="run-status" class="run-status ${r.state}" data-shell="output-toggle" aria-live="polite">${e(r.label)}</button></div></div>`;
+    const d = draft(), siblings = filtered(), i = siblings.findIndex(q => q.id === current.id), r = runSummary(runState, answerFingerprint(d, current.starter));
+    renderHeaderDOM($('#exercise-header'), { navExpanded: innerWidth < 760 ? document.body.classList.contains('library-open') : resolveLayout(presentation, workspace, innerWidth, shellState).navWidth > 56, workspace, current, bookmark: !!d.bookmark, caseAttempt: !!activeCase, previousDisabled: !!activeCase || i <= 0, nextDisabled: !!activeCase || i < 0 || i >= siblings.length - 1, busy, clock: clockText(), executionLabel: labelMode(), actionLabel: actionLabel(), result: r });
 }
 function tabs(items, active, attr) { return items.map(x => `<button ${attr}="${e(x)}" class="${x === active ? 'active' : ''}" aria-pressed="${x === active}">${e(x)}</button>`).join(''); }
 function renderQuestion() {
@@ -372,8 +373,8 @@ function bindControls() {
         if (handleShellClick(button))
             return;
         if (button.dataset.question) {
-            navigate(button.dataset.question);
             document.body.classList.remove('library-open');
+            navigate(button.dataset.question);
             return;
         }
         if (button.dataset.workspace) {
@@ -385,8 +386,11 @@ function bindControls() {
             conceptFilter = '';
             priorityFilter = 'All priorities';
             const q = filtered()[0];
-            if (q)
+            const inDrawer = !!button.closest('.library');
+            if (q) {
                 navigate(q.id);
+                document.querySelector(`${inDrawer ? '.library-labs' : '.workspace-nav'} [data-workspace="${workspace}"]`)?.focus({ preventScroll: true });
+            }
             return;
         }
         if (button.dataset.leftTab) {
@@ -990,10 +994,7 @@ function handleShellChange(t) { return shellViews.handleShellChange(shellViewsCo
 function bindSplitters() { return shellViews.bindSplitters(shellViewsContext()); }
 window.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.querySelector('dialog[open]')) {
     if (shellState.tool) {
-        shellState.tool = null;
-        renderRail();
-        renderTool();
-        applyLayout();
+        shellViews.closeTool(shellViewsContext());
     }
     else if (shellState.focus) {
         toggleFocus(shellState, presentation);

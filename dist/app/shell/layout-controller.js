@@ -62,8 +62,8 @@ export function resolveLayout(p, lab, width, ui) {
     const context = !ui.focus && m.context;
     const available = width - navWidth - 48;
     const minWorkspace = context ? 820 : 700;
-    const toolWidth = Math.max(260, Math.min(ui.toolExpanded ? Math.min(740, width - 64) : m.toolWidth, width - 56));
-    const pinned = !!ui.tool && !ui.toolExpanded && !ui.focus && !narrow && m.toolPinned && available - toolWidth >= minWorkspace;
+    const toolWidth = Math.max(260, Math.min(ui.tool === 'Theme' ? 320 : ui.toolExpanded ? Math.min(740, width - 64) : m.toolWidth, width - 56));
+    const pinned = !!ui.tool && ui.tool !== 'Theme' && !ui.toolExpanded && !ui.focus && !narrow && m.toolPinned && available - toolWidth >= minWorkspace;
     return { preset, requested: copy(m), context, split: m.split, outputAnchor: narrow ? 'workspace' : m.outputAnchor === 'context' && !context ? 'workspace' : m.outputAnchor, outputSize: ui.focus ? (ui.focusSnapshot?.outputSize ?? 'closed') : m.outputSize, toolWidth, pinned, navWidth, narrow, focus: ui.focus };
 }
 export function newTransient() { return { focus: false, tool: null, toolExpanded: false, mobile: 'artifact' }; }

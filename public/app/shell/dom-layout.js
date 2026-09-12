@@ -20,6 +20,7 @@ export function applyShellDOM(p, lab, ui) {
     ws.classList.toggle('drawer-collapsed', r.outputSize === 'closed');
     ws.style.setProperty('--split', r.split + '%');
     ws.style.setProperty('--output-width', r.requested.outputWidth + 'px');
+    document.querySelector('.navigator-toggle')?.setAttribute('aria-expanded', String(innerWidth < 760 ? document.body.classList.contains('library-open') : r.navWidth > 56));
     const tool = document.querySelector('#tool-panel');
     tool.hidden = !ui.tool || (r.narrow && ui.mobile !== 'tools');
     tool.style.width = r.toolWidth + 'px';

@@ -1,0 +1,287 @@
+{
+  "version": "2.3.0",
+  "inputArchive": "CodeDELeet-main.zip",
+  "inputArchiveSHA256": "b92a64667f1297a4a4317c658459a7682db01580f7ed1b8dd11da6a035120f38",
+  "gitArchiveCommitComment": "4212550ca4260390b5a756d81882c3a75a5f912b",
+  "expectedBaselineCommit": "4212550ca4260390b5a756d81882c3a75a5f912b",
+  "verifiedFrom": "Supplied Git archive comment, matching release metadata and source structure; no remote repository read this turn.",
+  "frozenContractFiles": [
+    {
+      "path": "src/core.ts",
+      "sha256": "b8c5fcbd89aad2928ec812f869cd70364c8f5909fc9c7b15eb00043035cb04d8",
+      "unchanged": true
+    },
+    {
+      "path": "src/runtime.ts",
+      "sha256": "f36f2049ec5ff6be79bbb65e02d131d3b62877056779ef4d515cb6c10fd86847",
+      "unchanged": true
+    },
+    {
+      "path": "src/editor.ts",
+      "sha256": "ec19a24fc801729bb6305b52c4121df876232af2d6c32697c3f0b5bb0400b37e",
+      "unchanged": true
+    },
+    {
+      "path": "src/dax.ts",
+      "sha256": "743b6d1c7bd1ddda70c1a20350d6c5fb873efc3775c18d89b9d8c512c6cb4a77",
+      "unchanged": true
+    },
+    {
+      "path": "src/graph.ts",
+      "sha256": "c2a4901911aad6be08f242e946612a0445feef1db960d27f90ed19ab0f1cde6a",
+      "unchanged": true
+    },
+    {
+      "path": "src/git.ts",
+      "sha256": "91751d8134706d04b6ce305cbbbda732bc265aa38582838a0e845391086cc7a9",
+      "unchanged": true
+    },
+    {
+      "path": "src/terminal.ts",
+      "sha256": "8ad43422c7cae24d7fe9dd327b4a9803fead901d2b8978c00df9e1612d4be3eb",
+      "unchanged": true
+    },
+    {
+      "path": "src/checks.ts",
+      "sha256": "dc06d64a37845aebbdb07771a643f939a61845a9ad684bd1a07515b086fc171c",
+      "unchanged": true
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "36220f2554d13832cf58cc0e1fc37d76fb3e6bf572a2924d5cc0620ca579f592",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/output-dock.ts",
+      "sha256": "2b83b2d8518e6b7db889ab642e8e3905af50b1ce55393e5ecfe7322936a47377",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/reading-panels.ts",
+      "sha256": "04722fd2c95759930d750d9d01e94d5b6bfeeaaab1337b6b1ace76b7f01c37e5",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/themes.ts",
+      "sha256": "733aae1445de99c289455e652519b7fc532f417998b36c5ffed0e0b431f0b499",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/theme-data.ts",
+      "sha256": "c44106acb0ba2e555ed3c87d15ef32085d7c4258b75b3d87beb8c52f47c699bc",
+      "unchanged": true
+    },
+    {
+      "path": "netlify.toml",
+      "sha256": "bf989a44b72165fe706855d98d71eba626a99eceb8e06cc2193e4613e9c7813d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify_hosted.py",
+      "sha256": "8c8cb0046eeb3670b8ab9ea791fb14c7c19806cd77ca4d8d11d1c205dc3ee7de",
+      "unchanged": true
+    },
+    {
+      "path": "tests/test_hosted_verifier.py",
+      "sha256": "88ba5fa74acfe02437af0a3fbcd46bd94961718d4093ac846c7aa4eb8942009e",
+      "unchanged": true
+    },
+    {
+      "path": "public/cases/index.json",
+      "sha256": "e663c187242ce3050ccce46af814dc0c6d6a7bba5302f13c9a6087aa039e3d60",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/deepnote-mapping.json",
+      "sha256": "142b48bd9d66311d9e8075c2de4bf4b49676e05464cad7400c7264abe5cd628d",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/fixtures.json",
+      "sha256": "7fbfb73300c33a8a92d7d65a4baba23a7aab557200d6755dd58b868ee73bbd7f",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/index.json",
+      "sha256": "aba4af8175df9281631a2862fa514121de229af4136427b48720734530e190c7",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/starter.json",
+      "sha256": "0d1cb310840f2eb143684a260599369423d9dcd129fe3348421f96331cc9fe2f",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/v2-specialists.json",
+      "sha256": "63a5307572ffd509d7898cbdc0dad0a9bfa7dd97ccfed92d12438c55662d9154",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/LICENSE",
+      "sha256": "82710bb7c985d56c126fe9e7381f348d70e816a652b4a2d587a820aaeb79f6be",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/comment/comment.js",
+      "sha256": "70a0f3c39b7aee5295b6564d87b0f888044b9959bbf808611a3ab35e2cda7afe",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/dialog/dialog.css",
+      "sha256": "5df690d771f12118348562dd2a90060433ae2edeccd0908abcaa4480b1e3e468",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/dialog/dialog.js",
+      "sha256": "f823db8445973fc7be842dbe5278211e8971e7ab9ffd8ce9c403c68171fbe31d",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/edit/closebrackets.js",
+      "sha256": "27e21e6907753f85aa748e8135b2c8890f10bb395ec72c214a62eb15de07da0d",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/edit/matchbrackets.js",
+      "sha256": "2bb0fa2c8f676ceffe5ea85f1031dcbce2f4908c5835fce7f1a1729cf3aa0c76",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/mode/simple.js",
+      "sha256": "e54ad6f1b624e79d3cc588cfe1f7a4275f8fc9a2654d3f2c9db6708e622a1232",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/search/search.js",
+      "sha256": "8949cd96092b539263f282a5db3041093984488db1a57c19ad35fe6abc5210a7",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/search/searchcursor.js",
+      "sha256": "4878764a1d5614c9ef5ef3f12a3354771f955251c749f74f2466c92e23bc0a79",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/lib/codemirror.css",
+      "sha256": "d30aa41229dacba5a631fd45ea0544bfdb07c78992820b67900b109b57095fb2",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/lib/codemirror.js",
+      "sha256": "6bb54e40daf6a348791102d7a8e5a13bcc0f85a6afce2c21a6a3fc29ed20c9c0",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/clike/clike.js",
+      "sha256": "01111b5fd832b6f63ff7367062fb73599cb7b4cc9ab0b06268ac19280fa0a42e",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/dockerfile/dockerfile.js",
+      "sha256": "18cd6214ccf0c89968ac21c77d4f6b05b49916ec0a43c60ad888a88141c51ed6",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/javascript/javascript.js",
+      "sha256": "66d254d4a7afb93c25c0469ecc09ea2a13315651c66cd3ff5f0e0296671bdd88",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/powershell/powershell.js",
+      "sha256": "21cea81524c781eee35f8c9dcfc1482cf2c6855f748d8bfd4dd9dcc9249f5974",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/properties/properties.js",
+      "sha256": "b6e49cd298ed765c05ad348f428acaaa94fc20c337155e04900b7abe843f4975",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/python/python.js",
+      "sha256": "3500480fdcd43b216ceac65f21dcf7c296cf3175070fec3c9162178116386a06",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/shell/shell.js",
+      "sha256": "b73ccd9dabbc8f0907225cca08bed1f2887032b74e47553f35520582219277b3",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/sql/sql.js",
+      "sha256": "50322f6ed76ad336b012f3efb02b80eba1f4426e6c830f312e23c57828fdd801",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/yaml/yaml.js",
+      "sha256": "4347a984e82dd43cf3c6728df6e0831008737f3b2995c632cb7008f85d3a75b2",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/studio-modes.js",
+      "sha256": "4411dd75772ab8a245501efa778aa86d15f0f004186d7c8914c509bc56408b88",
+      "unchanged": true
+    },
+    {
+      "path": "public/workers/python.js",
+      "sha256": "d0faf627d1911b421aceb55407de17a88af21d1c78e77aa335a9be62a04acd43",
+      "unchanged": true
+    },
+    {
+      "path": "src/case-study/controller.ts",
+      "sha256": "c07b4ed3359c6825c008691f8e879f79a00465625b568908c2fb11087557944b",
+      "unchanged": true
+    },
+    {
+      "path": "src/case-study/view.ts",
+      "sha256": "af8b8401d79b3da59f6928cbe2102b25c3d954d4ed41e46ca0376fa3ab6f42ac",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/code-view.ts",
+      "sha256": "2dfb7ff032d9ffaf835bbb4087cb075d69159954a4797a4465bc02cb095dd103",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/context.ts",
+      "sha256": "48b9efc250e4448abeb49932886f10127639860f36d59bc45f6550d50d86d6bb",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/model-view.ts",
+      "sha256": "92db6522e196f6646870b30cd8fdf8c9c857bf9bf8265362b503facd2c1a8c9a",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/pipeline-view.ts",
+      "sha256": "e13c873a92e3a32059808e9179ccb3c995029a9202d42345e4043580fb605143",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/systems-view.ts",
+      "sha256": "49a5fccd2a74aec58aa307ade0cec250c6613eb9fac3a03905c01fcd622f8b24",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/workspace.ts",
+      "sha256": "cb3b40d67fcb38ac7a3f707ee964f8c7c5a68c3eaebf68b37c73d8d0fbe2f8bf",
+      "unchanged": true
+    }
+  ],
+  "frozenContractFilesCount": 52,
+  "allFrozenFilesByteIdentical": true,
+  "privateResearch": {
+    "consulted": "Handoff prototype and private reference metadata/README guidance only",
+    "copiedUpstreamFiles": [],
+    "newRuntimeDependencies": [],
+    "includedInRelease": false
+  },
+  "remoteOperations": {
+    "GitHub": false,
+    "Netlify": false
+  },
+  "privateHandoffArchive": {
+    "filename": "CodeDELeet_V2_3_Compact_Shell_Pro_Handoff.zip",
+    "sha256": "94634cc47b42cf8c34dbe5e331974867b6db90b4218aaac2b610d71ad8797619",
+    "redistributed": false
+  }
+}

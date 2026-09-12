@@ -1,0 +1,35 @@
+PASS V23-01/05/06/10: one 52px desktop header; no routine brand, theme select or duplicate mode/Focus
+PASS V23-02/03/04: four 40px labeled neutral icons switch labs with exclusive visible/ARIA active state
+PASS V23-09: code/work uses the authoritative rail mode
+PASS V23-09: code/inspect uses the authoritative rail mode
+PASS V23-09: code/case uses the authoritative rail mode
+PASS V23-09: model/work uses the authoritative rail mode
+PASS V23-09: model/inspect uses the authoritative rail mode
+PASS V23-09: model/case uses the authoritative rail mode
+PASS V23-09: pipeline/work uses the authoritative rail mode
+PASS V23-09: pipeline/inspect uses the authoritative rail mode
+PASS V23-09: pipeline/case uses the authoritative rail mode
+PASS V23-09: architecture/work uses the authoritative rail mode
+PASS V23-09: architecture/inspect uses the authoritative rail mode
+PASS V23-09: architecture/case uses the authoritative rail mode
+PASS V23-11: bookmark, timer, previous/next, primary action and status visible at all desktop sizes
+PASS V23-07: compact exclusive Theme panel toggles from rail without remounting editor or changing drafts/sizes
+PASS V23-08: theme persists across fresh boot: sage-light
+PASS V23-08: theme persists across fresh boot: fluent-light
+PASS V23-08: theme persists across fresh boot: fluent-soft
+PASS V23-08: theme persists across fresh boot: slate-dark
+PASS V23-12: independent output anchors and requested sizes survive rail Theme changes
+PASS V23-13: Focus restores prior tools/layout, editor identity, draft and usable undo history
+PASS V23-14: independent case exhibit/task cursors and isolated drafts survive theme, lab and mode roundtrip
+PASS V23 keyboard: lab tab order, activation, native theme arrows, Escape return and visible focus in all themes
+PASS V23 keyboard: existing Ctrl+Enter executes DAX teaching check; Alt arrows navigate
+PASS V23-15/16: blank Deepnote hidden; explicitly imported safe URL has new-tab/no-opener contract; identity in Settings
+PASS V23 responsive: 1024px overlays never cover primary header or overwrite desktop pin/sizes
+PASS V23 rail crowding: mode/Focus/Theme/Settings targets stay >=40px; secondary tools scroll at 600px height
+PASS V23 mobile: 390px tabs, attempt controls, all four drawer labs, notes, light terminal and Theme close
+PASS V23 screenshots: actual compact pipeline/systems and retained light/dark themes
+{
+  "status": "PASS",
+  "passed": 30,
+  "failed": 0
+}

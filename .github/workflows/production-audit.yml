@@ -30,11 +30,12 @@ jobs:
         run: |
           python tests/ui_smoke.py
           python tests/v22_ui.py
+          python tests/v23_ui.py
       - name: Real production SQL, Python, worker recovery and diagrams
         run: python tests/network_runtime_smoke.py
       - name: Preserve production evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v22-production-evidence
+          name: v23-production-evidence
           path: evidence/

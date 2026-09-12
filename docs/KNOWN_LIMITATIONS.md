@@ -1,8 +1,19 @@
-# Known limitations - V2.2
+# Known limitations - V2.3
+
+## Compact-shell scope
+
+V2.3 changes shell/navigation presentation only. The current implementation was
+verified with Chromium, including phone-sized and touch-emulated layouts. Native
+iOS Safari, Firefox, physical devices and a full screen-reader audit were not run.
+The 52px single-row header applies from 760px upward. At phone widths, the header
+uses two compact internal lines (94px total) to retain every critical attempt action;
+lab switches are reachable in the exercise drawer rather than forced into that row.
+Theme is a transient rail overlay and intentionally cannot be pinned; other tools'
+saved pin and sizing preferences remain unchanged. Identity is in Settings/browser title.
 
 ## Promotion gate, not a passed test
 
-Actual browser URL navigation is blocked in this build environment (`net::ERR_BLOCKED_BY_ADMINISTRATOR`). The delivered deterministic browser tests exercise the actual compiled app, editor and teaching engines through a built-file transport/storage harness. Real HTTP-origin browser reload, DuckDB-Wasm startup, Pyodide execution/cancellation/restart, and Mermaid flowchart/ER/architecture-beta rendering are **UNVERIFIED here**. Run the supplied network gate in an allowed browser environment before promotion. Native SQLite and CPython reference checks are not browser-runtime verification.
+Actual browser URL navigation is blocked in this build environment (`net::ERR_BLOCKED_BY_ADMINISTRATOR`). The delivered deterministic browser tests exercise the actual compiled app, editor and teaching engines through a built-file transport/storage harness. Real HTTP-origin browser reload, DuckDB-Wasm startup, Pyodide execution/cancellation/restart, and Mermaid flowchart/ER/architecture-beta rendering are **UNVERIFIED here**. Run the supplied network gate and UI_MODE=http versions of all three UI suites in an allowed browser environment before V2.3 promotion. Prior V2.2 production successes do not prove V2.3 runtime behavior. Native SQLite and CPython reference checks are not browser-runtime verification.
 
 Registry DNS was unavailable. `npm ci --ignore-scripts` could not complete here; the build/typecheck used the installed TypeScript 5.8.3, matching the existing lockfile. No current npm vulnerability audit or fresh dependency installation is claimed.
 

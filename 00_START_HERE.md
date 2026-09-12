@@ -1,23 +1,48 @@
-# CodeDELeet V2.2 - source/build handoff
+# CodeDELeet V2.3 - compact shell source/build handoff
 
-This is the completed shared-workstation UX pass on the supplied V2 source. It is not a replacement app. No repository or deployment operations were performed for this pass.
+This is a bounded shell update to the supplied V2.2 release snapshot at
+`4212550ca4260390b5a756d81882c3a75a5f912b`. It is not a replacement application.
+No GitHub or Netlify operation was performed during this implementation.
 
-## Start
+## Open or rebuild
 
-Extract the source ZIP at the project root. Keep `src/`, `public/`, `dist/`, `package.json`, tests and documentation together. The separate build ZIP contains the contents of `dist/` at its root.
+Extract the complete source ZIP at the project root, not inside another project folder.
+The separate static ZIP has `index.html` and the contents of `dist/` at its root.
 
-Run the included static build with `node scripts/serve.mjs dist`, then open the local address printed by the server. Use an HTTP origin; double-clicking `index.html` is not supported. To rebuild, run `npm ci --ignore-scripts`, `npm run check`, then `npm run build`.
+```sh
+node scripts/serve.mjs dist
+# To rebuild in an environment with npm registry access:
+npm ci --ignore-scripts
+npm run check
+npm run build
+```
 
-Read [the coordinator handoff](docs/NEXT_AI_HANDOFF.md), [migration/audit report](docs/V2_2_AUDIT.md), [test report](docs/V2_2_TEST_REPORT.md) and [known limitations](docs/KNOWN_LIMITATIONS.md).
+Open the HTTP URL printed by the server. Double-clicking index.html is not supported.
 
-## Preserve personal work
+## What to review first
 
-Export progress from the existing site before moving to a different preview origin. Import through Settings > Merge backup on the new origin. The storage key and schema remain unchanged. Existing V1/V2 answers stay under their original exercise IDs; authored-case answers are separate.
+Read [implementation scope](docs/V23_IMPLEMENTATION_REPORT.md),
+[actual test results and blocked gates](docs/V23_TEST_REPORT.md),
+[measured before/after layout](evidence/v23/V23_LAYOUT_METRICS.json),
+and [the coordinator handoff](docs/NEXT_AI_HANDOFF.md).
+The [screenshot gallery](evidence/v23/gallery.html) contains actual browser captures.
 
-## Important release distinction
+The desktop has one 52px header, four compact lab icons, the original attempt
+controls, and a Theme panel on the right rail. Rail 1/2/3 is the layout-mode control.
+Mobile retains Context / Workspace / Output / Tools and lab navigation in the drawer.
 
-The source/build and deterministic checks are delivered here. The real HTTP-origin browser/CDN/worker promotion gate is **UNVERIFIED** because this execution environment blocks URL navigation. It is not a passed test. The coordinator must run `npm run test:network` on an allowed local origin or isolated preview before production promotion. That gate includes DuckDB-Wasm, Pyodide, cancellation/restart, browser reload and the three Mermaid syntaxes.
+## Preserve work
 
-## Deepnote is links-only
+Export progress before moving to a different preview origin. Use Settings > Merge
+backup at the new origin. The V1 storage key, migration/recovery snapshots, exercise
+IDs and authored-case isolation are unchanged. Do not clear existing progress to test
+an upgrade. Use disposable browser profiles for automated tests.
 
-No notebook ZIP or `.ipynb` file is in `public/` or `dist/`. Nothing is uploaded to Deepnote. Blank mappings hide the companion action. Configure explicit safe URLs through Settings only when a companion is needed. CodeDELeet otherwise works independently.
+## Promotion is separate
+
+Local compiled-DOM tests and measured layouts are not hosted-runtime verification.
+This environment blocks browser URL navigation and cannot reach the npm registry.
+Clean installation, current dependency audit, served-origin browser suites and the
+real SQL/Python/Mermaid gate must be run by the coordinator before promotion.
+Existing V2.2 release reports are historical evidence, not a V2.3 deployment claim.
+The private offline research library is not part of this source or static build.
