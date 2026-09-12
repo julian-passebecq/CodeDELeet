@@ -12,7 +12,7 @@ import type { ViewContext } from '../renderers/context.js';
 import * as systemsViews from '../renderers/systems-view.js';
 import { applyShellDOM } from '../shell/dom-layout.js';
 import type { ModeSlot,OutputAnchor,OutputSize,Presentation,ThemeId,ToolId } from '../shell/layout-controller.js';
-import { activePreferences,resolveLayout,setOutputSize,switchMode,toggleFocus } from '../shell/layout-controller.js';
+import { activePreferences,resolveLayout,setOutputSize,switchMode,toggleFocus,toggleNavigator } from '../shell/layout-controller.js';
 import type { RunStatus } from '../shell/output-dock.js';
 import { answerFingerprint,runSummary } from '../shell/output-dock.js';
 import { applyTheme } from '../shell/themes.js';
@@ -154,6 +154,7 @@ export function renderTool(ctx: Bridge, force = false): void {
 export function openTool(ctx: Bridge, tool: ToolId, keep = false): void {
     if (tool === 'Deepnote' && !ctx.companionLinks().length && !safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true))
         return;
+    if(innerWidth<1200)ctx.shellState.navOverlay=false;
     const previous = ctx.shellState.tool;
     ctx.shellState.tool = !keep && previous === tool && (innerWidth >= 1080 || ctx.shellState.mobile === 'tools') ? null : tool;
     ctx.shellState.toolExpanded = false;
@@ -289,10 +290,7 @@ export function handleShellClick(ctx: Bridge, button: HTMLElement): boolean {
         return false;
     const m = activePreferences(ctx.presentation, ctx.workspace);
     if (action === 'nav-toggle') {
-        if (innerWidth < 760)
-            document.body.classList.toggle('library-open');
-        else
-            ctx.presentation.navCollapsed = !ctx.presentation.navCollapsed;
+        toggleNavigator(ctx.presentation,ctx.shellState,innerWidth);
     }
     if (action === 'all-exercises') {
         ctx.search = '';
@@ -339,6 +337,7 @@ export function handleShellClick(ctx: Bridge, button: HTMLElement): boolean {
     ctx.renderDrawer();
     ctx.applyLayout();
     ctx.persist(true);
+    if(action==='nav-toggle'&&ctx.shellState.navOverlay)document.querySelector<HTMLElement>('#exercise-library [data-nav-home]')?.focus({preventScroll:true});
     return true;
 }
 
@@ -398,6 +397,7 @@ export function handleShellChange(ctx: Bridge, t: HTMLInputElement): boolean {
 
 export function bindSplitters(ctx: Bridge): void {
     for (const [id, kind] of [['column-separator', 'column'], ['drawer-separator', 'drawer'], ['tool-separator', 'tool']] as const) {
+        if(!ctx.$('#'+id))continue;
         ctx.$('#' + id).onpointerdown = ev => ctx.resize(ev, kind);
         ctx.$('#' + id).onkeydown = ev => {
             if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(ev.key))

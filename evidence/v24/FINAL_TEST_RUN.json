@@ -1,0 +1,233 @@
+{
+  "version": "2.4.0",
+  "startedUTC": "2026-09-12T21:53:58.722004+00:00",
+  "finishedUTC": "2026-09-12T21:58:10.507766+00:00",
+  "runs": [
+    {
+      "name": "typecheck",
+      "command": "npm run check",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 1.329,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/typecheck.log"
+    },
+    {
+      "name": "unit-tests",
+      "command": "npm test",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 2.036,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/unit-tests.log"
+    },
+    {
+      "name": "clean-rebuild",
+      "command": "python scripts/verify_rebuild.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 2.131,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/clean-rebuild.log"
+    },
+    {
+      "name": "fixture-content",
+      "command": "python tests/fixture_check.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 0.618,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/fixture-content.log"
+    },
+    {
+      "name": "hosted-verifier-unit",
+      "command": "python -m unittest discover -s tests -p test_hosted_verifier.py -v",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 0.57,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/hosted-verifier-unit.log"
+    },
+    {
+      "name": "ui-smoke",
+      "command": "python -u tests/ui_smoke.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 32.075,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/ui-smoke.log"
+    },
+    {
+      "name": "v22-shell",
+      "command": "python -u tests/v22_ui.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 19.384,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/v22-shell.log"
+    },
+    {
+      "name": "v23-compact",
+      "command": "python -u tests/v23_ui.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 22.25,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/v23-compact.log"
+    },
+    {
+      "name": "v23-layout",
+      "command": "python -u tests/v23_layout.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 11.872,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/v23-layout.log"
+    },
+    {
+      "name": "v24-acceptance",
+      "command": "python -u tests/v24_acceptance.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 56.583,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/v24-acceptance.log"
+    },
+    {
+      "name": "served-ui-smoke",
+      "command": "python -u tests/ui_smoke.py",
+      "environment": {
+        "UI_MODE": "http",
+        "BASE_URL": "http://127.0.0.1:5173"
+      },
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 1.38,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/served-ui-smoke.log",
+      "reason": "Browser URL navigation blocked by administrator"
+    },
+    {
+      "name": "served-v22-shell",
+      "command": "python -u tests/v22_ui.py",
+      "environment": {
+        "UI_MODE": "http",
+        "BASE_URL": "http://127.0.0.1:5173"
+      },
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 1.321,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/served-v22-shell.log",
+      "reason": "Browser URL navigation blocked by administrator"
+    },
+    {
+      "name": "served-v23-compact",
+      "command": "python -u tests/v23_ui.py",
+      "environment": {
+        "UI_MODE": "http",
+        "BASE_URL": "http://127.0.0.1:5173"
+      },
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 1.33,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/served-v23-compact.log",
+      "reason": "Browser URL navigation blocked by administrator"
+    },
+    {
+      "name": "served-v24-acceptance",
+      "command": "python -u tests/v24_acceptance.py",
+      "environment": {
+        "UI_MODE": "http",
+        "BASE_URL": "http://127.0.0.1:5173"
+      },
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 1.325,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/served-v24-acceptance.log",
+      "reason": "Browser URL navigation blocked by administrator"
+    },
+    {
+      "name": "real-runtime-workers-mermaid",
+      "command": "python -u tests/network_runtime_smoke.py",
+      "environment": {},
+      "exitCode": 2,
+      "status": "BLOCKED",
+      "durationSeconds": 1.225,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/real-runtime-workers-mermaid.log",
+      "reason": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:5173/#exercise=sql-paid-revenue\nCall log:\n  - navigating to \"http://127.0.0.1:5173/#exercise=sql-paid-revenue\", waiting until \"domcontentloaded\"\n",
+      "report": "evidence/v24/regression/network-runtime-report.json",
+      "executedRuntimeChecks": 0
+    },
+    {
+      "name": "clean-install",
+      "command": "npm ci --ignore-scripts --fetch-retries=0 --fetch-timeout=10000",
+      "environment": {},
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 5.332,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/clean-install.log",
+      "reason": "Registry unavailable or locked compiler absent from offline cache"
+    },
+    {
+      "name": "offline-install",
+      "command": "npm ci --ignore-scripts --offline",
+      "environment": {},
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 0.265,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/offline-install.log",
+      "reason": "Registry unavailable or locked compiler absent from offline cache"
+    },
+    {
+      "name": "dependency-audit",
+      "command": "npm audit --audit-level=high --fetch-retries=0 --fetch-timeout=10000",
+      "environment": {},
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "durationSeconds": 5.279,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/dependency-audit.log",
+      "reason": "Registry unavailable or locked compiler absent from offline cache"
+    },
+    {
+      "name": "release-integrity",
+      "command": "python scripts/validate_release.py",
+      "environment": {},
+      "exitCode": 0,
+      "status": "PASS",
+      "durationSeconds": 0.564,
+      "timedOut": false,
+      "log": "evidence/v24/logs/final/release-integrity.log"
+    }
+  ],
+  "completed": true,
+  "hostedPreview": "NOT ATTEMPTED: user explicitly prohibits GitHub and Netlify operations; no deployment or hosted-runtime pass is claimed.",
+  "supersededPreparationChecks": [
+    {
+      "name": "release-integrity",
+      "command": "python scripts/validate_release.py",
+      "environment": {},
+      "exitCode": 1,
+      "status": "FAIL",
+      "durationSeconds": 0.644,
+      "timedOut": false,
+      "log": "evidence/v24/logs/iterations/release-integrity-before-indexes.log"
+    }
+  ]
+}

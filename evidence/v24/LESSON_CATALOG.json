@@ -1,0 +1,506 @@
+{
+  "version": "2.4.0",
+  "count": 20,
+  "lessons": [
+    {
+      "id": "code-sql-grain-joins",
+      "lab": "code",
+      "category": "sql-patterns",
+      "title": "Joins and aggregation start with grain",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "sql-paid-revenue",
+        "v2-sql-cte"
+      ]
+    },
+    {
+      "id": "code-python-collections-dataframes",
+      "lab": "code",
+      "category": "python-dataframes",
+      "title": "From Python collections to grouped dataframes",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "python-aggregate",
+        "pandas-grain",
+        "v2-python-batches"
+      ]
+    },
+    {
+      "id": "code-spark-transformations-shuffles",
+      "lab": "code",
+      "category": "spark-distributed",
+      "title": "Spark transformations, actions and shuffles",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "v2-concept-shuffle",
+        "v2-spark-aggregate",
+        "v2-spark-join"
+      ]
+    },
+    {
+      "id": "code-git-working-tree-index-head",
+      "lab": "code",
+      "category": "developer-workflow",
+      "title": "Git: working tree, index and HEAD",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "comparison",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "git-safe-undo"
+      ]
+    },
+    {
+      "id": "code-interview-dedup-latest-row",
+      "lab": "code",
+      "category": "interview-patterns",
+      "title": "Latest-row problems: key, order and tie-breaker",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "sql-latest-order",
+        "v2-python-latest",
+        "v2-sql-quality"
+      ]
+    },
+    {
+      "id": "model-grain-star-schema",
+      "lab": "model",
+      "category": "dimensional-grain",
+      "title": "Facts, dimensions and the grain of a star schema",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "bi-star-schema",
+        "bi-scd"
+      ]
+    },
+    {
+      "id": "model-relationships-filter-context",
+      "lab": "model",
+      "category": "relationships-context",
+      "title": "Relationships explain where filters travel",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "bi-filter-context"
+      ]
+    },
+    {
+      "id": "model-dax-measure-context",
+      "lab": "model",
+      "category": "measures-dax",
+      "title": "Measures, CALCULATE and meaningful ratios",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "bi-revenue",
+        "bi-margin"
+      ]
+    },
+    {
+      "id": "model-performance-cardinality",
+      "lab": "model",
+      "category": "model-performance",
+      "title": "Model performance begins with useful data",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "bi-csharp"
+      ]
+    },
+    {
+      "id": "model-fabric-serving-path",
+      "lab": "model",
+      "category": "bi-serving",
+      "title": "From trusted tables to a Fabric / BI serving path",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "bullets"
+      ],
+      "relatedPractice": []
+    },
+    {
+      "id": "pipeline-dag-dependencies",
+      "lab": "pipeline",
+      "category": "dag-orchestration",
+      "title": "DAGs: dependencies are a correctness contract",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "v2-airflow-branch",
+        "dag-data-quality"
+      ]
+    },
+    {
+      "id": "pipeline-incremental-idempotent",
+      "lab": "pipeline",
+      "category": "incremental-cdc",
+      "title": "Incremental loads that are safe to replay",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "adf-watermark",
+        "dag-idempotency",
+        "v2-concept-watermark"
+      ]
+    },
+    {
+      "id": "pipeline-quality-contracts",
+      "lab": "pipeline",
+      "category": "quality-contracts",
+      "title": "Data contracts: make assumptions executable",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "dag-data-quality",
+        "v2-sql-quality"
+      ]
+    },
+    {
+      "id": "pipeline-retries-observability",
+      "lab": "pipeline",
+      "category": "retries-observability",
+      "title": "Retries need evidence and safe side effects",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "v2-dbt-failure",
+        "dag-idempotency"
+      ]
+    },
+    {
+      "id": "pipeline-dbt-elt-deployment",
+      "lab": "pipeline",
+      "category": "elt-deployment",
+      "title": "ELT deployment: lineage, tests and promotion",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "dbt-lineage",
+        "v2-dbt-failure"
+      ]
+    },
+    {
+      "id": "systems-lakehouse-serving",
+      "lab": "architecture",
+      "category": "lakehouse-serving",
+      "title": "Lakehouse architecture: storage is not the whole system",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "arch-fabric",
+        "arch-databricks",
+        "arch-table-formats"
+      ]
+    },
+    {
+      "id": "systems-platform-tradeoffs",
+      "lab": "architecture",
+      "category": "platform-tradeoffs",
+      "title": "Compare platforms by constraints, not by a winner",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "v2-cloud-compare"
+      ]
+    },
+    {
+      "id": "systems-spark-distributed-compute",
+      "lab": "architecture",
+      "category": "spark-compute",
+      "title": "Distributed compute: partitions, skew and small files",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "arch-spark-skew",
+        "v2-spark-files"
+      ]
+    },
+    {
+      "id": "systems-security-governance",
+      "lab": "architecture",
+      "category": "security-governance",
+      "title": "Access boundaries: identity, permissions and state",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "arch-tofu",
+        "v2-tofu-replacement"
+      ]
+    },
+    {
+      "id": "systems-cost-reliability-operations",
+      "lab": "architecture",
+      "category": "cost-operations",
+      "title": "Operate with evidence: cost, reliability and recovery",
+      "minutes": 7,
+      "blockKinds": [
+        "intro",
+        "concept",
+        "diagram",
+        "steps",
+        "code",
+        "table",
+        "workedExample",
+        "whenToUse",
+        "pitfall",
+        "checkpoint",
+        "keyTakeaways",
+        "relatedPractice"
+      ],
+      "relatedPractice": [
+        "arch-bigquery",
+        "v2-k8-selector",
+        "arch-kubernetes"
+      ]
+    }
+  ]
+}

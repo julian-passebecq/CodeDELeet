@@ -1,8 +1,15 @@
-import { renderHeaderDOM } from './shell/header.js';
+import { home, parseRoute, routeFor } from './navigation/state.js';
+import { association, categoryFor } from './navigation/taxonomy.js';
+import { discoveryHTML, navigatorHTML, filterHTML, groupedExercises, nearbyExercises, matches } from './navigation/surfaces.js';
+import { loadLessons } from './lessons/catalog.js';
+import { normalizeLearning, updateLesson } from './lessons/progress.js';
+import { railHTML, toolHeader } from './shell/tool-rail.js';
+import { themePanelHTML } from './shell/theme-panel.js';
+import { renderHeaderDOM, discoveryHeader } from './shell/header.js';
 import { ensureSession, patchTask, selectTask, taskDraft, validateCase } from './case-study/controller.js';
 import { caseReferences } from './case-study/view.js';
 import { configurationChecks, gitGoal, modelChecks, terminalGoal } from './checks.js';
-import { clone, escapeHTML as e, emptyStore, formatNumber, loadStore, markDraft, newId, normalizeQuestion, safeDeepnoteURL, saveStore, STORAGE_KEY, validateGraph, validatePack } from './core.js';
+import { WORKSPACES, clone, escapeHTML as e, emptyStore, formatNumber, loadStore, markDraft, newId, normalizeQuestion, safeDeepnoteURL, saveStore, STORAGE_KEY, validateGraph, validatePack } from './core.js';
 import { evaluateDax } from './dax.js';
 import { EditorPool } from './editor.js';
 import { commitAt, gitFixture, headId, runGit } from './git.js';
@@ -13,7 +20,7 @@ import * as pipelineViews from './renderers/pipeline-view.js';
 import * as systemsViews from './renderers/systems-view.js';
 import * as workspaceViews from './renderers/workspace.js';
 import { cancelRuntime, executePython, executeSQL, RUNTIME_VERSIONS } from './runtime.js';
-import { activePreferences, defaultPresentation, newTransient, normalizePresentation, presetFor, resolveLayout, setOutputSize, toggleFocus } from './shell/layout-controller.js';
+import { activePreferences, defaultPresentation, newTransient, normalizePresentation, presetFor, resolveLayout, resolveNavigator, setOutputSize, toggleFocus } from './shell/layout-controller.js';
 import * as shellViews from './shell/orchestration.js';
 import { answerFingerprint, newRunStatus, outputControls, outputDetail, runSummary } from './shell/output-dock.js';
 import * as readingViews from './shell/reading-panels.js';
@@ -35,6 +42,227 @@ let editor = null, editorEpoch = 0, labEpoch = 0, saveTimer, result = null, runE
 let graphUndo = [], timerStart = null, timerElapsed = 0, terminalResult = null;
 let runStatuses = {}, runGrid = [], graphDrag = false;
 const app = $('#app');
+let navigation = home('practice', 'code'), lessons = [];
+let filtersOpen = false;
+const practiceResume = {};
+const isWorkstation = () => navigation.surface === 'exercise' || navigation.surface === 'case';
+const activeLesson = () => lessons.find(l => l.id === navigation.lessonId);
+function discoveryContext() { return { nav: navigation, questions, cases, store, lessons, search, difficulty, technology, queue, concept: conceptFilter, priority: priorityFilter }; }
+function resetFilters() { search = ''; difficulty = 'All levels'; technology = 'All topics'; queue = 'All exercises'; conceptFilter = ''; priorityFilter = 'All priorities'; }
+function suspendPractice() {
+    if (busy) {
+        cancelRuntime();
+        busy = false;
+        runEpoch++;
+        result = { engine: 'Cancelled', columns: [], rows: [], elapsedMs: 0, error: 'The active worker was stopped when you left Practice. Your draft and notes are preserved.' };
+        runState = { ...runState, phase: 'cancelled', result };
+    }
+    captureView();
+    persist(true);
+}
+function routeSurface(next, push = true) {
+    if (isWorkstation() && current) {
+        practiceResume[workspace] = { ...navigation };
+        suspendPractice();
+    }
+    if (shellState.focus)
+        toggleFocus(shellState, presentation);
+    shellState.tool = null;
+    shellState.toolExpanded = false;
+    shellState.navOverlay = false;
+    shellState.mobile = 'artifact';
+    if (next.workspace !== workspace)
+        resetFilters();
+    navigation = next;
+    workspace = next.workspace;
+    labEpoch++;
+    editorEpoch++;
+    if (next.categoryId && next.surface === 'category-home') {
+        if (next.appMode === 'practice') {
+            store.settings.practiceNavigation ??= { lastExerciseByLab: {} };
+            store.settings.practiceNavigation.lastCategoryByLab ??= {};
+            store.settings.practiceNavigation.lastCategoryByLab[workspace] = next.categoryId;
+        }
+        else {
+            store.settings.learning ??= normalizeLearning(undefined);
+            store.settings.learning.lastCategoryByLab[workspace] = next.categoryId;
+        }
+    }
+    if (next.surface !== 'lesson') {
+        search = next.query ?? '';
+        queue = next.queue ?? 'All exercises';
+    }
+    const lesson = activeLesson();
+    if (lesson) {
+        store.settings.learning ??= normalizeLearning(undefined);
+        const old = store.settings.learning.progress[lesson.id];
+        updateLesson(store.settings.learning, lesson, { lastSection: next.section ?? old?.lastSection });
+    }
+    if (push && location.hash.slice(1) !== routeFor(next))
+        history.pushState(null, '', '#' + routeFor(next));
+    shellHTML();
+    persist(true);
+}
+function refreshDiscoveryResults() {
+    if (isWorkstation() || navigation.surface === 'lesson')
+        return;
+    const host = document.querySelector('#discovery-results');
+    if (!host)
+        return;
+    const template = document.createElement('template');
+    template.innerHTML = discoveryHTML(discoveryContext());
+    const results = template.content.querySelector('#discovery-results');
+    if (results)
+        host.innerHTML = results.innerHTML;
+}
+function closeNavigator(returnFocus = true) { shellState.navOverlay = false; applyLayout(); if (returnFocus)
+    document.querySelector('.navigator-toggle')?.focus({ preventScroll: true }); }
+function recordSection(id, scroll = true) {
+    const lesson = activeLesson();
+    if (!lesson || !lesson.blocks.some(b => b.id === id))
+        return;
+    updateLesson(store.settings.learning, lesson, { lastSection: id });
+    navigation.section = id;
+    history.replaceState(null, '', '#' + routeFor(navigation));
+    document.querySelectorAll('.lesson-outline [data-lesson-section-link]').forEach(b => b.setAttribute('aria-current', b.dataset.lessonSectionLink === id ? 'location' : 'false'));
+    if (scroll) {
+        closeNavigator(false);
+        document.querySelector('#section-' + id)?.scrollIntoView({ block: 'start', behavior: 'auto' });
+        document.querySelector('#section-' + id)?.focus({ preventScroll: true });
+    }
+    persist();
+}
+function bindLessonProgress() {
+    const lesson = activeLesson(), host = document.querySelector('#discovery-content');
+    if (!lesson || !host)
+        return;
+    const section = navigation.section ?? store.settings.learning?.progress[lesson.id]?.lastSection;
+    if (section && lesson.blocks.some(b => b.id === section))
+        requestAnimationFrame(() => { if (host.isConnected)
+            host.querySelector('#section-' + section)?.scrollIntoView({ block: 'start' }); });
+    let scrollTimer;
+    host.onscroll = () => { clearTimeout(scrollTimer); scrollTimer = setTimeout(() => { if (activeLesson()?.id !== lesson.id || !host.isConnected)
+        return; const top = host.getBoundingClientRect().top; const sections = [...host.querySelectorAll('[data-lesson-section]')]; const visible = sections.filter(el => el.getBoundingClientRect().top <= top + 140).at(-1); if (visible && store.settings.learning?.progress[lesson.id]?.lastSection !== visible.dataset.lessonSection)
+        recordSection(visible.dataset.lessonSection, false); }, 160); };
+}
+function handleNavigationClick(button) {
+    if (button.hasAttribute('data-app-mode')) {
+        const mode = navigation.appMode === 'practice' ? 'learn' : 'practice', global = button.classList.contains('app-mode-switch'), category = !global ? navigation.categoryId : undefined;
+        const resume = practiceResume[workspace];
+        resetFilters();
+        if (mode === 'practice' && global && resume?.exerciseId) {
+            navigate(resume.exerciseId, resume.caseId, resume.taskId);
+            return true;
+        }
+        routeSurface({ ...home(mode, workspace), ...(category ? { surface: 'category-home', categoryId: category } : {}) });
+        return true;
+    }
+    if (button.dataset.workspace) {
+        const lab = button.dataset.workspace;
+        resetFilters();
+        routeSurface(home(navigation.appMode, lab));
+        document.querySelector('.workspace-nav [data-workspace="' + lab + '"]')?.focus({ preventScroll: true });
+        return true;
+    }
+    if (button.hasAttribute('data-nav-home') || button.dataset.shell === 'all-exercises') {
+        resetFilters();
+        routeSurface(home(navigation.appMode, workspace));
+        return true;
+    }
+    if (button.dataset.navCategory) {
+        resetFilters();
+        routeSurface({ ...home(navigation.appMode, workspace), surface: 'category-home', categoryId: button.dataset.navCategory });
+        return true;
+    }
+    if (button.dataset.lesson) {
+        const lesson = lessons.find(l => l.id === button.dataset.lesson);
+        if (lesson)
+            routeSurface({ appMode: 'learn', workspace: lesson.workspace, surface: 'lesson', lessonId: lesson.id, categoryId: lesson.categoryId });
+        return true;
+    }
+    if (button.dataset.lessonSectionLink) {
+        recordSection(button.dataset.lessonSectionLink);
+        return true;
+    }
+    if (button.dataset.lessonComplete) {
+        const lesson = activeLesson();
+        if (lesson) {
+            updateLesson(store.settings.learning, lesson, { status: 'completed' });
+            persist(true);
+            renderHeader();
+            document.querySelectorAll('[data-lesson-complete]').forEach(b => { b.disabled = true; b.textContent = 'Lesson completed'; });
+            const status = document.querySelector('#lesson-progress-label');
+            if (status)
+                status.textContent = 'Completed';
+            applyLayout();
+            toast('Lesson complete. Practice progress is unchanged.');
+        }
+        return true;
+    }
+    if (button.dataset.copyBlock) {
+        const block = activeLesson()?.blocks.find(b => b.id === button.dataset.copyBlock);
+        if (block?.kind === 'code') {
+            void (async () => { try {
+                await navigator.clipboard.writeText(block.code);
+                button.textContent = 'Copied';
+            }
+            catch {
+                const area = document.createElement('textarea');
+                area.value = block.code;
+                document.body.append(area);
+                area.select();
+                const copied = document.execCommand('copy');
+                area.remove();
+                button.textContent = copied ? 'Copied' : 'Select code to copy';
+            } button.focus({ preventScroll: true }); })();
+        }
+        return true;
+    }
+    if (button.hasAttribute('data-nav-close')) {
+        closeNavigator();
+        return true;
+    }
+    if (button.hasAttribute('data-clear-filters')) {
+        resetFilters();
+        const category = navigation.categoryId;
+        if (!isWorkstation())
+            routeSurface({ ...home(navigation.appMode, workspace), ...(category ? { surface: 'category-home', categoryId: category } : {}) });
+        else {
+            shellHTML();
+        }
+        return true;
+    }
+    if (button.hasAttribute('data-nav-search') || button.hasAttribute('data-search-lab') || button.dataset.navQueue || button.hasAttribute('data-nav-cases')) {
+        const keep = button.hasAttribute('data-search-lab') ? search : '';
+        const chosen = button.dataset.navQueue;
+        routeSurface({ ...home(navigation.appMode, workspace), query: keep, queue: chosen });
+        const selector = button.hasAttribute('data-nav-cases') ? '#home-cases' : '#home-discovery';
+        document.querySelector(selector)?.scrollIntoView({ block: 'start' });
+        if (!chosen && !button.hasAttribute('data-nav-cases'))
+            document.querySelector('#surface-search')?.focus();
+        return true;
+    }
+    if (button.hasAttribute('data-open-filters')) {
+        const nav = resolveNavigator(presentation, innerWidth, shellState);
+        if (!nav.expanded) {
+            if (innerWidth < 1200) {
+                shellState.navOverlay = true;
+                shellState.tool = null;
+            }
+            else
+                presentation.navCollapsed = false;
+            applyLayout();
+        }
+        const details = document.querySelector('#navigator-filters');
+        if (details) {
+            details.open = true;
+            details.scrollIntoView({ block: 'nearest' });
+            details.querySelector('#search')?.focus();
+        }
+        return true;
+    }
+    return false;
+}
 function viewContext() { return { current, labTab, selectedNode, selectedCommit, get selectedFile() { return selectedFile; }, set selectedFile(v) { selectedFile = v; }, graphUndo, graphRedo, selectedEdge, runStatuses: runSummary(runState, answerFingerprint(draft(), current?.starter ?? '')).stale ? {} : runStatuses, runGrid, fixtures, draft, graph, git, terminal }; }
 const draftKey = () => activeCase ? 'case/' + activeCase.id + '/' + ensureSession(store, activeCase).currentTaskId : 'exercise/' + current.id;
 const draft = () => activeCase ? taskDraft(store, activeCase) : store.drafts[current.id] ?? {};
@@ -60,7 +288,8 @@ function patch(p, immediate = false) { if (activeCase)
 else
     markDraft(store, current.id, p); persist(immediate); updateRunBadge(); }
 function recalc() { questions = [...builtins, ...store.customPacks].flatMap(p => p.questions).map(normalizeQuestion); }
-function filtered() { return questions.filter(q => q.workspace === workspace && (!search || (q.title + ' ' + q.topic + ' ' + q.summary + ' ' + q.id).toLowerCase().includes(search.toLowerCase())) && (difficulty === 'All levels' || q.difficulty === difficulty) && (technology === 'All topics' || q.technology === technology) && (!conceptFilter || q.concept.join(' ').toLowerCase().includes(conceptFilter.toLowerCase())) && (priorityFilter === 'All priorities' || q.interviewPriority === priorityFilter) && (queue === 'All exercises' || queue === 'Bookmarked' && store.drafts[q.id]?.bookmark || queue === 'Review queue' && (store.drafts[q.id]?.status === 'review' || store.drafts[q.id]?.confidence === 'Review') || queue === 'Unfinished' && store.drafts[q.id]?.status !== 'completed')); }
+function filtered() { return nearbyExercises(discoveryContext()); }
+function practiceSequence() { return questions.filter(q => q.workspace === workspace && matches(q, discoveryContext())); }
 function graph() { if (draft().graph)
     return clone(draft().graph); return validateGraph(current.fixture?.graph ?? graphTemplate(current.template ?? (current.workspace === 'model' ? 'model' : 'fabric'))); }
 function setGraph(g, remember = true) { if (remember) {
@@ -79,25 +308,54 @@ function git() { const s = draft().labState; if (s?.kind === 'git' && s.value?.c
 } return gitFixture(current.fixture?.git ?? 'merge'); }
 function terminal() { const s = draft().labState; return s?.kind === 'terminal' && s.value?.files ? clone(s.value) : terminalFixture(current.fixture?.shell ?? 'bash'); }
 function shellHTML() {
-    app.innerHTML = scaffold({ workspace, questions, search, difficulty, technology, queue });
+    const existingFilters = document.querySelector('#navigator-filters');
+    if (existingFilters)
+        filtersOpen = existingFilters.open;
+    const ctx = discoveryContext(), work = isWorkstation();
+    app.innerHTML = scaffold({ workspace, questions, search, difficulty, technology, queue, navigator: navigatorHTML(ctx), filters: navigation.appMode === 'practice' ? filterHTML(ctx) : '', learn: navigation.appMode === 'learn', discovery: work ? undefined : discoveryHTML(ctx) });
+    app.dataset.surface = navigation.surface;
+    app.dataset.appMode = navigation.appMode;
+    const newFilters = document.querySelector('#navigator-filters');
+    if (newFilters)
+        newFilters.open = filtersOpen;
     renderLibrary();
     renderHeader();
-    renderQuestion();
-    renderLab();
-    renderDrawer();
+    if (work) {
+        renderQuestion();
+        renderLab();
+        renderDrawer();
+    }
+    else {
+        renderRail();
+        renderTool();
+    }
     applyLayout();
     bindControls();
+    if (!work)
+        bindLessonProgress();
 }
 function renderLibrary() {
-    const list = filtered();
-    const technologies = [...new Set(questions.filter(q => q.workspace === workspace).map(q => q.technology))];
-    $('#quick-filters').innerHTML = technologies.map(t => `<button data-quick-filter="${e(t)}" class="quick-filter ${technology === t ? 'active' : ''}" aria-pressed="${technology === t}">${e(t)}</button>`).join('');
-    $('#case-library').innerHTML = '<span class="eyebrow">CASE STUDIES</span>' + cases.filter(c => c.workspace === workspace).map(c => `<button class="case-library-item ${activeCase?.id === c.id ? 'active' : ''}" data-open-case="${e(c.id)}"><strong>${e(c.title)}</strong><span>${c.tasks.length} tasks / ${c.pages.length} exhibits</span></button>`).join('');
-    $('#library-count').textContent = `${list.length} exercises`;
-    $('#exercise-list').innerHTML = list.length ? list.map(q => { const d = store.drafts[q.id] ?? {}; return `<button class="exercise-item ${q.id === current.id ? 'selected' : ''}" data-question="${q.id}" role="listitem" aria-current="${q.id === current.id ? 'true' : 'false'}"><span class="exercise-status ${d.status === 'completed' ? 'done' : ''}">${d.status === 'completed' ? icon('check') : ''}</span><span class="exercise-item-copy"><strong>${e(q.title)}</strong><span><b class="level ${q.difficulty.toLowerCase()}">${q.difficulty}</b><span>${e(q.technology)}</span></span></span>${d.bookmark ? '<span class="tiny-bookmark">' + icon('bookmark') + '</span>' : ''}</button>`; }).join('') : '<div class="empty small">No exercises match these filters.</div>';
-    const done = questions.filter(q => store.drafts[q.id]?.status === 'completed').length;
-    $('#progress-text').innerHTML = `<strong>${done}</strong> of ${questions.length} marked complete`;
-    $('#progress-bar').style.width = 100 * done / questions.length + '%';
+    const ctx = discoveryContext(), list = filtered(), learn = navigation.appMode === 'learn';
+    const quick = document.querySelector('#quick-filters');
+    if (quick) {
+        const technologies = [...new Set(questions.filter(q => q.workspace === workspace).map(q => q.technology))];
+        quick.innerHTML = technologies.map(t => `<button data-quick-filter="${e(t)}" class="quick-filter ${technology === t ? 'active' : ''}" aria-pressed="${technology === t}">${e(t)}</button>`).join('');
+    }
+    const listHost = document.querySelector('#exercise-list');
+    if (listHost) {
+        listHost.innerHTML = navigation.surface === 'lab-home' && !search && queue === 'All exercises' ? '' : groupedExercises(list, ctx);
+    }
+    const count = document.querySelector('#library-count');
+    if (count)
+        count.textContent = navigation.surface === 'lab-home' ? 'Choose a category to explore' : `${list.length} nearby exercises`;
+    const caseHost = document.querySelector('#case-library');
+    if (caseHost)
+        caseHost.innerHTML = isWorkstation() ? '<span class="eyebrow">CASE STUDIES</span>' + cases.filter(c => c.workspace === workspace).map(c => `<button class="case-library-item ${activeCase?.id === c.id ? 'active' : ''}" data-open-case="${e(c.id)}"><strong>${e(c.title)}</strong><span>${c.tasks.length} tasks / ${c.pages.length} exhibits</span></button>`).join('') : '';
+    const total = learn ? lessons.filter(l => l.workspace === workspace).length : questions.filter(q => q.workspace === workspace).length;
+    const done = learn ? lessons.filter(l => l.workspace === workspace && store.settings.learning?.progress[l.id]?.status === 'completed').length : questions.filter(q => q.workspace === workspace && store.drafts[q.id]?.status === 'completed').length;
+    $('#progress-text').innerHTML = `<strong>${done}</strong> of ${total} ${learn ? 'lessons' : 'exercises'} complete in this lab`;
+    $('#progress-bar').style.width = (total ? 100 * done / total : 0) + '%';
+    refreshDiscoveryResults();
 }
 function labelMode() { const q = current; if (q.executionMode === 'execute')
     return q.engine === 'sql' ? 'EXECUTE / DUCKDB-WASM' : 'EXECUTE / PYODIDE'; if (q.renderer === 'pyspark-editor')
@@ -105,11 +363,19 @@ function labelMode() { const q = current; if (q.executionMode === 'execute')
     return 'TEACHING MODEL / DAX SUBSET'; return `${q.executionMode?.toUpperCase()} / ${q.renderer === 'terminal' ? 'VIRTUAL SHELL' : q.renderer === 'git-visual' ? 'VIRTUAL GIT' : q.renderer === 'config-editor' ? 'TEXT CHECKS' : 'FIXTURE'}`; }
 function actionLabel() { return busy ? 'Cancel' : current.renderer === 'git-visual' || current.renderer === 'terminal' ? 'Check goal' : current.executionMode === 'execute' ? 'Run & test' : current.renderer === 'dag-editor' ? 'Simulate' : current.renderer === 'semantic-model' ? 'Evaluate' : current.renderer === 'config-editor' ? 'Analyze' : 'Record review'; }
 function renderHeader() {
-    const d = draft(), siblings = filtered(), i = siblings.findIndex(q => q.id === current.id), r = runSummary(runState, answerFingerprint(d, current.starter));
-    renderHeaderDOM($('#exercise-header'), { navExpanded: innerWidth < 760 ? document.body.classList.contains('library-open') : resolveLayout(presentation, workspace, innerWidth, shellState).navWidth > 56, workspace, current, bookmark: !!d.bookmark, caseAttempt: !!activeCase, previousDisabled: !!activeCase || i <= 0, nextDisabled: !!activeCase || i < 0 || i >= siblings.length - 1, busy, clock: clockText(), executionLabel: labelMode(), actionLabel: actionLabel(), result: r });
+    if (!isWorkstation()) {
+        const lesson = activeLesson(), cat = categoryFor(workspace, navigation.categoryId);
+        $('#exercise-header').innerHTML = discoveryHeader(workspace, navigation.appMode, lesson?.title ?? cat?.title ?? WORKSPACE_TITLE(), lesson ? { id: lesson.id, done: store.settings.learning?.progress[lesson.id]?.status === 'completed' } : undefined);
+        return;
+    }
+    const d = draft(), siblings = practiceSequence(), i = siblings.findIndex(q => q.id === current.id), r = runSummary(runState, answerFingerprint(d, current.starter));
+    renderHeaderDOM($('#exercise-header'), { categoryId: navigation.categoryId, categoryLabel: categoryFor(workspace, navigation.categoryId)?.title, navExpanded: resolveNavigator(presentation, innerWidth, shellState).expanded, workspace, current, bookmark: !!d.bookmark, caseAttempt: !!activeCase, previousDisabled: !!activeCase || i <= 0, nextDisabled: !!activeCase || i < 0 || i >= siblings.length - 1, busy, clock: clockText(), executionLabel: labelMode(), actionLabel: actionLabel(), result: r });
 }
+function WORKSPACE_TITLE() { return WORKSPACES[workspace].title; }
 function tabs(items, active, attr) { return items.map(x => `<button ${attr}="${e(x)}" class="${x === active ? 'active' : ''}" aria-pressed="${x === active}">${e(x)}</button>`).join(''); }
 function renderQuestion() {
+    if (!isWorkstation())
+        return;
     if (activeCase && presentation.modes[workspace] === 'case') {
         $('#question-tabs').innerHTML = '<span class="case-reference-label">Exhibits - independent of task navigation</span>';
         $('#question-body').innerHTML = caseReferences(activeCase, ensureSession(store, activeCase));
@@ -140,7 +406,7 @@ async function mountCode(epoch) {
     const key = draftKey();
     const h = await editorPool.attach(host, key, code(), current.language, value => { if (draftKey() !== key)
         return; patch({ code: value, status: draft().status === 'completed' ? 'completed' : 'in-progress' }); }, () => void run());
-    if (epoch === labEpoch && key === draftKey()) {
+    if (isWorkstation() && epoch === labEpoch && key === draftKey()) {
         editor = h;
         editor.refresh();
     }
@@ -153,6 +419,11 @@ function performancePanel() { return systemsViews.performancePanel(viewContext()
 function configEvidence() { return systemsViews.configEvidence(viewContext()); }
 function mermaidPanel() { return workspaceViews.mermaidPanel(workspaceViewsContext()); }
 function renderDrawer() {
+    if (!isWorkstation()) {
+        renderRail();
+        renderTool();
+        return;
+    }
     const effective = resolveLayout(presentation, workspace, window.innerWidth, shellState);
     $('#drawer-tabs').innerHTML = outputControls(activePreferences(presentation, workspace), effective.outputSize, outputTab);
     $('#drawer-body').innerHTML = outputDetail(result, outputTab, resultPanel);
@@ -175,22 +446,27 @@ function navigate(id, caseId, taskId) {
     const q = questions.find(q => q.id === id);
     if (!q)
         return;
-    if (current) {
-        captureView();
-        if (busy) {
-            cancelRuntime();
-            busy = false;
-            runEpoch++;
-        }
-        persist(true);
-    }
+    if (current && isWorkstation())
+        suspendPractice();
     const nextCase = caseId ? cases.find(c => c.id === caseId) ?? null : null;
     activeCase = nextCase;
     if (activeCase && taskId)
         selectTask(store, activeCase, taskId);
+    if (!isWorkstation()) {
+        shellState.tool = null;
+        shellState.toolExpanded = false;
+        shellState.mobile = 'artifact';
+    }
     const changedLab = workspace !== q.workspace;
     current = q;
     workspace = q.workspace;
+    shellState.navOverlay = false;
+    navigation = { appMode: 'practice', workspace, surface: activeCase ? 'case' : 'exercise', exerciseId: q.id, categoryId: association(q).categoryId, caseId: activeCase?.id, taskId: activeCase ? ensureSession(store, activeCase).currentTaskId : undefined };
+    store.settings.practiceNavigation ??= { lastExerciseByLab: {} };
+    if (!activeCase)
+        store.settings.practiceNavigation.lastExerciseByLab[workspace] = id;
+    store.settings.practiceNavigation.lastCategoryByLab ??= {};
+    store.settings.practiceNavigation.lastCategoryByLab[workspace] = association(q).categoryId;
     store.settings.lastQuestion = id;
     store.settings.activeCase = activeCase?.id;
     if (changedLab) {
@@ -207,6 +483,8 @@ function navigate(id, caseId, taskId) {
     persist();
 }
 async function run() {
+    if (!isWorkstation())
+        return;
     if (busy) {
         cancelRuntime();
         runEpoch++;
@@ -365,32 +643,21 @@ function resetLab() { if (!confirm('Reset the current code and lab state to the 
     if (key.startsWith(draftKey() + '|'))
         inputMemory.delete(key); patch({ code: current.starter, graph: undefined, labState: undefined, diagram: undefined, mermaid: undefined, answer: undefined, diagnosis: undefined, grain: undefined }, true); result = null; runState = newRunStatus(); runStatuses = {}; runGrid = []; terminalResult = null; graphUndo = []; graphRedo = []; selectedNode = ''; selectedCommit = ''; void editorPool.replace(draftKey(), current.starter); renderLab(); renderDrawer(); }
 function bindControls() {
-    $('#search').oninput = () => { search = $('#search').value; renderLibrary(); };
+    const searchInput = document.querySelector('#search');
+    if (searchInput)
+        searchInput.oninput = () => { search = searchInput.value; const visibleSearch = document.querySelector('#surface-search'); if (visibleSearch)
+            visibleSearch.value = search; renderLibrary(); renderHeader(); applyLayout(); };
     app.onclick = (event) => {
         const target = event.target, button = target.closest('button,a');
         if (!button || button.hasAttribute('disabled'))
+            return;
+        if (handleNavigationClick(button))
             return;
         if (handleShellClick(button))
             return;
         if (button.dataset.question) {
             document.body.classList.remove('library-open');
             navigate(button.dataset.question);
-            return;
-        }
-        if (button.dataset.workspace) {
-            workspace = button.dataset.workspace;
-            technology = 'All topics';
-            search = '';
-            difficulty = 'All levels';
-            queue = 'All exercises';
-            conceptFilter = '';
-            priorityFilter = 'All priorities';
-            const q = filtered()[0];
-            const inDrawer = !!button.closest('.library');
-            if (q) {
-                navigate(q.id);
-                document.querySelector(`${inDrawer ? '.library-labs' : '.workspace-nav'} [data-workspace="${workspace}"]`)?.focus({ preventScroll: true });
-            }
             return;
         }
         if (button.dataset.leftTab) {
@@ -468,7 +735,7 @@ function bindControls() {
                     break;
                 case 'previous':
                 case 'next': {
-                    const list = filtered(), i = list.findIndex(q => q.id === current.id), q = list[i + (action === 'next' ? 1 : -1)];
+                    const list = practiceSequence(), i = list.findIndex(q => q.id === current.id), q = list[i + (action === 'next' ? 1 : -1)];
                     if (q)
                         navigate(q.id);
                     break;
@@ -733,14 +1000,42 @@ function bindControls() {
             toast(error.message, true);
         }
     };
-    app.oninput = (event) => { const t = event.target; if (t.id === 'notes')
-        patch({ notes: t.value }); if (t.id === 'concept-filter') {
-        conceptFilter = t.value;
-        renderLibrary();
-    } if (t.id === 'diagnosis')
-        patch({ diagnosis: t.value }); if (t.id === 'mermaid-source')
-        patch({ mermaid: t.value }); if (t.id === 'diagram-script')
-        patch({ diagram: t.value }); };
+    app.oninput = (event) => {
+        const t = event.target;
+        if (t.id === 'surface-search') {
+            search = t.value;
+            const navSearch = document.querySelector('#search');
+            if (navSearch)
+                navSearch.value = search;
+            renderLibrary();
+            if (!isWorkstation() && navigation.surface !== 'lesson') {
+                navigation.query = search;
+                history.replaceState(null, '', '#' + routeFor(navigation));
+            }
+        }
+        if (t.id === 'lesson-notes') {
+            const lesson = activeLesson();
+            if (lesson)
+                updateLesson(store.settings.learning, lesson, { notes: t.value.slice(0, 20000) });
+            else {
+                store.settings.learning.notes = t.value.slice(0, 20000);
+                store.settings.learning.notesUpdatedAt = new Date().toISOString();
+            }
+            persist();
+        }
+        if (t.id === 'notes')
+            patch({ notes: t.value });
+        if (t.id === 'concept-filter') {
+            conceptFilter = t.value;
+            renderLibrary();
+        }
+        if (t.id === 'diagnosis')
+            patch({ diagnosis: t.value });
+        if (t.id === 'mermaid-source')
+            patch({ mermaid: t.value });
+        if (t.id === 'diagram-script')
+            patch({ diagram: t.value });
+    };
     app.onsubmit = (event) => { const form = event.target; if (form.id === 'git-form' || form.id === 'terminal-form') {
         event.preventDefault();
         command(form.id === 'git-form' ? 'git' : 'terminal');
@@ -795,7 +1090,7 @@ app.addEventListener('keydown', event => { const t = event.target; if (t.dataset
 } });
 function resize(event, kind) {
     event.preventDefault();
-    const ws = $('#workstation'), rect = ws.getBoundingClientRect(), m = activePreferences(presentation, workspace);
+    const ws = $('#workstation') ?? $('#discovery-content'), rect = ws.getBoundingClientRect(), m = activePreferences(presentation, workspace);
     document.body.classList.add('resizing');
     const move = (ev) => { if (kind === 'column')
         m.split = Math.max(25, Math.min(60, 100 * (ev.clientX - rect.left) / rect.width));
@@ -812,7 +1107,8 @@ function resize(event, kind) {
     window.addEventListener('pointerup', end, { once: true });
     window.addEventListener('pointercancel', end, { once: true });
 }
-window.addEventListener('keydown', event => { if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+window.addEventListener('keydown', event => { if (!isWorkstation())
+    return; if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
     if (event.target.closest('.CodeMirror'))
         return;
     event.preventDefault();
@@ -821,7 +1117,11 @@ window.addEventListener('keydown', event => { if ((event.ctrlKey || event.metaKe
     $(`[data-action="${event.key === 'ArrowLeft' ? 'previous' : 'next'}"]`)?.click();
     event.preventDefault();
 } });
-window.addEventListener('resize', () => { if (current)
+let navWidthBand = innerWidth < 760 ? 0 : innerWidth < 1200 ? 1 : 2;
+window.addEventListener('resize', () => { const band = innerWidth < 760 ? 0 : innerWidth < 1200 ? 1 : 2; if (band !== navWidthBand) {
+    shellState.navOverlay = false;
+    navWidthBand = band;
+} if (current)
     applyLayout(); });
 window.addEventListener('beforeunload', () => { if (current)
     persist(true); });
@@ -844,12 +1144,14 @@ async function boot() {
             storageBlocked = true;
             store = emptyStore();
         }
+        store.settings.learning = normalizeLearning(store.settings.learning);
         presentation = normalizePresentation(store.settings.workstation, { split: store.settings.split, drawerHeight: store.settings.drawerHeight });
         store.settings.focus = false;
         recalc();
+        lessons = await loadLessons(questions);
         const authored = await (await fetch('./cases/index.json')).json();
         cases = authored.cases.map((c) => validateCase(c, questions));
-        const route = new URLSearchParams(location.hash.slice(1)), caseId = route.get('case') ?? (!route.get('exercise') ? store.settings.activeCase : undefined);
+        const route = new URLSearchParams(location.hash.slice(1)), caseId = route.get('case') ?? (!location.hash.replace(/^#/, '') ? store.settings.activeCase : undefined);
         activeCase = cases.find(c => c.id === caseId) ?? null;
         if (activeCase) {
             const session = ensureSession(store, activeCase), requestedTask = route.get('task');
@@ -862,9 +1164,17 @@ async function boot() {
             current = questions.find(q => q.id === id) ?? questions[0];
         }
         workspace = current.workspace;
-        restoreView();
-        shellHTML();
-        persist();
+        navigation = activeCase ? { appMode: 'practice', workspace, surface: 'case', exerciseId: current.id, caseId: activeCase.id, taskId: ensureSession(store, activeCase).currentTaskId, categoryId: association(current).categoryId } : parseRoute(location.hash, questions, lessons);
+        if (isWorkstation()) {
+            store.settings.practiceNavigation ??= { lastExerciseByLab: {} };
+            if (!activeCase)
+                store.settings.practiceNavigation.lastExerciseByLab[workspace] = current.id;
+            restoreView();
+            shellHTML();
+            persist();
+        }
+        else
+            routeSurface(navigation, false);
         if (storageBlocked)
             toast('Stored progress needs recovery. Export the raw value from Settings before starting fresh.', true);
     }
@@ -878,10 +1188,38 @@ function gitPredictionPanel() { return systemsViews.gitPredictionPanel(viewConte
 // Shared shell orchestration. Domain engines remain in their original modules.
 function companionLinks() { return shellViews.companionLinks(shellViewsContext()); }
 function updateRunBadge() { return shellViews.updateRunBadge(shellViewsContext()); }
-function renderRail() { return shellViews.renderRail(shellViewsContext()); }
+function renderRail() {
+    if (isWorkstation())
+        return shellViews.renderRail(shellViewsContext());
+    const rail = $('#tool-rail'), active = document.activeElement, tool = active?.dataset.tool;
+    rail.innerHTML = railHTML(presentation, workspace, shellState, false, false, true);
+    if (tool)
+        rail.querySelector('[data-tool="' + tool + '"]')?.focus({ preventScroll: true });
+}
 let inspectorElement = null;
-function renderTool(force = false) { return shellViews.renderTool(shellViewsContext(), force); }
-function openTool(tool, keep = false) { return shellViews.openTool(shellViewsContext(), tool, keep); }
+function renderTool(force = false) {
+    if (isWorkstation())
+        return shellViews.renderTool(shellViewsContext(), force);
+    const tool = shellState.tool, panel = $('#tool-panel'), body = $('#tool-body');
+    if (!tool) {
+        panel.hidden = true;
+        return;
+    }
+    if (!['Notes', 'Theme'].includes(tool)) {
+        shellState.tool = null;
+        panel.hidden = true;
+        return;
+    }
+    panel.hidden = false;
+    $('#tool-header').innerHTML = toolHeader(tool, shellState, false, false);
+    const lesson = activeLesson(), key = [navigation.appMode, lesson?.id ?? 'home', tool].join('|');
+    if (!force && body.dataset.renderKey === key)
+        return;
+    body.dataset.renderKey = key;
+    body.innerHTML = tool === 'Theme' ? themePanelHTML(presentation.theme) : `<div class="notes-panel"><span class="eyebrow">${lesson ? 'PRIVATE LESSON NOTES' : 'PRIVATE STUDY NOTEBOOK'}</span><textarea id="lesson-notes" maxlength="20000" aria-label="Personal learning notes" placeholder="Your mental model, questions and interview explanation...">${e(lesson ? store.settings.learning?.progress[lesson.id]?.notes ?? '' : store.settings.learning?.notes ?? '')}</textarea><p class="muted">Saved separately from Practice drafts and included in progress backups.</p></div>`;
+}
+function openTool(tool, keep = false) { if (!isWorkstation() && !['Notes', 'Theme'].includes(tool))
+    return; return shellViews.openTool(shellViewsContext(), tool, keep); }
 function rememberInputs() {
     if (!current || !document.querySelector('#lab-content'))
         return;
@@ -919,6 +1257,8 @@ function restoreView() {
         labTab = 'Workspace';
 }
 function renderLab() {
+    if (!isWorkstation())
+        return;
     // Preserve the camera independently of graph/model state.
     const before = document.querySelector('#lab-content');
     const canvas = before?.querySelector('#graph-canvas');
@@ -966,7 +1306,8 @@ function renderLab() {
 }
 function renderCaseParts() { return shellViews.renderCaseParts(shellViewsContext()); }
 function renderComparison() { return shellViews.renderComparison(shellViewsContext()); }
-function changeMode(slot) { return shellViews.changeMode(shellViewsContext(), slot); }
+function changeMode(slot) { if (!isWorkstation())
+    return; return shellViews.changeMode(shellViewsContext(), slot); }
 function setRoute() {
     const value = activeCase ? 'case=' + encodeURIComponent(activeCase.id) + '&task=' + encodeURIComponent(ensureSession(store, activeCase).currentTaskId) : 'exercise=' + encodeURIComponent(current.id);
     if (location.hash.slice(1) !== value)
@@ -976,24 +1317,37 @@ function handleRoute() {
     const route = new URLSearchParams(location.hash.slice(1)), cid = route.get('case');
     if (cid) {
         const c = cases.find(c => c.id === cid);
-        if (!c)
-            return;
-        const task = route.get('task') ?? ensureSession(store, c).currentTaskId;
-        const t = c.tasks.find(t => t.id === task);
-        if (t && (activeCase?.id !== cid || ensureSession(store, c).currentTaskId !== task))
-            navigate(t.questionRef, cid, task);
+        if (c) {
+            const task = route.get('task') ?? ensureSession(store, c).currentTaskId;
+            const t = c.tasks.find(t => t.id === task);
+            if (t) {
+                if (navigation.surface !== 'case' || activeCase?.id !== cid || ensureSession(store, c).currentTaskId !== task)
+                    navigate(t.questionRef, cid, task);
+                return;
+            }
+        }
     }
-    else {
-        const id = route.get('exercise');
-        if (id && (id !== current?.id || activeCase))
-            navigate(id);
+    const next = parseRoute(location.hash, questions, lessons);
+    if (next.surface === 'exercise') {
+        if (!isWorkstation() || current.id !== next.exerciseId || activeCase)
+            navigate(next.exerciseId);
     }
+    else if (next.surface === 'lesson' && navigation.lessonId === next.lessonId && navigation.surface === 'lesson') {
+        if (next.section)
+            recordSection(next.section);
+    }
+    else
+        routeSurface(next, false);
 }
 function handleShellClick(button) { return shellViews.handleShellClick(shellViewsContext(), button); }
 function handleShellChange(t) { return shellViews.handleShellChange(shellViewsContext(), t); }
 function bindSplitters() { return shellViews.bindSplitters(shellViewsContext()); }
 window.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.querySelector('dialog[open]')) {
-    if (shellState.tool) {
+    if (shellState.navOverlay) {
+        event.preventDefault();
+        closeNavigator();
+    }
+    else if (shellState.tool) {
         shellViews.closeTool(shellViewsContext());
     }
     else if (shellState.focus) {
@@ -1007,4 +1361,26 @@ window.addEventListener('keydown', event => { if (event.key === 'Escape' && !doc
 function shellViewsContext() { return { get presentation() { return presentation; }, set presentation(v) { presentation = v; }, get workspace() { return workspace; }, set workspace(v) { workspace = v; }, get shellState() { return shellState; }, set shellState(v) { shellState = v; }, get editorPool() { return editorPool; }, draftKey, get current() { return current; }, set current(v) { current = v; }, get mapping() { return mapping; }, set mapping(v) { mapping = v; }, get store() { return store; }, set store(v) { store = v; }, get runState() { return runState; }, set runState(v) { runState = v; }, draft, $, companionLinks, get revealed() { return revealed; }, set revealed(v) { revealed = v; }, get selectedNode() { return selectedNode; }, set selectedNode(v) { selectedNode = v; }, get selectedEdge() { return selectedEdge; }, set selectedEdge(v) { selectedEdge = v; }, get inspectorElement() { return inspectorElement; }, set inspectorElement(v) { inspectorElement = v; }, explanationPanel, visualPanel, get fixtures() { return fixtures; }, set fixtures(v) { fixtures = v; }, deepnotePanel, get activeCase() { return activeCase; }, set activeCase(v) { activeCase = v; }, labelMode, renderRail, renderTool, applyLayout, graph, viewContext, rememberInputs, get labTab() { return labTab; }, set labTab(v) { labTab = v; }, get leftTab() { return leftTab; }, set leftTab(v) { leftTab = v; }, renderHeader, renderQuestion, renderLab, renderCaseParts, renderComparison, renderDrawer, persist, changeMode, openTool, get outputTab() { return outputTab; }, set outputTab(v) { outputTab = v; }, get technology() { return technology; }, set technology(v) { technology = v; }, renderLibrary, get cases() { return cases; }, set cases(v) { cases = v; }, navigate, code, get search() { return search; }, set search(v) { search = v; }, get difficulty() { return difficulty; }, set difficulty(v) { difficulty = v; }, get queue() { return queue; }, set queue(v) { queue = v; }, get conceptFilter() { return conceptFilter; }, set conceptFilter(v) { conceptFilter = v; }, get priorityFilter() { return priorityFilter; }, set priorityFilter(v) { priorityFilter = v; }, toast, patch, resize }; }
 function workspaceViewsContext() { return { get current() { return current; }, set current(v) { current = v; }, get labEpoch() { return labEpoch; }, set labEpoch(v) { labEpoch = v; }, labTabs, get labTab() { return labTab; }, set labTab(v) { labTab = v; }, $, tabs, gitPanel, terminalPanel, semanticKPI, draft, mountCode, graphPanel, get fixtures() { return fixtures; }, set fixtures(v) { fixtures = v; }, graph, codePanel, viewContext, get runState() { return runState; }, set runState(v) { runState = v; }, mermaidPanel, performancePanel, configEvidence, dataPanel, code }; }
 function readingViewsContext() { return { get busy() { return busy; }, set busy(v) { busy = v; }, get result() { return result; }, set result(v) { result = v; }, actionLabel, get current() { return current; }, set current(v) { current = v; }, get revealed() { return revealed; }, set revealed(v) { revealed = v; }, draft, graph, get selectedNode() { return selectedNode; }, set selectedNode(v) { selectedNode = v; }, get runStatuses() { return runStatuses; }, set runStatuses(v) { runStatuses = v; }, git, get selectedCommit() { return selectedCommit; }, set selectedCommit(v) { selectedCommit = v; }, companionLinks, get mapping() { return mapping; }, set mapping(v) { mapping = v; } }; }
-function settingsViewsContext() { return { syncImportedDraft: () => { void editorPool.replace(draftKey(), code()); navigate(current.id, activeCase?.id, activeCase ? ensureSession(store, activeCase).currentTaskId : undefined); }, $, get storageBlocked() { return storageBlocked; }, set storageBlocked(v) { storageBlocked = v; }, get store() { return store; }, set store(v) { store = v; }, get presentation() { return presentation; }, set presentation(v) { presentation = v; }, exportBackup, toast, persist, readJSONFile, get builtins() { return builtins; }, set builtins(v) { builtins = v; }, recalc, navigate, get current() { return current; }, set current(v) { current = v; }, shellHTML, get mapping() { return mapping; }, set mapping(v) { mapping = v; }, renderDrawer, handleShellChange, get workspace() { return workspace; }, set workspace(v) { workspace = v; }, applyLayout, get runEpoch() { return runEpoch; }, set runEpoch(v) { runEpoch = v; }, get busy() { return busy; }, set busy(v) { busy = v; }, renderHeader, get shellState() { return shellState; }, set shellState(v) { shellState = v; }, renderLab }; }
+function settingsViewsContext() { return { syncImportedDraft: () => { if (isWorkstation()) {
+        void editorPool.replace(draftKey(), code());
+        navigate(current.id, activeCase?.id, activeCase ? ensureSession(store, activeCase).currentTaskId : undefined);
+    }
+    else
+        shellHTML(); }, $, get storageBlocked() { return storageBlocked; }, set storageBlocked(v) { storageBlocked = v; }, get store() { return store; }, set store(v) { store = v; }, get presentation() { return presentation; }, set presentation(v) { presentation = v; }, exportBackup, toast, persist, readJSONFile, get builtins() { return builtins; }, set builtins(v) { builtins = v; }, recalc, navigate, get current() { return current; }, set current(v) { current = v; }, shellHTML, get mapping() { return mapping; }, set mapping(v) { mapping = v; }, renderDrawer, handleShellChange, get workspace() { return workspace; }, set workspace(v) { workspace = v; }, applyLayout, get runEpoch() { return runEpoch; }, set runEpoch(v) { runEpoch = v; }, get busy() { return busy; }, set busy(v) { busy = v; }, renderHeader, get shellState() { return shellState; }, set shellState(v) { shellState = v; }, renderLab }; }
+// A drawer is modal only while actually visible; hidden/compact controls cannot trap focus.
+window.addEventListener('keydown', event => {
+    if (event.key !== 'Tab' || !shellState.navOverlay || shellState.focus || innerWidth >= 1200)
+        return;
+    const controls = [...document.querySelectorAll('#exercise-library button,#exercise-library input,#exercise-library select,#exercise-library summary')].filter(el => el.getBoundingClientRect().width > 0 && !el.hasAttribute('disabled'));
+    const first = controls[0], last = controls.at(-1);
+    if (!first || !last)
+        return;
+    if (event.shiftKey && (document.activeElement === first || !document.querySelector('#exercise-library')?.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+    }
+    else if (!event.shiftKey && (document.activeElement === last || !document.querySelector('#exercise-library')?.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+    }
+});

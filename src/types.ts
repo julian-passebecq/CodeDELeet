@@ -1,3 +1,4 @@
+import type {LearningState} from './lessons/types.js';
 import type { CaseSession } from './case-study/controller.js';
 import type { Presentation } from './shell/layout-controller.js';
 export type Workspace = 'code'|'model'|'pipeline'|'architecture';
@@ -13,6 +14,6 @@ export interface Question {id:string;version:number;title:string;workspace:Works
 export interface Pack {schemaVersion:1|2;id:string;title:string;version:number;questions:Question[];}
 export interface Attempt {at:string;kind:string;passed:boolean|null;summary:string;code?:string;}
 export interface Draft {code?:string;notes?:string;graph?:Graph;bookmark?:boolean;confidence?:'New'|'Learning'|'Review'|'Confident';status?:'not-started'|'in-progress'|'completed'|'review';attempts?:Attempt[];updatedAt?:string;rubric?:string[];country?:string;category?:string;grain?:string;diagram?:string;selectedTable?:string;performance?:{partitions:number;skew:number;broadcast:boolean};labState?:any;diagnosis?:string;answer?:string;[key:string]:unknown;}
-export interface Store {schemaVersion:1;drafts:Record<string,Draft>;customPacks:Pack[];caseSessions?:Record<string,CaseSession>;settings:{focus:boolean;workstation?:Presentation;activeCase?:string;lastQuestion?:string;pyodideConsent?:boolean;runtimeConsent?:boolean;split?:number;drawerHeight?:number;drawerCollapsed?:boolean;deepnoteMap?:Record<string,DeepnoteLink[]>;[key:string]:unknown};v2?:{version:number;migratedAt:string};}
+export interface Store {schemaVersion:1;drafts:Record<string,Draft>;customPacks:Pack[];caseSessions?:Record<string,CaseSession>;settings:{focus:boolean;learning?:LearningState;practiceNavigation?:{lastExerciseByLab:Partial<Record<Workspace,string>>;lastCategoryByLab?:Partial<Record<Workspace,string>>};workstation?:Presentation;activeCase?:string;lastQuestion?:string;pyodideConsent?:boolean;runtimeConsent?:boolean;split?:number;drawerHeight?:number;drawerCollapsed?:boolean;deepnoteMap?:Record<string,DeepnoteLink[]>;[key:string]:unknown};v2?:{version:number;migratedAt:string};}
 export interface QueryResult {engine:string;mode?:ExecutionMode;columns:string[];rows:unknown[][];elapsedMs:number;truncated?:boolean;error?:string;notice?:string;checks?:{label:string;passed:boolean;detail:string;actual?:unknown[][];expected?:unknown[][];columns?:string[];actualColumns?:string[]}[];output?:string;}
 export interface Fixtures {[name:string]:{columns:{name:string;type:string}[];rows:Row[]};}
