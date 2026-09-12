@@ -30,7 +30,7 @@ def open_app(page,exercise='sql-paid-revenue',store=None,route=None):
             page.locator('#editor-host .CodeMirror').wait_for(state='visible', timeout=15000)
         return
     css='\n'.join((DIST/file).read_text() for file in ['styles.css','vendor/codemirror/lib/codemirror.css','vendor/codemirror/addon/dialog/dialog.css','shell.css'])
-    page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2.2 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
+    page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2.3 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
     scripts=['lib/codemirror.js','addon/mode/simple.js','mode/sql/sql.js','mode/python/python.js','mode/javascript/javascript.js','mode/yaml/yaml.js','mode/shell/shell.js','mode/powershell/powershell.js','mode/dockerfile/dockerfile.js','mode/clike/clike.js','mode/properties/properties.js','addon/edit/matchbrackets.js','addon/edit/closebrackets.js','addon/comment/comment.js','addon/search/searchcursor.js','addon/search/search.js','addon/dialog/dialog.js','studio-modes.js']
     for path in scripts:page.add_script_tag(content=(DIST/'vendor/codemirror'/path).read_text())
     packs={str(f.relative_to(DIST)):json.loads(f.read_text()) for folder in ['packs','cases'] for f in (DIST/folder).glob('*.json')}

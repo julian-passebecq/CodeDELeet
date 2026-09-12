@@ -16,8 +16,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'.git', 'node_modules', '__pycache__', '.pytest_cache', 'release-artifacts'}
+PRIVATE_DIRS = {'OFFLINE_REFERENCE_LIBRARY_DO_NOT_PUBLISH', 'REFERENCE_INDEX', 'PROTOTYPE'}
 FONT_SUFFIXES = {'.ttf', '.otf', '.woff', '.woff2'}
-STAMP = (2026, 9, 10, 0, 0, 0)
+STAMP = (2026, 9, 11, 0, 0, 0)
 
 
 def sha256(data: bytes) -> str:
@@ -28,6 +29,8 @@ def candidates(root: Path) -> list[Path]:
     files: list[Path] = []
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
+        if PRIVATE_DIRS.intersection(relative.parts):
+            raise ValueError(f'Private implementation research must not be packaged: {relative}')
         if EXCLUDED.intersection(relative.parts) or path.suffix == '.pyc':
             continue
         if path.is_symlink():
@@ -73,15 +76,16 @@ def main() -> int:
         parser.error('Use an external output directory or the default release-artifacts.')
     out.mkdir(parents=True, exist_ok=True)
     package = json.loads((ROOT / 'package.json').read_text())
-    if package['version'] != '2.2.0':
-        raise ValueError('This release packager expects version 2.2.0.')
-    test_report = json.loads((ROOT / 'evidence/v22/test-results.json').read_text())
-    if test_report['testChecksFailed'] or test_report['testChecksPassed'] != 242:
-        raise ValueError('Expected V2.2 test summary was not found.')
+    if package['version'] != '2.3.0':
+        raise ValueError('This release packager expects version 2.3.0.')
+    test_report = json.loads((ROOT / 'evidence/v23/test-results.json').read_text())
+    if test_report['testChecksFailed'] or test_report['testChecksPassed'] != 305:
+        raise ValueError('Expected V2.3 test summary was not found.')
     # These check reports remain evidence of their runs, not a fresh CI invocation.
     for name, expected in [('fixture-report.json', 42), ('ui-legacy-report.json', 68),
-                           ('ui-shell-report.json', 30), ('release-integrity-report.json', 22)]:
-        report = json.loads((ROOT / 'evidence/v22' / name).read_text())
+                           ('ui-shell-report.json', 30), ('release-integrity-report.json', 22),
+                           ('acceptance-report.json', 30), ('V23_LAYOUT_METRICS.json', 16)]:
+        report = json.loads((ROOT / 'evidence/v23' / name).read_text())
         if report['passed'] != expected or report['failed'] or report.get('pageErrors'):
             raise ValueError(f'Release check is not green: {name}')
     files = [p for p in candidates(ROOT) if p != ROOT / 'SHA256SUMS.txt']
@@ -92,14 +96,14 @@ def main() -> int:
                       for p in candidates(ROOT)}
     build_entries = {p.relative_to(ROOT / 'dist').as_posix(): p.read_bytes()
                      for p in candidates(ROOT / 'dist')}
-    inventory = json.loads((ROOT / 'evidence/v22/build-files.json').read_text())
+    inventory = json.loads((ROOT / 'evidence/v23/build-files.json').read_text())
     if len(build_entries) != inventory['count']:
         raise ValueError('Build asset count differs from tested inventory.')
     for item in inventory['files']:
         if sha256(build_entries[item['path']]) != item['sha256']:
             raise ValueError(f'Build changed since recorded tests: {item["path"]}')
-    source_path = out / 'CodeDELeet_V2_2_Full_Source.zip'
-    build_path = out / 'CodeDELeet_V2_2_Static_Build.zip'
+    source_path = out / 'CodeDELeet_V2_3_Full_Source.zip'
+    build_path = out / 'CodeDELeet_V2_3_Static_Build.zip'
     write_zip(source_path, source_entries)
     write_zip(build_path, build_entries)
     with zipfile.ZipFile(source_path) as archive:
@@ -111,7 +115,7 @@ def main() -> int:
             if not re.fullmatch('[0-9a-f]{64}', expected) or sha256(archive.read(name)) != expected:
                 raise ValueError(f'Source manifest verification failed: {name}')
     verification = {
-        'version': '2.2.0',
+        'version': '2.3.0',
         'status': 'PASS: actual archive CRC, membership, bytes and source manifest verified',
         'source': {'file': source_path.name, 'entries': len(source_entries),
                    'bytes': source_path.stat().st_size, 'sha256': sha256(source_path.read_bytes()),
@@ -126,27 +130,27 @@ def main() -> int:
         'note': 'This script packages existing local evidence; it does not rerun tests, upload or deploy.'
     }
     verification_bytes = (json.dumps(verification, indent=2) + '\n').encode()
-    (out / 'CodeDELeet_V2_2_Package_Verification.json').write_bytes(verification_bytes)
+    (out / 'CodeDELeet_V2_3_Package_Verification.json').write_bytes(verification_bytes)
     evidence_entries = {name: data for name, data in source_entries.items()
-                        if ((name.startswith('docs/') and not name.startswith('docs/history/'))
-                            or name.startswith('evidence/') or name.startswith('tests/')
+                        if ((name.startswith('docs/V23') or name in ['docs/NEXT_AI_HANDOFF.md', 'docs/KNOWN_LIMITATIONS.md'])
+                            or name.startswith('evidence/v23/') or name.startswith('tests/')
                             or name.startswith('scripts/'))}
     evidence_entries['PACKAGE_VERIFICATION.json'] = verification_bytes
     evidence_entries['00_EVIDENCE_START_HERE.md'] = (
-        '# CodeDELeet V2.2 - actual evidence\n\n'
-        'Start with `docs/V2_2_TEST_REPORT.md`, `evidence/v22/test-results.json`, '
-        'and `evidence/v22/gallery.html`. `PACKAGE_VERIFICATION.json` records the '
+        '# CodeDELeet V2.3 - actual evidence\n\n'
+        'Start with `docs/V23_TEST_REPORT.md`, `evidence/v23/test-results.json`, '
+        'and `evidence/v23/gallery.html`. `PACKAGE_VERIFICATION.json` records the '
         'actual source/build archive hashes and byte/CRC verification.\n\n'
         'Tests and scripts are included for inspection. Run them from the complete '
         'source ZIP, not this evidence-only ZIP. The runtime network gate is '
         'explicitly UNVERIFIED; local passes are not hosted-runtime proof.\n\n'
-        'Seven new shell screenshots and ten exercise regression screenshots '
+        'Before/after layout matrices and new shell acceptance screenshots '
         'are actual compiled-UI captures. No GitHub or Netlify operation was performed.\n'
     ).encode()
-    evidence_path = out / 'CodeDELeet_V2_2_Evidence.zip'
+    evidence_path = out / 'CodeDELeet_V2_3_Evidence.zip'
     write_zip(evidence_path, evidence_entries)
-    paths = [source_path, build_path, evidence_path, out / 'CodeDELeet_V2_2_Package_Verification.json']
-    (out / 'CodeDELeet_V2_2_SHA256SUMS.txt').write_text(
+    paths = [source_path, build_path, evidence_path, out / 'CodeDELeet_V2_3_Package_Verification.json']
+    (out / 'CodeDELeet_V2_3_SHA256SUMS.txt').write_text(
         ''.join(f'{sha256(p.read_bytes())}  {p.name}\n' for p in paths), encoding='utf-8')
     print(json.dumps({'artifacts': [{'file': str(p), 'bytes': p.stat().st_size,
                                     'sha256': sha256(p.read_bytes())} for p in paths],

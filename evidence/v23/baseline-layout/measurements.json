@@ -1,0 +1,1752 @@
+{
+  "transport": "built-file harness (real DOM/CSS; fetch/storage replaced, no runtime simulation)",
+  "sourceRoot": "CodeDELeet-main",
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 134.5,
+        "width": 1372,
+        "height": 86.5,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1600,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 134.5,
+      "stage": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1372,
+        "height": 741.5,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 710.625,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 841.375,
+        "height": 741.5,
+        "visible": true
+      },
+      "renderer": {
+        "x": 710.625,
+        "y": 176.5,
+        "top": 176.5,
+        "bottom": 876,
+        "width": 841.375,
+        "height": 699.5,
+        "visible": true
+      },
+      "canvas": null,
+      "graphSVG": null,
+      "editor": {
+        "x": 710.625,
+        "y": 211.5,
+        "top": 211.5,
+        "bottom": 844.5,
+        "width": 841.375,
+        "height": 633,
+        "visible": true
+      },
+      "toolRail": {
+        "x": 1552,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 48,
+        "height": 741.5,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1466,
+        "y": 63.75,
+        "top": 63.75,
+        "bottom": 97.75,
+        "width": 116,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "text": {
+        "body": "14px",
+        "title": "18px"
+      },
+      "nav": "full",
+      "lab": "code",
+      "exercise": "sql-paid-revenue",
+      "mode": "work",
+      "screenshot": "1600x900-code.png"
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 134.5,
+        "width": 1372,
+        "height": 86.5,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1600,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 134.5,
+      "stage": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1372,
+        "height": 741.5,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 741.5,
+        "visible": true
+      },
+      "renderer": {
+        "x": 228,
+        "y": 217.5,
+        "top": 217.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 658.5,
+        "visible": true
+      },
+      "canvas": {
+        "x": 228,
+        "y": 263.5,
+        "top": 263.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 612.5,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 228,
+        "y": 264.5,
+        "top": 264.5,
+        "bottom": 875,
+        "width": 1324,
+        "height": 610.5,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1552,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 48,
+        "height": 741.5,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1472,
+        "y": 63.75,
+        "top": 63.75,
+        "bottom": 97.75,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "text": {
+        "body": "14px",
+        "title": "18px"
+      },
+      "nav": "full",
+      "lab": "model",
+      "exercise": "bi-star-schema",
+      "mode": "work",
+      "screenshot": "1600x900-model.png"
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 134.5,
+        "width": 1372,
+        "height": 86.5,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1600,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 134.5,
+      "stage": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1372,
+        "height": 741.5,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 741.5,
+        "visible": true
+      },
+      "renderer": {
+        "x": 228,
+        "y": 217.5,
+        "top": 217.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 658.5,
+        "visible": true
+      },
+      "canvas": {
+        "x": 228,
+        "y": 263.5,
+        "top": 263.5,
+        "bottom": 876,
+        "width": 1324,
+        "height": 612.5,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 228,
+        "y": 264.5,
+        "top": 264.5,
+        "bottom": 875,
+        "width": 1324,
+        "height": 610.5,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1552,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 48,
+        "height": 741.5,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1472,
+        "y": 63.75,
+        "top": 63.75,
+        "bottom": 97.75,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "text": {
+        "body": "14px",
+        "title": "18px"
+      },
+      "nav": "full",
+      "lab": "pipeline",
+      "exercise": "dag-data-quality",
+      "mode": "work",
+      "screenshot": "1600x900-pipeline.png"
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 134.5,
+        "width": 1372,
+        "height": 86.5,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1600,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 134.5,
+      "stage": {
+        "x": 228,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 1372,
+        "height": 741.5,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 657.671875,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 894.328125,
+        "height": 741.5,
+        "visible": true
+      },
+      "renderer": {
+        "x": 657.671875,
+        "y": 176.5,
+        "top": 176.5,
+        "bottom": 876,
+        "width": 894.328125,
+        "height": 699.5,
+        "visible": true
+      },
+      "canvas": {
+        "x": 657.671875,
+        "y": 222.5,
+        "top": 222.5,
+        "bottom": 876,
+        "width": 894.328125,
+        "height": 653.5,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 657.671875,
+        "y": 223.5,
+        "top": 223.5,
+        "bottom": 875,
+        "width": 894.328125,
+        "height": 651.5,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1552,
+        "y": 134.5,
+        "top": 134.5,
+        "bottom": 876,
+        "width": 48,
+        "height": 741.5,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1442.921875,
+        "y": 63.75,
+        "top": 63.75,
+        "bottom": 97.75,
+        "width": 139.078125,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "text": {
+        "body": "14px",
+        "title": "18px"
+      },
+      "nav": "full",
+      "lab": "architecture",
+      "exercise": "arch-fabric",
+      "mode": "work",
+      "screenshot": "1600x900-architecture.png"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 133.25,
+        "width": 1138,
+        "height": 85.25,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 133.25,
+      "stage": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1138,
+        "height": 610.75,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 626.390625,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 691.609375,
+        "height": 610.75,
+        "visible": true
+      },
+      "renderer": {
+        "x": 626.390625,
+        "y": 175.25,
+        "top": 175.25,
+        "bottom": 744,
+        "width": 691.609375,
+        "height": 568.75,
+        "visible": true
+      },
+      "canvas": null,
+      "graphSVG": null,
+      "editor": {
+        "x": 626.390625,
+        "y": 210.25,
+        "top": 210.25,
+        "bottom": 712.5,
+        "width": 691.609375,
+        "height": 502.25,
+        "visible": true
+      },
+      "toolRail": {
+        "x": 1318,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 48,
+        "height": 610.75,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1236,
+        "y": 63.125,
+        "top": 63.125,
+        "bottom": 97.125,
+        "width": 116,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "17px"
+      },
+      "nav": "full",
+      "lab": "code",
+      "exercise": "sql-paid-revenue",
+      "mode": "work",
+      "screenshot": "1366x768-code.png"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 133.25,
+        "width": 1138,
+        "height": 85.25,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 133.25,
+      "stage": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1138,
+        "height": 610.75,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 610.75,
+        "visible": true
+      },
+      "renderer": {
+        "x": 228,
+        "y": 216.25,
+        "top": 216.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 527.75,
+        "visible": true
+      },
+      "canvas": {
+        "x": 228,
+        "y": 262.25,
+        "top": 262.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 481.75,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 228,
+        "y": 263.25,
+        "top": 263.25,
+        "bottom": 743,
+        "width": 1090,
+        "height": 479.75,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1318,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 48,
+        "height": 610.75,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1242,
+        "y": 63.125,
+        "top": 63.125,
+        "bottom": 97.125,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "17px"
+      },
+      "nav": "full",
+      "lab": "model",
+      "exercise": "bi-star-schema",
+      "mode": "work",
+      "screenshot": "1366x768-model.png"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 133.25,
+        "width": 1138,
+        "height": 85.25,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 133.25,
+      "stage": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1138,
+        "height": 610.75,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 610.75,
+        "visible": true
+      },
+      "renderer": {
+        "x": 228,
+        "y": 216.25,
+        "top": 216.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 527.75,
+        "visible": true
+      },
+      "canvas": {
+        "x": 228,
+        "y": 262.25,
+        "top": 262.25,
+        "bottom": 744,
+        "width": 1090,
+        "height": 481.75,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 228,
+        "y": 263.25,
+        "top": 263.25,
+        "bottom": 743,
+        "width": 1090,
+        "height": 479.75,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1318,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 48,
+        "height": 610.75,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1242,
+        "y": 63.125,
+        "top": 63.125,
+        "bottom": 97.125,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "17px"
+      },
+      "nav": "full",
+      "lab": "pipeline",
+      "exercise": "dag-data-quality",
+      "mode": "work",
+      "screenshot": "1366x768-pipeline.png"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "header": {
+        "x": 228,
+        "y": 48,
+        "top": 48,
+        "bottom": 133.25,
+        "width": 1138,
+        "height": 85.25,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 133.25,
+      "stage": {
+        "x": 228,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 1138,
+        "height": 610.75,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 582.796875,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 735.203125,
+        "height": 610.75,
+        "visible": true
+      },
+      "renderer": {
+        "x": 582.796875,
+        "y": 175.25,
+        "top": 175.25,
+        "bottom": 744,
+        "width": 735.203125,
+        "height": 568.75,
+        "visible": true
+      },
+      "canvas": {
+        "x": 582.796875,
+        "y": 221.25,
+        "top": 221.25,
+        "bottom": 744,
+        "width": 735.203125,
+        "height": 522.75,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 582.796875,
+        "y": 222.25,
+        "top": 222.25,
+        "bottom": 743,
+        "width": 735.203125,
+        "height": 520.75,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 1318,
+        "y": 133.25,
+        "top": 133.25,
+        "bottom": 744,
+        "width": 48,
+        "height": 610.75,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 1212.921875,
+        "y": 63.125,
+        "top": 63.125,
+        "bottom": 97.125,
+        "width": 139.078125,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "17px"
+      },
+      "nav": "full",
+      "lab": "architecture",
+      "exercise": "arch-fabric",
+      "mode": "work",
+      "screenshot": "1366x768-architecture.png"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "header": {
+        "x": 56,
+        "y": 48,
+        "top": 48,
+        "bottom": 132,
+        "width": 968,
+        "height": 84,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1024,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 132,
+      "stage": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 968,
+        "height": 574,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 920,
+        "height": 574,
+        "visible": true
+      },
+      "renderer": {
+        "x": 56,
+        "y": 212,
+        "top": 212,
+        "bottom": 744,
+        "width": 920,
+        "height": 532,
+        "visible": true
+      },
+      "canvas": null,
+      "graphSVG": null,
+      "editor": {
+        "x": 56,
+        "y": 247,
+        "top": 247,
+        "bottom": 712.5,
+        "width": 920,
+        "height": 465.5,
+        "visible": true
+      },
+      "toolRail": {
+        "x": 976,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 48,
+        "height": 574,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 894,
+        "y": 62.5,
+        "top": 62.5,
+        "bottom": 96.5,
+        "width": 116,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 56,
+        "y": 132,
+        "top": 132,
+        "bottom": 170,
+        "width": 968,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "16px"
+      },
+      "nav": "compact",
+      "lab": "code",
+      "exercise": "sql-paid-revenue",
+      "mode": "work",
+      "screenshot": "1024x768-code.png"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "header": {
+        "x": 56,
+        "y": 48,
+        "top": 48,
+        "bottom": 132,
+        "width": 968,
+        "height": 84,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1024,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 132,
+      "stage": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 968,
+        "height": 574,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 920,
+        "height": 574,
+        "visible": true
+      },
+      "renderer": {
+        "x": 56,
+        "y": 253,
+        "top": 253,
+        "bottom": 744,
+        "width": 920,
+        "height": 491,
+        "visible": true
+      },
+      "canvas": {
+        "x": 56,
+        "y": 299,
+        "top": 299,
+        "bottom": 744,
+        "width": 920,
+        "height": 445,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 56,
+        "y": 300,
+        "top": 300,
+        "bottom": 743,
+        "width": 920,
+        "height": 443,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 976,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 48,
+        "height": 574,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 900,
+        "y": 62.5,
+        "top": 62.5,
+        "bottom": 96.5,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 56,
+        "y": 132,
+        "top": 132,
+        "bottom": 170,
+        "width": 968,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "16px"
+      },
+      "nav": "compact",
+      "lab": "model",
+      "exercise": "bi-star-schema",
+      "mode": "work",
+      "screenshot": "1024x768-model.png"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "header": {
+        "x": 56,
+        "y": 48,
+        "top": 48,
+        "bottom": 132,
+        "width": 968,
+        "height": 84,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1024,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 132,
+      "stage": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 968,
+        "height": 574,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 920,
+        "height": 574,
+        "visible": true
+      },
+      "renderer": {
+        "x": 56,
+        "y": 253,
+        "top": 253,
+        "bottom": 744,
+        "width": 920,
+        "height": 491,
+        "visible": true
+      },
+      "canvas": {
+        "x": 56,
+        "y": 299,
+        "top": 299,
+        "bottom": 744,
+        "width": 920,
+        "height": 445,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 56,
+        "y": 300,
+        "top": 300,
+        "bottom": 743,
+        "width": 920,
+        "height": 443,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 976,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 48,
+        "height": 574,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 900,
+        "y": 62.5,
+        "top": 62.5,
+        "bottom": 96.5,
+        "width": 110,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 56,
+        "y": 132,
+        "top": 132,
+        "bottom": 170,
+        "width": 968,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "16px"
+      },
+      "nav": "compact",
+      "lab": "pipeline",
+      "exercise": "dag-data-quality",
+      "mode": "work",
+      "screenshot": "1024x768-pipeline.png"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "header": {
+        "x": 56,
+        "y": 48,
+        "top": 48,
+        "bottom": 132,
+        "width": 968,
+        "height": 84,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 1024,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 132,
+      "stage": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 968,
+        "height": 574,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 56,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 920,
+        "height": 574,
+        "visible": true
+      },
+      "renderer": {
+        "x": 56,
+        "y": 212,
+        "top": 212,
+        "bottom": 744,
+        "width": 920,
+        "height": 532,
+        "visible": true
+      },
+      "canvas": {
+        "x": 56,
+        "y": 258,
+        "top": 258,
+        "bottom": 744,
+        "width": 920,
+        "height": 486,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 56,
+        "y": 259,
+        "top": 259,
+        "bottom": 743,
+        "width": 920,
+        "height": 484,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 976,
+        "y": 170,
+        "top": 170,
+        "bottom": 744,
+        "width": 48,
+        "height": 574,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 870.921875,
+        "y": 62.5,
+        "top": 62.5,
+        "bottom": 96.5,
+        "width": 139.078125,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 56,
+        "y": 132,
+        "top": 132,
+        "bottom": 170,
+        "width": 968,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "text": {
+        "body": "14px",
+        "title": "16px"
+      },
+      "nav": "compact",
+      "lab": "architecture",
+      "exercise": "arch-fabric",
+      "mode": "work",
+      "screenshot": "1024x768-architecture.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "header": {
+        "x": 0,
+        "y": 48,
+        "top": 48,
+        "bottom": 138,
+        "width": 390,
+        "height": 90,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 390,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 138,
+      "stage": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 390,
+        "height": 644,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 342,
+        "height": 644,
+        "visible": true
+      },
+      "renderer": {
+        "x": 0,
+        "y": 218,
+        "top": 218,
+        "bottom": 820,
+        "width": 342,
+        "height": 602,
+        "visible": true
+      },
+      "canvas": null,
+      "graphSVG": null,
+      "editor": {
+        "x": 0,
+        "y": 253,
+        "top": 253,
+        "bottom": 777,
+        "width": 342,
+        "height": 524,
+        "visible": true
+      },
+      "toolRail": {
+        "x": 342,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 48,
+        "height": 644,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 282.078125,
+        "y": 65.5,
+        "top": 65.5,
+        "bottom": 99.5,
+        "width": 97.921875,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 138,
+        "top": 138,
+        "bottom": 176,
+        "width": 390,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "text": {
+        "body": "14px",
+        "title": "15px"
+      },
+      "nav": "hidden",
+      "lab": "code",
+      "exercise": "sql-paid-revenue",
+      "mode": "work",
+      "screenshot": "390x844-code.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "header": {
+        "x": 0,
+        "y": 48,
+        "top": 48,
+        "bottom": 138,
+        "width": 390,
+        "height": 90,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 390,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 138,
+      "stage": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 390,
+        "height": 644,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 342,
+        "height": 644,
+        "visible": true
+      },
+      "renderer": {
+        "x": 0,
+        "y": 258,
+        "top": 258,
+        "bottom": 820,
+        "width": 342,
+        "height": 562,
+        "visible": true
+      },
+      "canvas": {
+        "x": 0,
+        "y": 304,
+        "top": 304,
+        "bottom": 820,
+        "width": 342,
+        "height": 516,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 0,
+        "y": 305,
+        "top": 305,
+        "bottom": 819,
+        "width": 600,
+        "height": 514,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 342,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 48,
+        "height": 644,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 284,
+        "y": 65.5,
+        "top": 65.5,
+        "bottom": 99.5,
+        "width": 96,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 138,
+        "top": 138,
+        "bottom": 176,
+        "width": 390,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "text": {
+        "body": "14px",
+        "title": "15px"
+      },
+      "nav": "hidden",
+      "lab": "model",
+      "exercise": "bi-star-schema",
+      "mode": "work",
+      "screenshot": "390x844-model.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "header": {
+        "x": 0,
+        "y": 48,
+        "top": 48,
+        "bottom": 138,
+        "width": 390,
+        "height": 90,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 390,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 138,
+      "stage": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 390,
+        "height": 644,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 342,
+        "height": 644,
+        "visible": true
+      },
+      "renderer": {
+        "x": 0,
+        "y": 258,
+        "top": 258,
+        "bottom": 820,
+        "width": 342,
+        "height": 562,
+        "visible": true
+      },
+      "canvas": {
+        "x": 0,
+        "y": 304,
+        "top": 304,
+        "bottom": 820,
+        "width": 342,
+        "height": 516,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 0,
+        "y": 305,
+        "top": 305,
+        "bottom": 819,
+        "width": 600,
+        "height": 514,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 342,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 48,
+        "height": 644,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 284,
+        "y": 65.5,
+        "top": 65.5,
+        "bottom": 99.5,
+        "width": 96,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 138,
+        "top": 138,
+        "bottom": 176,
+        "width": 390,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "text": {
+        "body": "14px",
+        "title": "15px"
+      },
+      "nav": "hidden",
+      "lab": "pipeline",
+      "exercise": "dag-data-quality",
+      "mode": "work",
+      "screenshot": "390x844-pipeline.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "header": {
+        "x": 0,
+        "y": 48,
+        "top": 48,
+        "bottom": 138,
+        "width": 390,
+        "height": 90,
+        "visible": true
+      },
+      "topbar": {
+        "x": 0,
+        "y": 0,
+        "top": 0,
+        "bottom": 48,
+        "width": 390,
+        "height": 48,
+        "visible": true
+      },
+      "globalChromeHeight": 138,
+      "stage": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 390,
+        "height": 644,
+        "visible": true
+      },
+      "labPanel": {
+        "x": 0,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 342,
+        "height": 644,
+        "visible": true
+      },
+      "renderer": {
+        "x": 0,
+        "y": 218,
+        "top": 218,
+        "bottom": 820,
+        "width": 342,
+        "height": 602,
+        "visible": true
+      },
+      "canvas": {
+        "x": 0,
+        "y": 264,
+        "top": 264,
+        "bottom": 820,
+        "width": 342,
+        "height": 556,
+        "visible": true
+      },
+      "graphSVG": {
+        "x": 0,
+        "y": 265,
+        "top": 265,
+        "bottom": 819,
+        "width": 600,
+        "height": 554,
+        "visible": true
+      },
+      "editor": null,
+      "toolRail": {
+        "x": 342,
+        "y": 176,
+        "top": 176,
+        "bottom": 820,
+        "width": 48,
+        "height": 644,
+        "visible": true
+      },
+      "primaryAction": {
+        "x": 260.78125,
+        "y": 65.5,
+        "top": 65.5,
+        "bottom": 99.5,
+        "width": 119.21875,
+        "height": 34,
+        "visible": true
+      },
+      "mobileTabs": {
+        "x": 0,
+        "y": 138,
+        "top": 138,
+        "bottom": 176,
+        "width": 390,
+        "height": 38,
+        "visible": true
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "text": {
+        "body": "14px",
+        "title": "15px"
+      },
+      "nav": "hidden",
+      "lab": "architecture",
+      "exercise": "arch-fabric",
+      "mode": "work",
+      "screenshot": "390x844-architecture.png"
+    }
+  ],
+  "pageErrors": [],
+  "browser": "144.0.7559.96"
+}

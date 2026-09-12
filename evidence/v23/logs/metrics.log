@@ -1,0 +1,21 @@
+1600 900 code chrome 52 stage 824 canvas None
+1600 900 model chrome 52 stage 824 canvas 695
+1600 900 pipeline chrome 52 stage 824 canvas 695
+1600 900 architecture chrome 52 stage 824 canvas 736
+1366 768 code chrome 52 stage 692 canvas None
+1366 768 model chrome 52 stage 692 canvas 563
+1366 768 pipeline chrome 52 stage 692 canvas 563
+1366 768 architecture chrome 52 stage 692 canvas 604
+1024 768 code chrome 52 stage 654 canvas None
+1024 768 model chrome 52 stage 654 canvas 525
+1024 768 pipeline chrome 52 stage 654 canvas 525
+1024 768 architecture chrome 52 stage 654 canvas 566
+390 844 code chrome 94 stage 688 canvas None
+390 844 model chrome 94 stage 688 canvas 560
+390 844 pipeline chrome 94 stage 688 canvas 560
+390 844 architecture chrome 94 stage 688 canvas 600
+{
+  "status": "PASS",
+  "passed": 16,
+  "failed": 0
+}

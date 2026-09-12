@@ -8,6 +8,7 @@ export function applyShellDOM(p:Presentation,lab:Workspace,ui:TransientShell):vo
  stage.dataset.pinned=String(r.pinned);stage.dataset.tool=ui.tool??'';stage.style.setProperty('--tool-width',r.toolWidth+'px');
  ws.dataset.mode=r.preset.slot;ws.dataset.lab=lab;ws.dataset.context=String(r.context);ws.dataset.swapped=String(r.requested.swapped);ws.dataset.mobile=ui.mobile;ws.dataset.narrow=String(r.narrow);ws.dataset.output=r.outputSize;ws.dataset.anchor=r.outputAnchor;
  ws.classList.toggle('focus-lab',ui.focus);ws.classList.toggle('drawer-collapsed',r.outputSize==='closed');ws.style.setProperty('--split',r.split+'%');ws.style.setProperty('--output-width',r.requested.outputWidth+'px');
+ document.querySelector('.navigator-toggle')?.setAttribute('aria-expanded',String(innerWidth<760?document.body.classList.contains('library-open'):r.navWidth>56));
  const tool=document.querySelector<HTMLElement>('#tool-panel')!;tool.hidden=!ui.tool||(r.narrow&&ui.mobile!=='tools');tool.style.width=r.toolWidth+'px';
  const anchor=document.querySelector<HTMLElement>('#'+r.outputAnchor+'-output')!,output=document.querySelector<HTMLElement>('#output-dock')!;
  if(output.parentElement!==anchor)anchor.append(output);

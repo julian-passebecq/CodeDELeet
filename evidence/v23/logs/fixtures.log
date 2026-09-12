@@ -1,0 +1,8 @@
+{
+  "environment": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1"
+  },
+  "passed": 42,
+  "failed": 0
+}

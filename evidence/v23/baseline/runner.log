@@ -1,0 +1,6 @@
+ui exit=0
+shell exit=0
+integrity exit=0
+ui-http exit=1
+shell-http exit=1
+network exit=2

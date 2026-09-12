@@ -1,0 +1,35 @@
+PASS New session: compact shell, 48px rail, real editor, no empty output or revealed solution
+PASS Preset renders: code/work; no implicit authored-case session
+PASS Preset renders: code/inspect; no implicit authored-case session
+PASS Preset renders: code/case; no implicit authored-case session
+PASS Preset renders: model/work; no implicit authored-case session
+PASS Preset renders: model/inspect; no implicit authored-case session
+PASS Preset renders: model/case; no implicit authored-case session
+PASS Preset renders: pipeline/work; no implicit authored-case session
+PASS Preset renders: pipeline/inspect; no implicit authored-case session
+PASS Preset renders: pipeline/case; no implicit authored-case session
+PASS Preset renders: architecture/work; no implicit authored-case session
+PASS Preset renders: architecture/inspect; no implicit authored-case session
+PASS Preset renders: architecture/case; no implicit authored-case session
+PASS Mode/theme/tool/Focus changes retain the identical editor, cursor and undo stack
+PASS Focus temporarily maximizes and restores exact sizes, dock, tool and expansion
+PASS Four independent output anchors, persistent check badge, per-mode resize and tools
+PASS Output becomes stale only after input changes; failing count remains visible
+PASS Tools default overlay, safely pin, keyboard resize, switch exclusively and retain Notes
+PASS Laptop fallback uses overlay/mobile surfaces without corrupting desktop preferences
+PASS Pipeline node selection, graph edits, retries and camera survive modes
+PASS Unapplied graph JSON survives modes; simulation opens real fixture grid/timeline/logs
+PASS Model inspector exposes typed columns, PK/FK, grain and active single-direction relationship
+PASS Git commits and unsaved working editor, plus object-terminal sessions, survive modes
+PASS Authored case: page/task cursors independent; all case drafts isolated from standalone
+PASS Deliberate copy and checkpoint restoration never overwrite standalone answer
+PASS Case session, page/task cursor and saved answers survive a fresh application boot
+PASS Four themes apply without domain reset; terminal inheritance and override/settings persist
+PASS Blank companion hidden; safe mapping works; unsafe import is rejected without replacing it
+PASS V1 upgrade keeps byte-equivalent recovery snapshot and all personal draft fields
+PASS Phone tabs preserve notes, keep terminal usable and show navigator on request
+{
+  "passed": 30,
+  "failed": 0,
+  "pageErrors": []
+}

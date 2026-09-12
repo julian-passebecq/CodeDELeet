@@ -30,7 +30,7 @@ def archive_policy():
  for f in (ROOT/'dist/app').rglob('*.js'):require('companion/Deepnote_' not in f.read_text(),str(f))
 check('No public/build notebook, archive or old companion-download code',archive_policy)
 check('Build script rejects future public notebook/archive files',lambda:require('rejectArchives' in (ROOT/'scripts/build.mjs').read_text(),'missing fail-closed build guard'))
-check('Package, lockfile and build version agree at 2.2.0',lambda:require(get('package.json')['version']==get('package-lock.json')['version']==get('package-lock.json')['packages']['']['version']==get('dist/build-info.json')['version']=='2.2.0','version mismatch'))
+check('Package, lockfile and build version agree at 2.3.0',lambda:require(get('package.json')['version']==get('package-lock.json')['version']==get('package-lock.json')['packages']['']['version']==get('dist/build-info.json')['version']=='2.3.0','version mismatch'))
 check('Pinned compiler and lockfile agree',lambda:require(get('package.json')['devDependencies']['typescript']==get('package-lock.json')['packages']['node_modules/typescript']['version']=='5.8.3','compiler mismatch'))
 check('Bundled CodeMirror license and source retained',lambda:require((ROOT/'dist/vendor/codemirror/LICENSE').is_file() and '5.58.3' in (ROOT/'dist/vendor/codemirror/lib/codemirror.js').read_text(),'editor license/version'))
 check('No environment secrets, dependencies or fonts in served assets',lambda:require(not any(f.name in ['.env','.env.local','node_modules'] or f.suffix in ['.woff','.woff2','.ttf','.otf'] for folder in ['public','dist'] for f in (ROOT/folder).rglob('*')),'unexpected bulk/sensitive public file'))

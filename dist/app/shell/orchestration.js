@@ -9,14 +9,14 @@ import { applyShellDOM } from '../shell/dom-layout.js';
 import { activePreferences, resolveLayout, setOutputSize, switchMode, toggleFocus } from '../shell/layout-controller.js';
 import { answerFingerprint, runSummary } from '../shell/output-dock.js';
 import { applyTheme } from '../shell/themes.js';
+import { themePanelHTML, syncThemeChoices } from './theme-panel.js';
+import { THEME_DATA } from './theme-data.js';
 import { railHTML, toolHeader } from '../shell/tool-rail.js';
 import { notice, options, pre, table } from '../ui.js';
 export function applyLayout(ctx) {
     applyTheme(ctx.presentation);
+    syncThemeChoices(ctx.presentation.theme);
     applyShellDOM(ctx.presentation, ctx.workspace, ctx.shellState);
-    const selector = document.querySelector('#theme-select');
-    if (selector)
-        selector.value = ctx.presentation.theme;
     ctx.editorPool.refresh(ctx.draftKey());
 }
 // Shared shell orchestration. Domain engines remain in their original modules.
@@ -29,6 +29,7 @@ export function updateRunBadge(ctx) {
         return;
     const s = runSummary(ctx.runState, answerFingerprint(ctx.draft(), ctx.current.starter));
     badge.textContent = s.label;
+    badge.title = s.label + ' - Open output';
     badge.className = 'run-status ' + s.state;
     badge.setAttribute('aria-label', 'Run status: ' + s.label + '. Open output');
     const old = document.querySelector('#stale-marker');
@@ -39,7 +40,14 @@ export function updateRunBadge(ctx) {
     else if (!s.stale)
         old?.remove();
 }
-export function renderRail(ctx) { ctx.$('#tool-rail').innerHTML = railHTML(ctx.presentation, ctx.workspace, ctx.shellState, ctx.companionLinks().length > 0 || !!safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true), ['semantic-model', 'dag-editor', 'architecture-editor'].includes(ctx.current.renderer)); }
+export function renderRail(ctx) {
+    const rail = ctx.$('#tool-rail'), focused = document.activeElement;
+    const key = focused && rail.contains(focused) ? ['data-mode', 'data-tool', 'data-action', 'data-shell'].find(k => focused.hasAttribute(k)) : undefined;
+    const value = key ? focused.getAttribute(key) : null;
+    rail.innerHTML = railHTML(ctx.presentation, ctx.workspace, ctx.shellState, ctx.companionLinks().length > 0 || !!safeDeepnoteURL(ctx.current.deepnoteEmbedUrl, true), ['semantic-model', 'dag-editor', 'architecture-editor'].includes(ctx.current.renderer));
+    if (key && value)
+        rail.querySelector(`[${key}="${value}"]`)?.focus({ preventScroll: true });
+}
 export function renderTool(ctx, force = false) {
     const panel = ctx.$('#tool-panel'), body = ctx.$('#tool-body'), tool = ctx.shellState.tool;
     if (!tool) {
@@ -61,7 +69,9 @@ export function renderTool(ctx, force = false) {
             body.innerHTML = notice('Inspector', 'Select a model table, node or relationship in the canvas.');
         return;
     }
-    if (tool === 'Explanation')
+    if (tool === 'Theme')
+        body.innerHTML = themePanelHTML(ctx.presentation.theme);
+    else if (tool === 'Explanation')
         body.innerHTML = ctx.explanationPanel();
     else if (tool === 'Visual')
         body.innerHTML = ctx.visualPanel() + codeViews.tracePanel(ctx.current, ctx.fixtures);
@@ -82,11 +92,22 @@ export function openTool(ctx, tool, keep = false) {
     ctx.shellState.toolExpanded = false;
     if (ctx.shellState.tool && innerWidth < 1080)
         ctx.shellState.mobile = 'tools';
+    if (!ctx.shellState.tool && innerWidth < 1080)
+        ctx.shellState.mobile = 'artifact';
     ctx.renderRail();
     ctx.renderTool();
     ctx.applyLayout();
     if (ctx.shellState.tool && previous !== ctx.shellState.tool)
-        document.querySelector('#tool-header [data-shell="tool-close"]')?.focus({ preventScroll: true });
+        document.querySelector(ctx.shellState.tool === 'Theme' ? '#tool-body input:checked' : '#tool-header [data-shell="tool-close"]')?.focus({ preventScroll: true });
+}
+export function closeTool(ctx) {
+    const tool = ctx.shellState.tool;
+    ctx.shellState.tool = null;
+    ctx.shellState.mobile = 'artifact';
+    ctx.renderRail();
+    ctx.renderTool();
+    ctx.applyLayout();
+    document.querySelector(`#tool-rail [data-tool="${tool}"]`)?.focus({ preventScroll: true });
 }
 export function renderCaseParts(ctx) {
     ctx.$('#case-task-host').innerHTML = ctx.activeCase ? caseTaskBar(ctx.activeCase, ensureSession(ctx.store, ctx.activeCase), ctx.current) : ctx.presentation.modes[ctx.workspace] === 'case' ? `<div class="standalone-case-label"><span class="chip">STANDALONE CASE VIEW</span><span>Same exercise, same answer. Open an authored case from the navigator for multiple tasks.</span></div>` : '';
@@ -230,10 +251,8 @@ export function handleShellClick(ctx, button) {
     if (action === 'output-close')
         setOutputSize(ctx.presentation, ctx.workspace, ctx.shellState, 'closed');
     if (action === 'tool-close') {
-        const tool = ctx.shellState.tool;
-        ctx.shellState.tool = null;
-        ctx.shellState.mobile = 'artifact';
-        setTimeout(() => document.querySelector(`[data-tool="${tool}"]`)?.focus({ preventScroll: true }), 0);
+        closeTool(ctx);
+        return true;
     }
     if (action === 'tool-expand')
         ctx.shellState.toolExpanded = !ctx.shellState.toolExpanded;
@@ -256,9 +275,15 @@ export function handleShellClick(ctx, button) {
 }
 export function handleShellChange(ctx, t) {
     const m = activePreferences(ctx.presentation, ctx.workspace);
-    if (t.id === 'theme-select')
+    if (t.name === 'app-theme') {
+        if (!Object.hasOwn(THEME_DATA, t.value))
+            return true;
         ctx.presentation.theme = t.value;
-    else if (t.id === 'layout-mode') {
+        ctx.applyLayout();
+        ctx.persist(true);
+        return true;
+    }
+    if (t.id === 'layout-mode') {
         ctx.changeMode(t.value);
         return true;
     }

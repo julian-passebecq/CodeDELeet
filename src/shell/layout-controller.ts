@@ -3,7 +3,7 @@ import type { Workspace } from '../types.js';
 export type ModeSlot = 'work'|'inspect'|'case';
 export type OutputAnchor = 'artifact'|'context'|'workspace'|'right';
 export type OutputSize = 'closed'|'compact'|'half'|'expanded';
-export type ToolId = 'Explanation'|'Visual'|'Deepnote'|'Notes'|'History'|'References'|'Inspector';
+export type ToolId = 'Explanation'|'Visual'|'Deepnote'|'Notes'|'History'|'References'|'Inspector'|'Theme';
 export type ThemeId = 'sage-light'|'fluent-light'|'fluent-soft'|'slate-dark';
 export interface Preset {id:string;lab:Workspace;slot:ModeSlot;label:string;context:boolean;split:number;output:OutputAnchor;view:string;}
 export const PRESETS:Preset[] = [
@@ -45,8 +45,8 @@ export function resolveLayout(p:Presentation,lab:Workspace,width:number,ui:Trans
  const context=!ui.focus&&m.context;
  const available=width-navWidth-48;
  const minWorkspace=context?820:700;
- const toolWidth=Math.max(260,Math.min(ui.toolExpanded?Math.min(740,width-64):m.toolWidth,width-56));
- const pinned=!!ui.tool&&!ui.toolExpanded&&!ui.focus&&!narrow&&m.toolPinned&&available-toolWidth>=minWorkspace;
+ const toolWidth=Math.max(260,Math.min(ui.tool==='Theme'?320:ui.toolExpanded?Math.min(740,width-64):m.toolWidth,width-56));
+ const pinned=!!ui.tool&&ui.tool!=='Theme'&&!ui.toolExpanded&&!ui.focus&&!narrow&&m.toolPinned&&available-toolWidth>=minWorkspace;
  return {preset,requested:copy(m),context,split:m.split,outputAnchor:narrow?'workspace':m.outputAnchor==='context'&&!context?'workspace':m.outputAnchor,outputSize:ui.focus?(ui.focusSnapshot?.outputSize??'closed'):m.outputSize,toolWidth,pinned,navWidth,narrow,focus:ui.focus};
 }
 export function newTransient():TransientShell{return {focus:false,tool:null,toolExpanded:false,mobile:'artifact'};}

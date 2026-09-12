@@ -1,11 +1,11 @@
-name: V2.2 checks
+name: V2.3 checks
 on:
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: v22-checks-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: v23-checks-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   contracts:
@@ -33,11 +33,15 @@ jobs:
         run: python tests/ui_smoke.py
       - name: V2.2 shell and isolated cases
         run: python tests/v22_ui.py
+      - name: V2.3 compact shell and keyboard acceptance
+        run: python tests/v23_ui.py
+      - name: V2.3 measured viewport gains
+        run: python tests/v23_layout.py
       - name: Contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v22-contract-evidence
+          name: v23-contract-evidence
           path: evidence/
   runtime-smoke:
     runs-on: ubuntu-latest
@@ -77,13 +81,17 @@ jobs:
         env:
           UI_MODE: http
         run: python tests/v22_ui.py
+      - name: Served-origin compact-shell acceptance
+        env:
+          UI_MODE: http
+        run: python tests/v23_ui.py
       - name: Real DuckDB, Pyodide, persistence and Mermaid
         run: python tests/network_runtime_smoke.py
       - name: Runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v22-runtime-evidence
+          name: v23-runtime-evidence
           path: |
             evidence/
             /tmp/codedeleet-server.log
@@ -110,11 +118,12 @@ jobs:
         run: |
           python tests/ui_smoke.py
           python tests/v22_ui.py
+          python tests/v23_ui.py
       - name: Real deployed SQL, Python, worker restart and diagrams
         run: python tests/network_runtime_smoke.py
       - name: Hosted evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v22-netlify-preview-evidence
+          name: v23-netlify-preview-evidence
           path: evidence/

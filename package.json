@@ -1,6 +1,6 @@
 {
   "name": "codedeleet-v2",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "description": "CodeDELeet - local-first data engineering interview workstation",
@@ -16,7 +16,9 @@
     "preview": "node scripts/serve.mjs dist",
     "test:network": "python tests/network_runtime_smoke.py",
     "test:shell": "python tests/v22_ui.py",
-    "test:integrity": "python scripts/validate_release.py"
+    "test:integrity": "python scripts/validate_release.py",
+    "test:compact": "python tests/v23_ui.py",
+    "test:layout": "python tests/v23_layout.py"
   },
   "devDependencies": {
     "typescript": "5.8.3"

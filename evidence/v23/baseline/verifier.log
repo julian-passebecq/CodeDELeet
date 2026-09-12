@@ -1,0 +1,14 @@
+test_changed_application_still_fails (test_hosted_verifier.HostedByteTests.test_changed_application_still_fails) ... ok
+test_duplicate_snippet_fails (test_hosted_verifier.HostedByteTests.test_duplicate_snippet_fails) ... ok
+test_exact_observed_drawer_only (test_hosted_verifier.HostedByteTests.test_exact_observed_drawer_only) ... ok
+test_exact_production_bytes (test_hosted_verifier.HostedByteTests.test_exact_production_bytes) ... ok
+test_no_non_html_normalization (test_hosted_verifier.HostedByteTests.test_no_non_html_normalization) ... ok
+test_no_production_normalization (test_hosted_verifier.HostedByteTests.test_no_production_normalization) ... ok
+test_unknown_script_fails (test_hosted_verifier.HostedByteTests.test_unknown_script_fails) ... ok
+test_unsafe_deploy_id_fails (test_hosted_verifier.HostedByteTests.test_unsafe_deploy_id_fails) ... ok
+test_wrong_site_fails (test_hosted_verifier.HostedByteTests.test_wrong_site_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.000s
+
+OK

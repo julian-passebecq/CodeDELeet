@@ -1,0 +1,4 @@
+
+> codedeleet-v2@2.3.0 check
+> tsc -p tsconfig.json --noEmit
+
