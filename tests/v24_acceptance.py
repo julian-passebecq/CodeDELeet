@@ -144,7 +144,7 @@ with sync_playwright() as pw:
     def lesson_interactions():
         l=LESSONS[0];go(p,'view=learn&lesson='+l['id']);before=saved(p).get('drafts',{}).copy()
         p.locator('.lesson-outline [data-lesson-section-link="flow"]').click();assert 'section=flow' in p.evaluate('location.hash');assert saved(p)['settings']['learning']['progress'][l['id']]['lastSection']=='flow'
-        p.locator('[data-copy-block]').first.click();assert p.locator('[data-copy-block]').first.inner_text() in ['Copied','Select code to copy']
+        copy=p.locator('[data-copy-block]').first;copy.click();expect(copy).not_to_have_text('Copy code');assert copy.inner_text() in ['Copied','Select code to copy']
         # Restore an explicit section after clicking a scrolled code block.
         p.locator('.lesson-outline [data-lesson-section-link="flow"]').click()
         tool(p,'Notes');p.locator('#lesson-notes').fill('A lesson note, not an exercise draft.');close_tool(p)
@@ -156,16 +156,26 @@ with sync_playwright() as pw:
     check('E/F/H: outline / copy / completion / notes / reload / related Practice remain separate',lesson_interactions)
 
     def backup_roundtrip():
-        go(p,'view=learn&lesson='+LESSONS[0]['id']);before=saved(p);p.locator('[data-action="settings"]').click()
+        # Build Practice and Learn state independently so this gate cannot inherit
+        # an earlier test failure or an open modal from another scenario.
+        source=new_page();setcode(source,'SELECT 55 AS source_practice;');tool(source,'Notes');source.locator('#notes').fill('source practice notes');close_tool(source)
+        go(source,'view=learn&lesson='+LESSONS[0]['id']);tool(source,'Notes');source.locator('#lesson-notes').fill('source lesson note');close_tool(source)
+        if source.locator('#lesson-progress-label').inner_text()!='Completed':source.locator('#exercise-header [data-lesson-complete]').click()
+        before=saved(source);source.locator('[data-action="settings"]').click()
         if os.getenv('UI_MODE')=='http':
-            with p.expect_download() as download:p.locator('#settings-export').click()
+            with source.expect_download() as download:source.locator('#settings-export').click()
             backup=json.loads(Path(download.value.path()).read_text())
         else:
-            p.locator('#settings-export').click();backup=read_download(p)
-        assert backup['settings']['learning']==before['settings']['learning'];assert backup['drafts']==before['drafts'];p.locator('[aria-label="Close settings"]').click()
+            source.locator('#settings-export').click();backup=read_download(source)
+        source.locator('[aria-label="Close settings"]').click();after=saved(source)
+        # Export persists current state first. Compare with the persisted state at
+        # that export boundary; section timestamps may settle after the old snapshot.
+        assert backup['settings']['learning']==after['settings']['learning'];assert backup['drafts']==after['drafts']
+        assert backup['settings']['learning']['progress'][LESSONS[0]['id']]['status']==before['settings']['learning']['progress'][LESSONS[0]['id']]['status']=='completed'
+        assert backup['settings']['learning']['progress'][LESSONS[0]['id']]['notes']=='source lesson note';source.close()
         target=new_page();setcode(target,'SELECT 77 AS target_local;');tool(target,'Notes');target.locator('#notes').fill('target notes');close_tool(target)
         target.locator('[data-action="settings"]').click();target.locator('#backup-import').set_input_files({'name':'roundtrip.json','mimeType':'application/json','buffer':json.dumps(backup).encode()});expect(target.locator('#modal')).not_to_be_visible()
-        merged=saved(target);assert merged['settings']['learning']['progress'][LESSONS[0]['id']]['status']=='completed';assert merged['drafts']['sql-paid-revenue']['code']=='SELECT 77 AS target_local;';assert merged['drafts']['sql-paid-revenue']['notes']=='target notes'
+        merged=saved(target);assert merged['settings']['learning']['progress'][LESSONS[0]['id']]['status']=='completed';assert merged['settings']['learning']['progress'][LESSONS[0]['id']]['notes']=='source lesson note';assert merged['drafts']['sql-paid-revenue']['code']=='SELECT 77 AS target_local;';assert merged['drafts']['sql-paid-revenue']['notes']=='target notes'
         old={'schemaVersion':1,'drafts':{'preserved-old':{'notes':'old backup imported','updatedAt':'2025-01-01T00:00:00Z'}},'customPacks':[],'settings':{'focus':False}}
         target.locator('[data-action="settings"]').click();target.locator('#backup-import').set_input_files({'name':'v23.json','mimeType':'application/json','buffer':json.dumps(old).encode()});expect(target.locator('#modal')).not_to_be_visible();merged=saved(target)
         assert merged['drafts']['preserved-old']['notes']=='old backup imported';assert merged['settings']['learning']['progress'][LESSONS[0]['id']]['status']=='completed';target.close()
