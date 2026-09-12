@@ -1,0 +1,117 @@
+name: Recover V2.3 source package
+
+on:
+  push:
+    branches: [v2.3-recovery-artifact]
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Recover valid V2.3 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/v23-candidates
+
+          try_candidate() {
+            local name="$1"
+            shift
+            local b64="/tmp/v23-candidates/${name}.b64"
+            local txz="/tmp/v23-candidates/${name}.tar.xz"
+            : > "$b64"
+            for f in "$@"; do
+              [ -f "$f" ] || return 1
+              cat "$f" >> "$b64"
+            done
+            if ! base64 -d "$b64" > "$txz" 2>/dev/null; then
+              return 1
+            fi
+            if ! xz -t "$txz" 2>/dev/null; then
+              return 1
+            fi
+            if ! tar -tJf "$txz" > "/tmp/v23-candidates/${name}.list" 2>/dev/null; then
+              return 1
+            fi
+            echo "VALID_CANDIDATE=$name"
+            sha256sum "$txz"
+            printf '%s' "$txz" > /tmp/v23-chosen-path
+            return 0
+          }
+
+          chosen=0
+
+          # Prefer the later checksum-safe correction stream.
+          mapfile -t fix_files < <(find .v23-payload -maxdepth 1 -type f -name 'fix*' -printf '%p\n' | sort)
+          if [ "${#fix_files[@]}" -gt 0 ] && try_candidate fix_all "${fix_files[@]}"; then
+            chosen=1
+          fi
+
+          if [ "$chosen" -eq 0 ]; then
+            files=(.v23-payload/newpart00 .v23-payload/fix02 .v23-payload/fix03 .v23-payload/fix04 .v23-payload/fix06 .v23-payload/fix07 .v23-payload/fix08 .v23-payload/fix09)
+            if try_candidate corrected_newpart "${files[@]}"; then
+              chosen=1
+            fi
+          fi
+
+          if [ "$chosen" -eq 0 ]; then
+            files=(.v23-payload/fix00 .v23-payload/fix01 .v23-payload/fix02 .v23-payload/fix03 .v23-payload/fix04 .v23-payload/part05 .v23-payload/fix06 .v23-payload/fix07 .v23-payload/fix08 .v23-payload/fix09)
+            if try_candidate corrected_with_part05 "${files[@]}"; then
+              chosen=1
+            fi
+          fi
+
+          if [ "$chosen" -eq 0 ]; then
+            mapfile -t part_files < <(find .v23-payload -maxdepth 1 -type f -name 'part*' -printf '%p\n' | sort)
+            if [ "${#part_files[@]}" -gt 0 ] && try_candidate original_parts "${part_files[@]}"; then
+              chosen=1
+            fi
+          fi
+
+          if [ "$chosen" -eq 0 ]; then
+            echo "No payload stream decoded to a valid xz tar archive." >&2
+            exit 1
+          fi
+
+          chosen_path="$(cat /tmp/v23-chosen-path)"
+          echo "Chosen payload: $chosen_path"
+          echo "Payload contents:"
+          tar -tJf "$chosen_path" | sed -n '1,160p'
+          tar -xJf "$chosen_path" -C .
+
+          # Release-clean exclusions from the original V2.3 handoff/materializer.
+          rm -f reference/legacy-trainer/leetcodedataeng-main.zip
+          rm -rf .v23-payload
+          rm -f .github/workflows/v23-materialize.yml
+          rm -f .github/workflows/v23-recover-package.yml
+
+          # Sanity evidence: compact-shell source must actually be present after overlay.
+          echo "--- V2.3 compact-shell markers ---"
+          grep -RIlE 'V2\.3|v2\.3|compact.shell|theme.*rail|right.*rail' src tests docs 2>/dev/null | sed -n '1,80p' || true
+
+      - name: Package complete branch-ready source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/codedeleet-v23
+          rsync -a --exclude='.git/' --exclude='node_modules/' --exclude='.DS_Store' ./ /tmp/codedeleet-v23/
+          cd /tmp/codedeleet-v23
+          find . -type f -print0 | sort -z | xargs -0 sha256sum > SOURCE_SHA256SUMS.txt
+          zip -qr /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip .
+          sha256sum /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip | tee /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip.sha256
+          unzip -t /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip
+
+      - name: Upload recovered source
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeDELeet-V2.3-Full-Source-CLEAN
+          path: |
+            /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip
+            /tmp/CodeDELeet_V2_3_Compact_Shell_Full_Source_CLEAN.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
