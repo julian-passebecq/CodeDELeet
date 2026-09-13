@@ -1,0 +1,360 @@
+{
+  "version": "2.4.0",
+  "sourceArchive": "CodeDELeet-2.3-manual-upload-clean(1).zip",
+  "sourceArchiveSha256": "879cf30fdd4556fb9ab256b19bf82509bea2ad92ae363f2b63935c9c1226d099",
+  "declaredUpstreamBase": "a4aad2e4ad5fe3163c5ad725456ea7e84df28964",
+  "upstreamGitObjectIndependentlyVerified": false,
+  "reason": "The provided repository ZIP contains no Git database. Work started from its exact extracted files. A local baseline commit was made without contacting a remote.",
+  "localBaselineCommit": "9b366538014bd0b5d6cf6808ba80373fb4fb9eef",
+  "localBranch": "v2.4-learning-navigation-pro",
+  "remoteOperations": [],
+  "exerciseIds": [
+    "adf-watermark",
+    "arch-bigquery",
+    "arch-databricks",
+    "arch-fabric",
+    "arch-kubernetes",
+    "arch-spark-skew",
+    "arch-table-formats",
+    "arch-tofu",
+    "bi-csharp",
+    "bi-filter-context",
+    "bi-margin",
+    "bi-revenue",
+    "bi-scd",
+    "bi-star-schema",
+    "bigquery-qualify",
+    "dag-data-quality",
+    "dag-idempotency",
+    "dbt-lineage",
+    "git-safe-undo",
+    "linux-log-triage",
+    "pandas-grain",
+    "python-aggregate",
+    "python-two-sum",
+    "spark-dedup",
+    "sql-latest-order",
+    "sql-paid-revenue",
+    "tsql-running-total",
+    "v2-airflow-branch",
+    "v2-bash-csv",
+    "v2-cloud-compare",
+    "v2-concept-shuffle",
+    "v2-concept-watermark",
+    "v2-dbt-failure",
+    "v2-docker-cache",
+    "v2-git-conflict",
+    "v2-git-detached",
+    "v2-git-fetch",
+    "v2-git-merge",
+    "v2-git-rebase",
+    "v2-git-stage",
+    "v2-k8-selector",
+    "v2-powershell-csv",
+    "v2-powershell-json",
+    "v2-python-batches",
+    "v2-python-latest",
+    "v2-spark-aggregate",
+    "v2-spark-files",
+    "v2-spark-join",
+    "v2-sql-cte",
+    "v2-sql-quality",
+    "v2-tofu-replacement"
+  ],
+  "exerciseCount": 51,
+  "rendererCounts": {
+    "sql-editor": 6,
+    "code-editor": 5,
+    "pyspark-editor": 3,
+    "concept-case": 6,
+    "terminal": 4,
+    "semantic-model": 4,
+    "dag-editor": 4,
+    "architecture-editor": 5,
+    "config-editor": 4,
+    "performance-investigation": 2,
+    "pipeline-investigation": 1,
+    "git-visual": 6,
+    "multi-choice-reasoning": 1
+  },
+  "authoredCaseIds": [
+    "case-bi-sales",
+    "case-code-customer",
+    "case-pipeline-release",
+    "case-systems-incident"
+  ],
+  "caseTasks": 12,
+  "retainedFiles": [
+    {
+      "path": "src/runtime.ts",
+      "originalSha256": "f36f2049ec5ff6be79bbb65e02d131d3b62877056779ef4d515cb6c10fd86847",
+      "currentSha256": "f36f2049ec5ff6be79bbb65e02d131d3b62877056779ef4d515cb6c10fd86847",
+      "unchanged": true
+    },
+    {
+      "path": "src/editor.ts",
+      "originalSha256": "ec19a24fc801729bb6305b52c4121df876232af2d6c32697c3f0b5bb0400b37e",
+      "currentSha256": "ec19a24fc801729bb6305b52c4121df876232af2d6c32697c3f0b5bb0400b37e",
+      "unchanged": true
+    },
+    {
+      "path": "src/checks.ts",
+      "originalSha256": "dc06d64a37845aebbdb07771a643f939a61845a9ad684bd1a07515b086fc171c",
+      "currentSha256": "dc06d64a37845aebbdb07771a643f939a61845a9ad684bd1a07515b086fc171c",
+      "unchanged": true
+    },
+    {
+      "path": "src/git.ts",
+      "originalSha256": "91751d8134706d04b6ce305cbbbda732bc265aa38582838a0e845391086cc7a9",
+      "currentSha256": "91751d8134706d04b6ce305cbbbda732bc265aa38582838a0e845391086cc7a9",
+      "unchanged": true
+    },
+    {
+      "path": "src/dax.ts",
+      "originalSha256": "743b6d1c7bd1ddda70c1a20350d6c5fb873efc3775c18d89b9d8c512c6cb4a77",
+      "currentSha256": "743b6d1c7bd1ddda70c1a20350d6c5fb873efc3775c18d89b9d8c512c6cb4a77",
+      "unchanged": true
+    },
+    {
+      "path": "src/graph.ts",
+      "originalSha256": "c2a4901911aad6be08f242e946612a0445feef1db960d27f90ed19ab0f1cde6a",
+      "currentSha256": "c2a4901911aad6be08f242e946612a0445feef1db960d27f90ed19ab0f1cde6a",
+      "unchanged": true
+    },
+    {
+      "path": "src/terminal.ts",
+      "originalSha256": "8ad43422c7cae24d7fe9dd327b4a9803fead901d2b8978c00df9e1612d4be3eb",
+      "currentSha256": "8ad43422c7cae24d7fe9dd327b4a9803fead901d2b8978c00df9e1612d4be3eb",
+      "unchanged": true
+    },
+    {
+      "path": "src/case-study/controller.ts",
+      "originalSha256": "c07b4ed3359c6825c008691f8e879f79a00465625b568908c2fb11087557944b",
+      "currentSha256": "c07b4ed3359c6825c008691f8e879f79a00465625b568908c2fb11087557944b",
+      "unchanged": true
+    },
+    {
+      "path": "src/case-study/view.ts",
+      "originalSha256": "af8b8401d79b3da59f6928cbe2102b25c3d954d4ed41e46ca0376fa3ab6f42ac",
+      "currentSha256": "af8b8401d79b3da59f6928cbe2102b25c3d954d4ed41e46ca0376fa3ab6f42ac",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/themes.ts",
+      "originalSha256": "733aae1445de99c289455e652519b7fc532f417998b36c5ffed0e0b431f0b499",
+      "currentSha256": "733aae1445de99c289455e652519b7fc532f417998b36c5ffed0e0b431f0b499",
+      "unchanged": true
+    },
+    {
+      "path": "src/shell/theme-data.ts",
+      "originalSha256": "c44106acb0ba2e555ed3c87d15ef32085d7c4258b75b3d87beb8c52f47c699bc",
+      "currentSha256": "c44106acb0ba2e555ed3c87d15ef32085d7c4258b75b3d87beb8c52f47c699bc",
+      "unchanged": true
+    },
+    {
+      "path": "public/cases/index.json",
+      "originalSha256": "e663c187242ce3050ccce46af814dc0c6d6a7bba5302f13c9a6087aa039e3d60",
+      "currentSha256": "e663c187242ce3050ccce46af814dc0c6d6a7bba5302f13c9a6087aa039e3d60",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/deepnote-mapping.json",
+      "originalSha256": "142b48bd9d66311d9e8075c2de4bf4b49676e05464cad7400c7264abe5cd628d",
+      "currentSha256": "142b48bd9d66311d9e8075c2de4bf4b49676e05464cad7400c7264abe5cd628d",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/fixtures.json",
+      "originalSha256": "7fbfb73300c33a8a92d7d65a4baba23a7aab557200d6755dd58b868ee73bbd7f",
+      "currentSha256": "7fbfb73300c33a8a92d7d65a4baba23a7aab557200d6755dd58b868ee73bbd7f",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/index.json",
+      "originalSha256": "aba4af8175df9281631a2862fa514121de229af4136427b48720734530e190c7",
+      "currentSha256": "aba4af8175df9281631a2862fa514121de229af4136427b48720734530e190c7",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/starter.json",
+      "originalSha256": "0d1cb310840f2eb143684a260599369423d9dcd129fe3348421f96331cc9fe2f",
+      "currentSha256": "0d1cb310840f2eb143684a260599369423d9dcd129fe3348421f96331cc9fe2f",
+      "unchanged": true
+    },
+    {
+      "path": "public/packs/v2-specialists.json",
+      "originalSha256": "63a5307572ffd509d7898cbdc0dad0a9bfa7dd97ccfed92d12438c55662d9154",
+      "currentSha256": "63a5307572ffd509d7898cbdc0dad0a9bfa7dd97ccfed92d12438c55662d9154",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/LICENSE",
+      "originalSha256": "82710bb7c985d56c126fe9e7381f348d70e816a652b4a2d587a820aaeb79f6be",
+      "currentSha256": "82710bb7c985d56c126fe9e7381f348d70e816a652b4a2d587a820aaeb79f6be",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/comment/comment.js",
+      "originalSha256": "70a0f3c39b7aee5295b6564d87b0f888044b9959bbf808611a3ab35e2cda7afe",
+      "currentSha256": "70a0f3c39b7aee5295b6564d87b0f888044b9959bbf808611a3ab35e2cda7afe",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/dialog/dialog.css",
+      "originalSha256": "5df690d771f12118348562dd2a90060433ae2edeccd0908abcaa4480b1e3e468",
+      "currentSha256": "5df690d771f12118348562dd2a90060433ae2edeccd0908abcaa4480b1e3e468",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/dialog/dialog.js",
+      "originalSha256": "f823db8445973fc7be842dbe5278211e8971e7ab9ffd8ce9c403c68171fbe31d",
+      "currentSha256": "f823db8445973fc7be842dbe5278211e8971e7ab9ffd8ce9c403c68171fbe31d",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/edit/closebrackets.js",
+      "originalSha256": "27e21e6907753f85aa748e8135b2c8890f10bb395ec72c214a62eb15de07da0d",
+      "currentSha256": "27e21e6907753f85aa748e8135b2c8890f10bb395ec72c214a62eb15de07da0d",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/edit/matchbrackets.js",
+      "originalSha256": "2bb0fa2c8f676ceffe5ea85f1031dcbce2f4908c5835fce7f1a1729cf3aa0c76",
+      "currentSha256": "2bb0fa2c8f676ceffe5ea85f1031dcbce2f4908c5835fce7f1a1729cf3aa0c76",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/mode/simple.js",
+      "originalSha256": "e54ad6f1b624e79d3cc588cfe1f7a4275f8fc9a2654d3f2c9db6708e622a1232",
+      "currentSha256": "e54ad6f1b624e79d3cc588cfe1f7a4275f8fc9a2654d3f2c9db6708e622a1232",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/search/search.js",
+      "originalSha256": "8949cd96092b539263f282a5db3041093984488db1a57c19ad35fe6abc5210a7",
+      "currentSha256": "8949cd96092b539263f282a5db3041093984488db1a57c19ad35fe6abc5210a7",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/addon/search/searchcursor.js",
+      "originalSha256": "4878764a1d5614c9ef5ef3f12a3354771f955251c749f74f2466c92e23bc0a79",
+      "currentSha256": "4878764a1d5614c9ef5ef3f12a3354771f955251c749f74f2466c92e23bc0a79",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/lib/codemirror.css",
+      "originalSha256": "d30aa41229dacba5a631fd45ea0544bfdb07c78992820b67900b109b57095fb2",
+      "currentSha256": "d30aa41229dacba5a631fd45ea0544bfdb07c78992820b67900b109b57095fb2",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/lib/codemirror.js",
+      "originalSha256": "6bb54e40daf6a348791102d7a8e5a13bcc0f85a6afce2c21a6a3fc29ed20c9c0",
+      "currentSha256": "6bb54e40daf6a348791102d7a8e5a13bcc0f85a6afce2c21a6a3fc29ed20c9c0",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/clike/clike.js",
+      "originalSha256": "01111b5fd832b6f63ff7367062fb73599cb7b4cc9ab0b06268ac19280fa0a42e",
+      "currentSha256": "01111b5fd832b6f63ff7367062fb73599cb7b4cc9ab0b06268ac19280fa0a42e",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/dockerfile/dockerfile.js",
+      "originalSha256": "18cd6214ccf0c89968ac21c77d4f6b05b49916ec0a43c60ad888a88141c51ed6",
+      "currentSha256": "18cd6214ccf0c89968ac21c77d4f6b05b49916ec0a43c60ad888a88141c51ed6",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/javascript/javascript.js",
+      "originalSha256": "66d254d4a7afb93c25c0469ecc09ea2a13315651c66cd3ff5f0e0296671bdd88",
+      "currentSha256": "66d254d4a7afb93c25c0469ecc09ea2a13315651c66cd3ff5f0e0296671bdd88",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/powershell/powershell.js",
+      "originalSha256": "21cea81524c781eee35f8c9dcfc1482cf2c6855f748d8bfd4dd9dcc9249f5974",
+      "currentSha256": "21cea81524c781eee35f8c9dcfc1482cf2c6855f748d8bfd4dd9dcc9249f5974",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/properties/properties.js",
+      "originalSha256": "b6e49cd298ed765c05ad348f428acaaa94fc20c337155e04900b7abe843f4975",
+      "currentSha256": "b6e49cd298ed765c05ad348f428acaaa94fc20c337155e04900b7abe843f4975",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/python/python.js",
+      "originalSha256": "3500480fdcd43b216ceac65f21dcf7c296cf3175070fec3c9162178116386a06",
+      "currentSha256": "3500480fdcd43b216ceac65f21dcf7c296cf3175070fec3c9162178116386a06",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/shell/shell.js",
+      "originalSha256": "b73ccd9dabbc8f0907225cca08bed1f2887032b74e47553f35520582219277b3",
+      "currentSha256": "b73ccd9dabbc8f0907225cca08bed1f2887032b74e47553f35520582219277b3",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/sql/sql.js",
+      "originalSha256": "50322f6ed76ad336b012f3efb02b80eba1f4426e6c830f312e23c57828fdd801",
+      "currentSha256": "50322f6ed76ad336b012f3efb02b80eba1f4426e6c830f312e23c57828fdd801",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/mode/yaml/yaml.js",
+      "originalSha256": "4347a984e82dd43cf3c6728df6e0831008737f3b2995c632cb7008f85d3a75b2",
+      "currentSha256": "4347a984e82dd43cf3c6728df6e0831008737f3b2995c632cb7008f85d3a75b2",
+      "unchanged": true
+    },
+    {
+      "path": "public/vendor/codemirror/studio-modes.js",
+      "originalSha256": "4411dd75772ab8a245501efa778aa86d15f0f004186d7c8914c509bc56408b88",
+      "currentSha256": "4411dd75772ab8a245501efa778aa86d15f0f004186d7c8914c509bc56408b88",
+      "unchanged": true
+    },
+    {
+      "path": "public/workers/python.js",
+      "originalSha256": "d0faf627d1911b421aceb55407de17a88af21d1c78e77aa335a9be62a04acd43",
+      "currentSha256": "d0faf627d1911b421aceb55407de17a88af21d1c78e77aa335a9be62a04acd43",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/code-view.ts",
+      "originalSha256": "2dfb7ff032d9ffaf835bbb4087cb075d69159954a4797a4465bc02cb095dd103",
+      "currentSha256": "2dfb7ff032d9ffaf835bbb4087cb075d69159954a4797a4465bc02cb095dd103",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/context.ts",
+      "originalSha256": "48b9efc250e4448abeb49932886f10127639860f36d59bc45f6550d50d86d6bb",
+      "currentSha256": "48b9efc250e4448abeb49932886f10127639860f36d59bc45f6550d50d86d6bb",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/model-view.ts",
+      "originalSha256": "92db6522e196f6646870b30cd8fdf8c9c857bf9bf8265362b503facd2c1a8c9a",
+      "currentSha256": "92db6522e196f6646870b30cd8fdf8c9c857bf9bf8265362b503facd2c1a8c9a",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/pipeline-view.ts",
+      "originalSha256": "e13c873a92e3a32059808e9179ccb3c995029a9202d42345e4043580fb605143",
+      "currentSha256": "e13c873a92e3a32059808e9179ccb3c995029a9202d42345e4043580fb605143",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/systems-view.ts",
+      "originalSha256": "49a5fccd2a74aec58aa307ade0cec250c6613eb9fac3a03905c01fcd622f8b24",
+      "currentSha256": "49a5fccd2a74aec58aa307ade0cec250c6613eb9fac3a03905c01fcd622f8b24",
+      "unchanged": true
+    },
+    {
+      "path": "src/renderers/workspace.ts",
+      "originalSha256": "cb3b40d67fcb38ac7a3f707ee964f8c7c5a68c3eaebf68b37c73d8d0fbe2f8bf",
+      "currentSha256": "cb3b40d67fcb38ac7a3f707ee964f8c7c5a68c3eaebf68b37c73d8d0fbe2f8bf",
+      "unchanged": true
+    }
+  ],
+  "allRetainedFilesByteIdentical": true
+}

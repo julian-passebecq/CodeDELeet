@@ -1,48 +1,78 @@
-# CodeDELeet V2.3 - compact shell source/build handoff
+# CodeDELeet V2.4 - complete source, static build and evidence
 
-This is a bounded shell update to the supplied V2.2 release snapshot at
-`4212550ca4260390b5a756d81882c3a75a5f912b`. It is not a replacement application.
-No GitHub or Netlify operation was performed during this implementation.
+This delivery continues the supplied V2.3 application. It does not replace the
+workstations, exercise bank, teaching engines, worker adapters or storage key.
+No GitHub or Netlify operation was performed. There is one delivery ZIP; the
+complete modified source tree is also retained in the working directory.
 
-## Open or rebuild
+## Open the application
 
-Extract the complete source ZIP at the project root, not inside another project folder.
-The separate static ZIP has `index.html` and the contents of `dist/` at its root.
+Extract the ZIP, open a terminal in its `CodeDELeet` folder, and run:
 
 ```sh
 node scripts/serve.mjs dist
-# To rebuild in an environment with npm registry access:
-npm ci --ignore-scripts
-npm run check
-npm run build
 ```
 
-Open the HTTP URL printed by the server. Double-clicking index.html is not supported.
+Open the local HTTP address printed by the server. The included `dist/` is ready
+to serve; rebuilding is not necessary to inspect this version. Double-clicking
+`index.html` is not supported. Runtime downloads are optional and require consent;
+SQL and Python execution need access to their pinned external runtime assets.
 
-## What to review first
+## Review this version
 
-Read [implementation scope](docs/V23_IMPLEMENTATION_REPORT.md),
-[actual test results and blocked gates](docs/V23_TEST_REPORT.md),
-[measured before/after layout](evidence/v23/V23_LAYOUT_METRICS.json),
-and [the coordinator handoff](docs/NEXT_AI_HANDOFF.md).
-The [screenshot gallery](evidence/v23/gallery.html) contains actual browser captures.
+Read the [implementation report](docs/V24_IMPLEMENTATION_REPORT.md),
+[actual test report](docs/V24_TEST_REPORT.md), and
+[acceptance results](evidence/v24/V24_ACCEPTANCE_REPORT.json).
+The [screenshot gallery](evidence/v24/gallery.html) uses real browser captures.
+The [layout measurements](evidence/v24/V24_LAYOUT_METRICS.json) record all six
+requested viewport sizes, responsive navigation and lesson/tool widths.
 
-The desktop has one 52px header, four compact lab icons, the original attempt
-controls, and a Theme panel on the right rail. Rail 1/2/3 is the layout-mode control.
-Mobile retains Context / Workspace / Output / Tools and lab navigation in the drawer.
+Use the Practice / Learn button to switch app modes. Each of the four lab icons
+opens a home with exactly five category cards. A category opens grouped content;
+it does not silently start an exercise. Learn contains 20 original seed lessons.
+Switching directly back to Practice restores the active in-session exercise or
+case; lab home Continue cards preserve per-lab standalone resume information.
 
-## Preserve work
+## Keep your progress
 
-Export progress before moving to a different preview origin. Use Settings > Merge
-backup at the new origin. The V1 storage key, migration/recovery snapshots, exercise
-IDs and authored-case isolation are unchanged. Do not clear existing progress to test
-an upgrade. Use disposable browser profiles for automated tests.
+Before changing origins or versions, use **Settings > Export my backup**. On the
+new origin, use **Settings > Merge backup**. Lesson completion, section position
+and notes are separate from Practice drafts and case answers. Newer timestamps
+win independently; an older backup without Learn data cannot erase Learn data.
+Device presentation preferences remain local. Never clear progress to test an
+upgrade; use a disposable browser profile.
 
-## Promotion is separate
+## Rebuild and test
 
-Local compiled-DOM tests and measured layouts are not hosted-runtime verification.
-This environment blocks browser URL navigation and cannot reach the npm registry.
-Clean installation, current dependency audit, served-origin browser suites and the
-real SQL/Python/Mermaid gate must be run by the coordinator before promotion.
-Existing V2.2 release reports are historical evidence, not a V2.3 deployment claim.
-The private offline research library is not part of this source or static build.
+```sh
+npm ci --ignore-scripts
+npm run check
+npm test
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
+python tests/fixture_check.py
+python tests/ui_smoke.py
+python tests/v22_ui.py
+python tests/v23_ui.py
+python tests/v23_layout.py
+python tests/v24_acceptance.py
+python -m unittest discover -s tests -p test_hosted_verifier.py
+python scripts/verify_rebuild.py
+```
+
+With the local server running, also run the distinct origin/runtime gates:
+
+```sh
+python scripts/validate_release.py
+UI_MODE=http python tests/ui_smoke.py
+UI_MODE=http python tests/v22_ui.py
+UI_MODE=http python tests/v23_ui.py
+UI_MODE=http python tests/v24_acceptance.py
+python tests/network_runtime_smoke.py
+```
+
+On PowerShell, set `$env:UI_MODE='http'` before invoking a served-origin suite.
+The test report distinguishes passes from environment-blocked gates. Compiled-DOM
+harness success is not a claim that DuckDB, Pyodide, Mermaid, npm audit or a hosted
+preview passed in this environment. Integration/deployment remains a separate
+coordinator responsibility. Private reference images are not in this delivery.

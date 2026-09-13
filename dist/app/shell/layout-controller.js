@@ -58,19 +58,21 @@ export function normalizePresentation(input, legacy) {
 }
 export function resolveLayout(p, lab, width, ui) {
     const preset = presetFor(lab, p.modes[lab]), m = p.layouts[preset.id], narrow = width < 1080;
-    const navWidth = ui.focus ? 0 : width < 760 ? 0 : p.navCollapsed || width < 1200 ? 56 : p.navWidth;
+    const nav = resolveNavigator(p, width, ui);
+    const navWidth = nav.width;
     const context = !ui.focus && m.context;
     const available = width - navWidth - 48;
     const minWorkspace = context ? 820 : 700;
     const toolWidth = Math.max(260, Math.min(ui.tool === 'Theme' ? 320 : ui.toolExpanded ? Math.min(740, width - 64) : m.toolWidth, width - 56));
     const pinned = !!ui.tool && ui.tool !== 'Theme' && !ui.toolExpanded && !ui.focus && !narrow && m.toolPinned && available - toolWidth >= minWorkspace;
-    return { preset, requested: copy(m), context, split: m.split, outputAnchor: narrow ? 'workspace' : m.outputAnchor === 'context' && !context ? 'workspace' : m.outputAnchor, outputSize: ui.focus ? (ui.focusSnapshot?.outputSize ?? 'closed') : m.outputSize, toolWidth, pinned, navWidth, narrow, focus: ui.focus };
+    return { preset, requested: copy(m), context, split: m.split, outputAnchor: narrow ? 'workspace' : m.outputAnchor === 'context' && !context ? 'workspace' : m.outputAnchor, outputSize: ui.focus ? (ui.focusSnapshot?.outputSize ?? 'closed') : m.outputSize, toolWidth, pinned, navWidth, navState: nav.state, navOverlayWidth: nav.overlayWidth, narrow, focus: ui.focus };
 }
-export function newTransient() { return { focus: false, tool: null, toolExpanded: false, mobile: 'artifact' }; }
+export function newTransient() { return { focus: false, navOverlay: false, tool: null, toolExpanded: false, mobile: 'artifact' }; }
 export function toggleFocus(ui, p) {
     if (!ui.focus) {
-        ui.focusSnapshot = { tool: ui.tool, expanded: ui.toolExpanded, outputSize: 'closed', preferences: p ? copy(p) : undefined };
+        ui.focusSnapshot = { tool: ui.tool, expanded: ui.toolExpanded, navOverlay: ui.navOverlay, outputSize: 'closed', preferences: p ? copy(p) : undefined };
         ui.focus = true;
+        ui.navOverlay = false;
         ui.tool = null;
         ui.toolExpanded = false;
     }
@@ -83,6 +85,7 @@ export function toggleFocus(ui, p) {
             p.navCollapsed = before.navCollapsed;
         }
         ui.focus = false;
+        ui.navOverlay = ui.focusSnapshot?.navOverlay ?? false;
         ui.tool = ui.focusSnapshot?.tool ?? null;
         ui.toolExpanded = ui.focusSnapshot?.expanded ?? false;
         ui.focusSnapshot = undefined;
@@ -94,3 +97,28 @@ export function setOutputSize(p, lab, ui, size) { if (ui.focus && ui.focusSnapsh
 else
     activePreferences(p, lab).outputSize = size; }
 export function switchMode(p, lab, slot) { p.modes[lab] = slot; return presetFor(lab, slot); }
+/** Desktop preference and responsive overlays are deliberately independent. */
+export function resolveNavigator(p, width, ui) {
+    const overlayWidth = Math.min(320, Math.max(240, width - 32));
+    if (ui.focus)
+        return { state: 'hidden', width: 0, overlayWidth: 0, expanded: false };
+    if (width < 760)
+        return { state: ui.navOverlay ? 'drawer' : 'hidden', width: 0, overlayWidth: ui.navOverlay ? overlayWidth : 0, expanded: ui.navOverlay };
+    if (width < 1200)
+        return { state: ui.navOverlay ? 'overlay' : 'compact', width: 56, overlayWidth: ui.navOverlay ? overlayWidth : 0, expanded: ui.navOverlay };
+    return { state: p.navCollapsed ? 'compact' : 'expanded', width: p.navCollapsed ? 56 : p.navWidth, overlayWidth: 0, expanded: !p.navCollapsed };
+}
+export function toggleNavigator(p, ui, width) {
+    if (ui.focus)
+        toggleFocus(ui, p);
+    if (width >= 1200)
+        p.navCollapsed = !p.navCollapsed;
+    else {
+        ui.navOverlay = !ui.navOverlay;
+        if (ui.navOverlay) {
+            ui.tool = null;
+            ui.toolExpanded = false;
+            ui.mobile = 'artifact';
+        }
+    }
+}

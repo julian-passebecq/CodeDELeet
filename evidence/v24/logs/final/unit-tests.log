@@ -1,0 +1,836 @@
+
+> codedeleet-v2@2.4.0 test
+> npm run build && node --test tests/*.test.mjs
+
+
+> codedeleet-v2@2.4.0 build
+> tsc -p tsconfig.json && node scripts/validate-learning.mjs && node scripts/build.mjs
+
+Learning gate passed: 51 stable exercises, 20 categories, 20 validated lessons.
+Built static site in dist. No serverless functions or secrets required.
+TAP version 13
+# Subtest: V23 header contains four neutral labeled lab switches, not a brand or mode/theme select
+ok 1 - V23 header contains four neutral labeled lab switches, not a brand or mode/theme select
+  ---
+  duration_ms: 1.685043
+  type: 'test'
+  ...
+# Subtest: V23 active lab is exclusive and accessible in each workspace
+ok 2 - V23 active lab is exclusive and accessible in each workspace
+  ---
+  duration_ms: 1.048835
+  type: 'test'
+  ...
+# Subtest: V23 header retains all attempt actions, state and case navigation guard
+ok 3 - V23 header retains all attempt actions, state and case navigation guard
+  ---
+  duration_ms: 0.206073
+  type: 'test'
+  ...
+# Subtest: V23 rail owns modes, Focus, Theme and Settings, retaining conditional Deepnote/Inspector
+ok 4 - V23 rail owns modes, Focus, Theme and Settings, retaining conditional Deepnote/Inspector
+  ---
+  duration_ms: 1.093771
+  type: 'test'
+  ...
+# Subtest: V23 Theme uses four named native radios and an exclusive selection
+ok 5 - V23 Theme uses four named native radios and an exclusive selection
+  ---
+  duration_ms: 0.316376
+  type: 'test'
+  ...
+# Subtest: V23 Theme never steals pinned width or mutates saved tool sizing
+ok 6 - V23 Theme never steals pinned width or mutates saved tool sizing
+  ---
+  duration_ms: 0.404276
+  type: 'test'
+  ...
+# Subtest: V23 Theme and Focus restore the pre-focus tool/layout while retaining theme choice
+ok 7 - V23 Theme and Focus restore the pre-focus tool/layout while retaining theme choice
+  ---
+  duration_ms: 0.790495
+  type: 'test'
+  ...
+# Subtest: V23 published files contain no research or notebook archives
+ok 8 - V23 published files contain no research or notebook archives
+  ---
+  duration_ms: 4.42606
+  type: 'test'
+  ...
+# Subtest: Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+ok 9 - Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+  ---
+  duration_ms: 3.227164
+  type: 'test'
+  ...
+# Subtest: All 13 renderer contracts are represented and execution claims are bounded
+ok 10 - All 13 renderer contracts are represented and execution claims are bounded
+  ---
+  duration_ms: 1.324451
+  type: 'test'
+  ...
+# Subtest: V1 migration preserves every existing field and does not mutate input
+ok 11 - V1 migration preserves every existing field and does not mutate input
+  ---
+  duration_ms: 2.592979
+  type: 'test'
+  ...
+# Subtest: Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+ok 12 - Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+  ---
+  duration_ms: 0.969348
+  type: 'test'
+  ...
+# Subtest: Equal timestamp never overwrites current draft
+ok 13 - Equal timestamp never overwrites current draft
+  ---
+  duration_ms: 0.194396
+  type: 'test'
+  ...
+# Subtest: Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+ok 14 - Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+  ---
+  duration_ms: 1.50029
+  type: 'test'
+  ...
+# Subtest: Pack upgrade does not erase progress or orphan saved additions
+ok 15 - Pack upgrade does not erase progress or orphan saved additions
+  ---
+  duration_ms: 0.279682
+  type: 'test'
+  ...
+# Subtest: Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+ok 16 - Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+  ---
+  duration_ms: 4.39194
+  type: 'test'
+  ...
+# Subtest: Unreadable storage is surfaced instead of silently reset
+ok 17 - Unreadable storage is surfaced instead of silently reset
+  ---
+  duration_ms: 0.542178
+  type: 'test'
+  ...
+# Subtest: Specialist imports cannot acquire a misleading execution badge
+ok 18 - Specialist imports cannot acquire a misleading execution badge
+  ---
+  duration_ms: 0.843292
+  type: 'test'
+  ...
+# Subtest: Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+ok 19 - Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+  ---
+  duration_ms: 0.590259
+  type: 'test'
+  ...
+# Subtest: Blank or unsafe Deepnote mappings render no live link
+ok 20 - Blank or unsafe Deepnote mappings render no live link
+  ---
+  duration_ms: 0.283958
+  type: 'test'
+  ...
+# Subtest: Layout clamps bounds and HTML escaping covers payloads
+ok 21 - Layout clamps bounds and HTML escaping covers payloads
+  ---
+  duration_ms: 0.406338
+  type: 'test'
+  ...
+# Subtest: Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+ok 22 - Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+  ---
+  duration_ms: 1.131928
+  type: 'test'
+  ...
+# Subtest: Result comparison respects row order and duplicate multiplicity
+ok 23 - Result comparison respects row order and duplicate multiplicity
+  ---
+  duration_ms: 0.416754
+  type: 'test'
+  ...
+# Subtest: Staging commits only the index and preserves untracked notes
+ok 24 - Staging commits only the index and preserves untracked notes
+  ---
+  duration_ms: 1.986125
+  type: 'test'
+  ...
+# Subtest: Commit does not include working changes made after staging
+ok 25 - Commit does not include working changes made after staging
+  ---
+  duration_ms: 0.276477
+  type: 'test'
+  ...
+# Subtest: Divergent merge creates a two-parent commit without rewriting histories
+ok 26 - Divergent merge creates a two-parent commit without rewriting histories
+  ---
+  duration_ms: 0.907767
+  type: 'test'
+  ...
+# Subtest: Fast-forward moves the branch and creates no merge object
+ok 27 - Fast-forward moves the branch and creates no merge object
+  ---
+  duration_ms: 0.342054
+  type: 'test'
+  ...
+# Subtest: Rebase replays linear feature commits with new IDs and original provenance
+ok 28 - Rebase replays linear feature commits with new IDs and original provenance
+  ---
+  duration_ms: 1.118438
+  type: 'test'
+  ...
+# Subtest: Fetch imports remote objects and tracking refs, not local files or branch
+ok 29 - Fetch imports remote objects and tracking refs, not local files or branch
+  ---
+  duration_ms: 0.408702
+  type: 'test'
+  ...
+# Subtest: Pull only fast-forwards; divergence is explicit and atomic
+ok 30 - Pull only fast-forwards; divergence is explicit and atomic
+  ---
+  duration_ms: 0.493497
+  type: 'test'
+  ...
+# Subtest: Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+ok 31 - Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+  ---
+  duration_ms: 0.484104
+  type: 'test'
+  ...
+# Subtest: Staged conflict markers are rejected by the teaching guard
+ok 32 - Staged conflict markers are rejected by the teaching guard
+  ---
+  duration_ms: 0.402443
+  type: 'test'
+  ...
+# Subtest: reset --soft changes the appropriate layers
+ok 33 - reset --soft changes the appropriate layers
+  ---
+  duration_ms: 0.437194
+  type: 'test'
+  ...
+# Subtest: reset --mixed changes the appropriate layers
+ok 34 - reset --mixed changes the appropriate layers
+  ---
+  duration_ms: 0.50242
+  type: 'test'
+  ...
+# Subtest: reset --hard changes the appropriate layers
+ok 35 - reset --hard changes the appropriate layers
+  ---
+  duration_ms: 0.186755
+  type: 'test'
+  ...
+# Subtest: Restore --staged keeps the working change and ordinary restore resets a tracked working file
+ok 36 - Restore --staged keeps the working change and ordinary restore resets a tracked working file
+  ---
+  duration_ms: 0.287283
+  type: 'test'
+  ...
+# Subtest: Detached work can be rescued with a named branch
+ok 37 - Detached work can be rescued with a named branch
+  ---
+  duration_ms: 0.248586
+  type: 'test'
+  ...
+# Subtest: Revert creates inverse commit rather than deleting the original
+ok 38 - Revert creates inverse commit rather than deleting the original
+  ---
+  duration_ms: 0.142039
+  type: 'test'
+  ...
+# Subtest: Stash has explicit tracked/untracked behavior
+ok 39 - Stash has explicit tracked/untracked behavior
+  ---
+  duration_ms: 0.246163
+  type: 'test'
+  ...
+# Subtest: Unsafe/unsupported commands fail without changing semantic state and have visible errors
+ok 40 - Unsafe/unsupported commands fail without changing semantic state and have visible errors
+  ---
+  duration_ms: 0.660112
+  type: 'test'
+  ...
+# Subtest: Dependency cycle is rejected before simulation
+ok 41 - Dependency cycle is rejected before simulation
+  ---
+  duration_ms: 1.511947
+  type: 'test'
+  ...
+# Subtest: DAG repair removes bypass and failure blocks downstream until a retry
+ok 42 - DAG repair removes bypass and failure blocks downstream until a retry
+  ---
+  duration_ms: 0.882941
+  type: 'test'
+  ...
+# Subtest: Skip propagation and none_failed_min_one_success behave distinctly
+ok 43 - Skip propagation and none_failed_min_one_success behave distinctly
+  ---
+  duration_ms: 0.428681
+  type: 'test'
+  ...
+# Subtest: ADF Failed/Completed conditions are evaluated against upstream status
+ok 44 - ADF Failed/Completed conditions are evaluated against upstream status
+  ---
+  duration_ms: 0.197041
+  type: 'test'
+  ...
+# Subtest: Custom diagram roundtrip preserves retry metadata and edges
+ok 45 - Custom diagram roundtrip preserves retry metadata and edges
+  ---
+  duration_ms: 0.793559
+  type: 'test'
+  ...
+# Subtest: Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+ok 46 - Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+  ---
+  duration_ms: 0.515099
+  type: 'test'
+  ...
+# Subtest: Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+ok 47 - Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+  ---
+  duration_ms: 2.133643
+  type: 'test'
+  ...
+# Subtest: Inactive customer relationship stops country filter propagation
+ok 48 - Inactive customer relationship stops country filter propagation
+  ---
+  duration_ms: 0.174246
+  type: 'test'
+  ...
+# Subtest: DAX unsupported syntax and implicit context transition reject explicitly
+ok 49 - DAX unsupported syntax and implicit context transition reject explicitly
+  ---
+  duration_ms: 0.414841
+  type: 'test'
+  ...
+# Subtest: Model grain and active dimension paths are checked separately
+ok 50 - Model grain and active dimension paths are checked separately
+  ---
+  duration_ms: 0.461569
+  type: 'test'
+  ...
+# Subtest: Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+ok 51 - Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.47534
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+ok 52 - Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.130613
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+ok 53 - Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.220505
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+ok 54 - Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.311188
+  type: 'test'
+  ...
+# Subtest: V24 taxonomy has exactly five unique categories per lab and covers all 51 stable IDs once
+ok 55 - V24 taxonomy has exactly five unique categories per lab and covers all 51 stable IDs once
+  ---
+  duration_ms: 2.811561
+  type: 'test'
+  ...
+# Subtest: V24 imported exercises remain in the fifth category / Imported Other without creating a sixth card
+ok 56 - V24 imported exercises remain in the fifth category / Imported Other without creating a sixth card
+  ---
+  duration_ms: 0.241986
+  type: 'test'
+  ...
+# Subtest: V24 exactly 20 substantial seed lessons validate, one per category, with all 14 block kinds
+ok 57 - V24 exactly 20 substantial seed lessons validate, one per category, with all 14 block kinds
+  ---
+  duration_ms: 4.717429
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects unknown block kind
+ok 58 - V24 lesson validator rejects unknown block kind
+  ---
+  duration_ms: 0.569078
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects unsafe URL
+ok 59 - V24 lesson validator rejects unsafe URL
+  ---
+  duration_ms: 0.298139
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects HTTP URL
+ok 60 - V24 lesson validator rejects HTTP URL
+  ---
+  duration_ms: 0.24446
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects credential URL
+ok 61 - V24 lesson validator rejects credential URL
+  ---
+  duration_ms: 0.269337
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects wrong category pair
+ok 62 - V24 lesson validator rejects wrong category pair
+  ---
+  duration_ms: 0.240214
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects unsafe workspace
+ok 63 - V24 lesson validator rejects unsafe workspace
+  ---
+  duration_ms: 0.413309
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects oversized block
+ok 64 - V24 lesson validator rejects oversized block
+  ---
+  duration_ms: 0.457985
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects oversized catalog item
+ok 65 - V24 lesson validator rejects oversized catalog item
+  ---
+  duration_ms: 0.543991
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects broken Practice link
+ok 66 - V24 lesson validator rejects broken Practice link
+  ---
+  duration_ms: 0.249587
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects raw script
+ok 67 - V24 lesson validator rejects raw script
+  ---
+  duration_ms: 0.181367
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects raw image handler
+ok 68 - V24 lesson validator rejects raw image handler
+  ---
+  duration_ms: 0.130512
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects duplicate block ID
+ok 69 - V24 lesson validator rejects duplicate block ID
+  ---
+  duration_ms: 0.188859
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects unsafe lesson ID
+ok 70 - V24 lesson validator rejects unsafe lesson ID
+  ---
+  duration_ms: 0.204962
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects unsafe nested key
+ok 71 - V24 lesson validator rejects unsafe nested key
+  ---
+  duration_ms: 0.177151
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects invalid minutes
+ok 72 - V24 lesson validator rejects invalid minutes
+  ---
+  duration_ms: 0.168248
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects invalid version
+ok 73 - V24 lesson validator rejects invalid version
+  ---
+  duration_ms: 0.181317
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects missing objectives
+ok 74 - V24 lesson validator rejects missing objectives
+  ---
+  duration_ms: 0.191071
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects oversized diagram
+ok 75 - V24 lesson validator rejects oversized diagram
+  ---
+  duration_ms: 0.338969
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects broken diagram edge
+ok 76 - V24 lesson validator rejects broken diagram edge
+  ---
+  duration_ms: 0.234476
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects duplicate diagram node
+ok 77 - V24 lesson validator rejects duplicate diagram node
+  ---
+  duration_ms: 0.250339
+  type: 'test'
+  ...
+# Subtest: V24 lesson validator rejects mismatched table
+ok 78 - V24 lesson validator rejects mismatched table
+  ---
+  duration_ms: 0.267454
+  type: 'test'
+  ...
+# Subtest: V24 catalog rejects duplicate lesson IDs
+ok 79 - V24 catalog rejects duplicate lesson IDs
+  ---
+  duration_ms: 3.661093
+  type: 'test'
+  ...
+# Subtest: V24 renderer escapes text, code, captions, sources and uses labeled original SVG without HTML interpolation
+ok 80 - V24 renderer escapes text, code, captions, sources and uses labeled original SVG without HTML interpolation
+  ---
+  duration_ms: 2.416319
+  type: 'test'
+  ...
+# Subtest: V24 routes preserve old exercise IDs and infer lesson lab/category rather than trusting URL fields
+ok 81 - V24 routes preserve old exercise IDs and infer lesson lab/category rather than trusting URL fields
+  ---
+  duration_ms: 1.508212
+  type: 'test'
+  ...
+# Subtest: V24 home/category surfaces contain real cards and grouped discovery, not pretend attempts
+ok 82 - V24 home/category surfaces contain real cards and grouped discovery, not pretend attempts
+  ---
+  duration_ms: 3.8153
+  type: 'test'
+  ...
+# Subtest: V24 search, queues and imported fallback remain grouped and Learn progress cannot change exercise counts
+ok 83 - V24 search, queues and imported fallback remain grouped and Learn progress cannot change exercise counts
+  ---
+  duration_ms: 0.718067
+  type: 'test'
+  ...
+# Subtest: V24 old backup migration leaves Practice drafts, cases and settings intact; no mandatory learning rewrite
+ok 84 - V24 old backup migration leaves Practice drafts, cases and settings intact; no mandatory learning rewrite
+  ---
+  duration_ms: 1.399542
+  type: 'test'
+  ...
+# Subtest: V24 learning status, section and notes round trip independently of Practice and case attempts
+ok 85 - V24 learning status, section and notes round trip independently of Practice and case attempts
+  ---
+  duration_ms: 0.493547
+  type: 'test'
+  ...
+# Subtest: V24 merge keeps newer/equal local lessons, imports newer incoming lessons and preserves absent-old-backup learning
+ok 86 - V24 merge keeps newer/equal local lessons, imports newer incoming lessons and preserves absent-old-backup learning
+  ---
+  duration_ms: 1.047282
+  type: 'test'
+  ...
+# Subtest: V24 learning notebook merge and safe unknown future IDs are bounded and non-destructive
+ok 87 - V24 learning notebook merge and safe unknown future IDs are bounded and non-destructive
+  ---
+  duration_ms: 0.141639
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects invalid map
+ok 88 - V24 backup rejects invalid map
+  ---
+  duration_ms: 0.157091
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects invalid status
+ok 89 - V24 backup rejects invalid status
+  ---
+  duration_ms: 0.083493
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects invalid time
+ok 90 - V24 backup rejects invalid time
+  ---
+  duration_ms: 0.069202
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects oversized notes
+ok 91 - V24 backup rejects oversized notes
+  ---
+  duration_ms: 0.114999
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects unsafe section
+ok 92 - V24 backup rejects unsafe section
+  ---
+  duration_ms: 0.0741
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects unsafe ID
+ok 93 - V24 backup rejects unsafe ID
+  ---
+  duration_ms: 0.063834
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects unsafe memory
+ok 94 - V24 backup rejects unsafe memory
+  ---
+  duration_ms: 0.120047
+  type: 'test'
+  ...
+# Subtest: V24 backup rejects oversized map
+ok 95 - V24 backup rejects oversized map
+  ---
+  duration_ms: 0.360371
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 1600px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 96 - V24 navigator state machine 1600px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.52276
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 1366px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 97 - V24 navigator state machine 1366px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.134268
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 1190px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 98 - V24 navigator state machine 1190px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.126426
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 1024px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 99 - V24 navigator state machine 1024px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.174718
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 768px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 100 - V24 navigator state machine 768px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.122451
+  type: 'test'
+  ...
+# Subtest: V24 navigator state machine 390px is reversible, respects Focus and never changes saved widths on medium/mobile
+ok 101 - V24 navigator state machine 390px is reversible, respects Focus and never changes saved widths on medium/mobile
+  ---
+  duration_ms: 0.140056
+  type: 'test'
+  ...
+# Subtest: V24 semantic right rail has ordered groups and Learn has only personal/preferences
+ok 102 - V24 semantic right rail has ordered groups and Learn has only personal/preferences
+  ---
+  duration_ms: 0.578703
+  type: 'test'
+  ...
+# Subtest: 12 unique presets share four labs and three slots
+ok 103 - 12 unique presets share four labs and three slots
+  ---
+  duration_ms: 2.213321
+  type: 'test'
+  ...
+# Subtest: Every preset resolves desktop and phone without mutating presentation
+ok 104 - Every preset resolves desktop and phone without mutating presentation
+  ---
+  duration_ms: 2.178228
+  type: 'test'
+  ...
+# Subtest: Invalid presentation clamps without accepting arbitrary enum values
+ok 105 - Invalid presentation clamps without accepting arbitrary enum values
+  ---
+  duration_ms: 0.31929
+  type: 'test'
+  ...
+# Subtest: Legacy pane sizes migrate only once, not over new preferences
+ok 106 - Legacy pane sizes migrate only once, not over new preferences
+  ---
+  duration_ms: 0.267755
+  type: 'test'
+  ...
+# Subtest: Mode-specific sizes, docking and pins are independent
+ok 107 - Mode-specific sizes, docking and pins are independent
+  ---
+  duration_ms: 0.132185
+  type: 'test'
+  ...
+# Subtest: Focus restores all layout sizes, docking, navigation and original tool state exactly
+ok 108 - Focus restores all layout sizes, docking, navigation and original tool state exactly
+  ---
+  duration_ms: 0.264399
+  type: 'test'
+  ...
+# Subtest: Output dock and tools remain orthogonal
+ok 109 - Output dock and tools remain orthogonal
+  ---
+  duration_ms: 0.19661
+  type: 'test'
+  ...
+# Subtest: Unsafe pin and hidden-context dock fall back without changing preference
+ok 110 - Unsafe pin and hidden-context dock fall back without changing preference
+  ---
+  duration_ms: 0.196299
+  type: 'test'
+  ...
+# Subtest: Stale fingerprint includes evaluated inputs but excludes notes, status and presentation
+ok 111 - Stale fingerprint includes evaluated inputs but excludes notes, status and presentation
+  ---
+  duration_ms: 0.424105
+  type: 'test'
+  ...
+# Subtest: Run status exposes failure count, stale, running, cancellation and runtime failure independently
+ok 112 - Run status exposes failure count, stale, running, cancellation and runtime failure independently
+  ---
+  duration_ms: 0.475451
+  type: 'test'
+  ...
+# Subtest: Actual/expected evidence is rendered only from a returned attempt
+ok 113 - Actual/expected evidence is rendered only from a returned attempt
+  ---
+  duration_ms: 13.661293
+  type: 'test'
+  ...
+# Subtest: All authored cases validate, resolve same-lab refs and use independent task artifacts
+ok 114 - All authored cases validate, resolve same-lab refs and use independent task artifacts
+  ---
+  duration_ms: 0.737005
+  type: 'test'
+  ...
+# Subtest: Case page and task cursors move independently; standalone drafts untouched
+ok 115 - Case page and task cursors move independently; standalone drafts untouched
+  ---
+  duration_ms: 0.764436
+  type: 'test'
+  ...
+# Subtest: Explicit standalone copy checkpoints current case before reuse; restoration is non-destructive
+ok 116 - Explicit standalone copy checkpoints current case before reuse; restoration is non-destructive
+  ---
+  duration_ms: 0.738177
+  type: 'test'
+  ...
+# Subtest: Case import merges newer per-task changes, preserves unknown tasks/checkpoints and local settings
+ok 117 - Case import merges newer per-task changes, preserves unknown tasks/checkpoints and local settings
+  ---
+  duration_ms: 1.32354
+  type: 'test'
+  ...
+# Subtest: Malformed case session and dangling case references fail validation atomically
+ok 118 - Malformed case session and dangling case references fail validation atomically
+  ---
+  duration_ms: 1.156584
+  type: 'test'
+  ...
+# Subtest: V1/V2 store migration is idempotent with V2.2 presentation and case answers
+ok 119 - V1/V2 store migration is idempotent with V2.2 presentation and case answers
+  ---
+  duration_ms: 0.583549
+  type: 'test'
+  ...
+# Subtest: Four palette tokens pass 4.5:1 text and 3:1 focus contrast on panels
+ok 120 - Four palette tokens pass 4.5:1 text and 3:1 focus contrast on panels
+  ---
+  duration_ms: 0.288835
+  type: 'test'
+  ...
+# Subtest: Fluent Soft remains a light palette and terminal is inherited by default
+ok 121 - Fluent Soft remains a light palette and terminal is inherited by default
+  ---
+  duration_ms: 0.089592
+  type: 'test'
+  ...
+# Subtest: Model diagrams have isolated marker IDs and semantic CSS classes for all themes
+ok 122 - Model diagrams have isolated marker IDs and semantic CSS classes for all themes
+  ---
+  duration_ms: 0.543461
+  type: 'test'
+  ...
+# Subtest: Deepnote direct metadata validates explicit safe URLs; blank remains hidden
+ok 123 - Deepnote direct metadata validates explicit safe URLs; blank remains hidden
+  ---
+  duration_ms: 0.345829
+  type: 'test'
+  ...
+# Subtest: Mermaid is pinned to the requested patched baseline
+ok 124 - Mermaid is pinned to the requested patched baseline
+  ---
+  duration_ms: 0.10889
+  type: 'test'
+  ...
+# Subtest: Bash log pipeline preserves original line numbers and ignores case
+ok 125 - Bash log pipeline preserves original line numbers and ignores case
+  ---
+  duration_ms: 1.971924
+  type: 'test'
+  ...
+# Subtest: Bash country aggregation runs through text streams
+ok 126 - Bash country aggregation runs through text streams
+  ---
+  duration_ms: 0.410795
+  type: 'test'
+  ...
+# Subtest: head/tail support explicit files without -n, and zero requested lines
+ok 127 - head/tail support explicit files without -n, and zero requested lines
+  ---
+  duration_ms: 0.276267
+  type: 'test'
+  ...
+# Subtest: A no-match pipeline contains no fake error rows
+ok 128 - A no-match pipeline contains no fake error rows
+  ---
+  duration_ms: 0.17005
+  type: 'test'
+  ...
+# Subtest: PowerShell CSV pipeline retains objects with string properties
+ok 129 - PowerShell CSV pipeline retains objects with string properties
+  ---
+  duration_ms: 1.618024
+  type: 'test'
+  ...
+# Subtest: PowerShell explicit cast performs numeric rather than lexical comparison
+ok 130 - PowerShell explicit cast performs numeric rather than lexical comparison
+  ---
+  duration_ms: 0.344938
+  type: 'test'
+  ...
+# Subtest: PowerShell JSON expansion filters complete objects
+ok 131 - PowerShell JSON expansion filters complete objects
+  ---
+  duration_ms: 0.685139
+  type: 'test'
+  ...
+# Subtest: PowerShell Group-Object retains grouped objects and counts
+ok 132 - PowerShell Group-Object retains grouped objects and counts
+  ---
+  duration_ms: 0.264319
+  type: 'test'
+  ...
+# Subtest: CSV roundtrip handles quoted commas and escaped quotes
+ok 133 - CSV roundtrip handles quoted commas and escaped quotes
+  ---
+  duration_ms: 0.455721
+  type: 'test'
+  ...
+# Subtest: Virtual writes change only the cloned virtual filesystem
+ok 134 - Virtual writes change only the cloned virtual filesystem
+  ---
+  duration_ms: 0.350586
+  type: 'test'
+  ...
+# Subtest: Shells are distinct and unsafe/network/subshell commands fail without file changes
+ok 135 - Shells are distinct and unsafe/network/subshell commands fail without file changes
+  ---
+  duration_ms: 0.405137
+  type: 'test'
+  ...
+# Subtest: Pipeline splitting respects quoted pipe and PowerShell blocks
+ok 136 - Pipeline splitting respects quoted pipe and PowerShell blocks
+  ---
+  duration_ms: 0.347282
+  type: 'test'
+  ...
+1..136
+# tests 136
+# suites 0
+# pass 136
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 210.549919

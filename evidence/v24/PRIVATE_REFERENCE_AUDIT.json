@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "privateReferenceImageCount": 12,
+  "candidateFilesScanned": 544,
+  "exactImageByteMatches": [],
+  "sourceOrBuildPrivateDirectoryPresent": false,
+  "scope": "Byte-identical private-image detection over source, docs, evidence, public and dist; no reference artwork is included. Lesson diagrams are original local SVG generated from authored bounded graph data. This hash scan is not an automated semantic/copyright-similarity assessment.",
+  "capturedUTC": "2026-09-12T21:58:10.507766+00:00"
+}

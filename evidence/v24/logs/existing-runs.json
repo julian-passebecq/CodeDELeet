@@ -1,0 +1,38 @@
+[
+  {
+    "name": "ui-smoke",
+    "command": "python -u tests/ui_smoke.py",
+    "exitCode": 0,
+    "durationSeconds": 31.87
+  },
+  {
+    "name": "v22",
+    "command": "python -u tests/v22_ui.py",
+    "exitCode": 1,
+    "durationSeconds": 87.62
+  },
+  {
+    "name": "v23",
+    "command": "python -u tests/v23_ui.py",
+    "exitCode": 0,
+    "durationSeconds": 22.75
+  },
+  {
+    "name": "v23-layout",
+    "command": "python -u tests/v23_layout.py",
+    "exitCode": 0,
+    "durationSeconds": 11.92
+  },
+  {
+    "name": "fixtures",
+    "command": "python -u tests/fixture_check.py",
+    "exitCode": 0,
+    "durationSeconds": 0.62
+  },
+  {
+    "name": "hosted-verifier-unit",
+    "command": "python -m unittest discover -s tests -p test_hosted_verifier.py",
+    "exitCode": 0,
+    "durationSeconds": 0.57
+  }
+]

@@ -1,0 +1,1643 @@
+{
+  "transport": "built-file import-map harness: real compiled modules, CSS, CodeMirror; fixture fetch/storage only",
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 848,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1372,
+        "height": 848,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1552,
+        "y": 52,
+        "width": 48,
+        "height": 800,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "visibleCards": 5,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 848,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1544,
+        "height": 848,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1552,
+        "y": 52,
+        "width": 48,
+        "height": 800,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "visibleCards": 5,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 1372,
+      "mainWidthAfter": 1544
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 848,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1372,
+        "height": 848,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1552,
+        "y": 52,
+        "width": 48,
+        "height": 800,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 455,
+        "y": -1735,
+        "width": 870,
+        "height": 4744.734375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 848,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1372,
+        "height": 848,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1552,
+        "y": 52,
+        "width": 48,
+        "height": 800,
+        "visible": true
+      },
+      "tool": {
+        "x": 1232,
+        "y": 464.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 455,
+        "y": -1735,
+        "width": 870,
+        "height": 4744.734375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1600,
+        "height": 900
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1366,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1138,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1318,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "visibleCards": 5,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1366,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1310,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1318,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "visibleCards": 5,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 1138,
+      "mainWidthAfter": 1310
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1366,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1138,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1318,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 338,
+        "y": -1735,
+        "width": 870,
+        "height": 4744.734375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "expanded",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1366,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 228,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 228,
+      "main": {
+        "x": 228,
+        "y": 52,
+        "width": 1138,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1318,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 998,
+        "y": 332.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 338,
+        "y": -1735,
+        "width": 870,
+        "height": 4744.734375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1366,
+        "height": 768
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    },
+    {
+      "viewport": {
+        "width": 1190,
+        "height": 800
+      },
+      "surface": "exercise",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1190,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 748,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1134,
+        "height": 748,
+        "visible": true
+      },
+      "workstation": {
+        "x": 56,
+        "y": 52,
+        "width": 1086,
+        "height": 724,
+        "visible": true
+      },
+      "rail": {
+        "x": 1142,
+        "y": 52,
+        "width": 48,
+        "height": 724,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1190,
+        "height": 800
+      },
+      "visibleCards": 0,
+      "scenario": "practice-overlay",
+      "mainWidthBefore": 1134,
+      "mainWidthAfter": 1134,
+      "workstationWidthBefore": 1086,
+      "workstationWidthAfter": 1086
+    },
+    {
+      "viewport": {
+        "width": 1190,
+        "height": 800
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1190,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 748,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1134,
+        "height": 748,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1142,
+        "y": 52,
+        "width": 48,
+        "height": 700,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1190,
+        "height": 800
+      },
+      "visibleCards": 5,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 1190,
+        "height": 800
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1190,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 748,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1134,
+        "height": 748,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1142,
+        "y": 52,
+        "width": 48,
+        "height": 700,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1190,
+        "height": 800
+      },
+      "visibleCards": 5,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 1134,
+      "mainWidthAfter": 1134
+    },
+    {
+      "viewport": {
+        "width": 1190,
+        "height": 800
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1190,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 748,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1134,
+        "height": 748,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1142,
+        "y": 52,
+        "width": 48,
+        "height": 700,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 164,
+        "y": -1730,
+        "width": 870,
+        "height": 4739.109375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1190,
+        "height": 800
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 1190,
+        "height": 800
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1190,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 748,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 1134,
+        "height": 748,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 1142,
+        "y": 52,
+        "width": 48,
+        "height": 700,
+        "visible": true
+      },
+      "tool": {
+        "x": 822,
+        "y": 364.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 164,
+        "y": -1730,
+        "width": 870,
+        "height": 4739.109375,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1190,
+        "height": 800
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "surface": "exercise",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 968,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": {
+        "x": 56,
+        "y": 90,
+        "width": 920,
+        "height": 654,
+        "visible": true
+      },
+      "rail": {
+        "x": 976,
+        "y": 90,
+        "width": 48,
+        "height": 654,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "visibleCards": 0,
+      "scenario": "practice-overlay",
+      "mainWidthBefore": 968,
+      "mainWidthAfter": 968,
+      "workstationWidthBefore": 920,
+      "workstationWidthAfter": 920
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 968,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 976,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "visibleCards": 5,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 968,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 976,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "visibleCards": 5,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 968,
+      "mainWidthAfter": 968
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 968,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 976,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 81,
+        "y": -1725,
+        "width": 870,
+        "height": 4676.03125,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 56,
+        "height": 716,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 968,
+        "height": 716,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 976,
+        "y": 52,
+        "width": 48,
+        "height": 668,
+        "visible": true
+      },
+      "tool": {
+        "x": 656,
+        "y": 332.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 81,
+        "y": -1725,
+        "width": 870,
+        "height": 4676.03125,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "surface": "exercise",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 972,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 712,
+        "height": 972,
+        "visible": true
+      },
+      "workstation": {
+        "x": 56,
+        "y": 90,
+        "width": 664,
+        "height": 910,
+        "visible": true
+      },
+      "rail": {
+        "x": 720,
+        "y": 90,
+        "width": 48,
+        "height": 910,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "visibleCards": 0,
+      "scenario": "practice-overlay",
+      "mainWidthBefore": 712,
+      "mainWidthAfter": 712,
+      "workstationWidthBefore": 664,
+      "workstationWidthAfter": 664
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": -56.099998474121094,
+        "y": 57,
+        "width": 51,
+        "height": 967,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 712,
+        "height": 972,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 720,
+        "y": 52,
+        "width": 48,
+        "height": 924,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "visibleCards": 5,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "overlay",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 52,
+        "width": 320,
+        "height": 972,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 712,
+        "height": 972,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 720,
+        "y": 52,
+        "width": 48,
+        "height": 924,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "visibleCards": 5,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 712,
+      "mainWidthAfter": 712
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": -56.099998474121094,
+        "y": 57,
+        "width": 51,
+        "height": 967,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 712,
+        "height": 972,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 720,
+        "y": 52,
+        "width": 48,
+        "height": 924,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 56,
+        "y": -1790,
+        "width": 664,
+        "height": 4907.8125,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "compact",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 52,
+        "visible": true
+      },
+      "navigator": {
+        "x": -56.099998474121094,
+        "y": 57,
+        "width": 51,
+        "height": 967,
+        "visible": true
+      },
+      "persistentNavWidth": 56,
+      "main": {
+        "x": 56,
+        "y": 52,
+        "width": 712,
+        "height": 972,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 720,
+        "y": 52,
+        "width": 48,
+        "height": 924,
+        "visible": true
+      },
+      "tool": {
+        "x": 400,
+        "y": 588.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 56,
+        "y": -1790,
+        "width": 664,
+        "height": 4907.8125,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "surface": "exercise",
+      "mode": "practice",
+      "navState": "drawer",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 135.75,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 135.75,
+        "width": 320,
+        "height": 708.25,
+        "visible": true
+      },
+      "persistentNavWidth": 0,
+      "main": {
+        "x": 0,
+        "y": 135.75,
+        "width": 390,
+        "height": 708.25,
+        "visible": true
+      },
+      "workstation": {
+        "x": 0,
+        "y": 173.75,
+        "width": 342,
+        "height": 646.25,
+        "visible": true
+      },
+      "rail": {
+        "x": 342,
+        "y": 173.75,
+        "width": 48,
+        "height": 646.25,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "visibleCards": 0,
+      "scenario": "practice-overlay",
+      "mainWidthBefore": 390,
+      "mainWidthAfter": 390,
+      "workstationWidthBefore": 342,
+      "workstationWidthAfter": 342
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "hidden",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 99,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "persistentNavWidth": 0,
+      "main": {
+        "x": 0,
+        "y": 99,
+        "width": 390,
+        "height": 745,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 342,
+        "y": 99,
+        "width": 48,
+        "height": 697,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "visibleCards": 3,
+      "scenario": "home"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "surface": "lab-home",
+      "mode": "practice",
+      "navState": "drawer",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 99,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 99,
+        "width": 320,
+        "height": 745,
+        "visible": true
+      },
+      "persistentNavWidth": 0,
+      "main": {
+        "x": 0,
+        "y": 99,
+        "width": 390,
+        "height": 745,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 342,
+        "y": 99,
+        "width": 48,
+        "height": 697,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": null,
+      "readingMaxWidth": null,
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "visibleCards": 3,
+      "scenario": "navigator-toggle",
+      "mainWidthBefore": 390,
+      "mainWidthAfter": 390
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "hidden",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 99,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "persistentNavWidth": 0,
+      "main": {
+        "x": 0,
+        "y": 99,
+        "width": 390,
+        "height": 745,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 342,
+        "y": 99,
+        "width": 48,
+        "height": 697,
+        "visible": true
+      },
+      "tool": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "reading": {
+        "x": 0,
+        "y": -2297,
+        "width": 342,
+        "height": 6152.71875,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "visibleCards": 0,
+      "scenario": "lesson"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "surface": "lesson",
+      "mode": "learn",
+      "navState": "hidden",
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 99,
+        "visible": true
+      },
+      "navigator": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "persistentNavWidth": 0,
+      "main": {
+        "x": 0,
+        "y": 99,
+        "width": 390,
+        "height": 745,
+        "visible": true
+      },
+      "workstation": null,
+      "rail": {
+        "x": 342,
+        "y": 99,
+        "width": 48,
+        "height": 697,
+        "visible": true
+      },
+      "tool": {
+        "x": 22,
+        "y": 408.4375,
+        "width": 320,
+        "height": 379.5625,
+        "visible": true
+      },
+      "reading": {
+        "x": 0,
+        "y": -2495,
+        "width": 342,
+        "height": 6152.71875,
+        "visible": true
+      },
+      "readingMaxWidth": "870px",
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "visibleCards": 0,
+      "scenario": "lesson-theme"
+    }
+  ],
+  "status": "PASS",
+  "boundary": "Actual DOM measurements. Built-file fixture transport is not served-origin or worker/CDN validation."
+}

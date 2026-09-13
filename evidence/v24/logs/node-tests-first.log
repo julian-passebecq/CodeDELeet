@@ -1,0 +1,635 @@
+
+> codedeleet-v2@2.4.0 test
+> npm run build && node --test tests/*.test.mjs
+
+
+> codedeleet-v2@2.4.0 build
+> tsc -p tsconfig.json && node scripts/build.mjs
+
+Built static site in dist. No serverless functions or secrets required.
+TAP version 13
+# Subtest: V23 header contains four neutral labeled lab switches, not a brand or mode/theme select
+not ok 1 - V23 header contains four neutral labeled lab switches, not a brand or mode/theme select
+  ---
+  duration_ms: 1.93488
+  type: 'test'
+  location: '/mnt/data/workspace/CodeDELeet/tests/compact-shell.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /<title>CodeDELeet V2\.3 - Interview Workstation<\/title>/. Input:
+    
+    '<!doctype html>\n' +
+      '<html lang="en">\n' +
+      '<head>\n' +
+      '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<meta name="description" content="Local-first data engineering interview practice: SQL, Python, PySpark, BI modeling, DAGs, Git, and cloud investigations.">\n' +
+      '<meta name="theme-color" content="#f7f9f7">\n' +
+      '<title>CodeDELeet V2.4 - Interview Workstation</title>\n' +
+      '<link rel="icon" type="image/svg+xml" href="./favicon.svg">\n' +
+      '<link rel="stylesheet" href="./styles.css">\n' +
+      '<link rel="stylesheet" href="./vendor/codemirror/lib/codemirror.css">\n' +
+      '<link rel="stylesheet" href="./vendor/codemirror/addon/dialog/dialog.css">\n' +
+      '<link rel="stylesheet" href="./shell.css">\n' +
+      '</head>\n' +
+      '<body><div id="app"><div class="boot-screen"><div class="boot-logo">&lt;/&gt;</div><h1>CodeDELeet</h1><p>Opening your interview workstation...</p></div></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog><script type="module" src="./app/app.js"></script><noscript>This application needs JavaScript. It does not need a server-side code runner.</noscript></body>\n' +
+      '</html>\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    <!doctype html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Local-first data engineering interview practice: SQL, Python, PySpark, BI modeling, DAGs, Git, and cloud investigations.">
+    <meta name="theme-color" content="#f7f9f7">
+    <title>CodeDELeet V2.4 - Interview Workstation</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./vendor/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="./vendor/codemirror/addon/dialog/dialog.css">
+    <link rel="stylesheet" href="./shell.css">
+    </head>
+    <body><div id="app"><div class="boot-screen"><div class="boot-logo">&lt;/&gt;</div><h1>CodeDELeet</h1><p>Opening your interview workstation...</p></div></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog><script type="module" src="./app/app.js"></script><noscript>This application needs JavaScript. It does not need a server-side code runner.</noscript></body>
+    </html>
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///mnt/data/workspace/CodeDELeet/tests/compact-shell.test.mjs:17:50)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: V23 active lab is exclusive and accessible in each workspace
+ok 2 - V23 active lab is exclusive and accessible in each workspace
+  ---
+  duration_ms: 0.321053
+  type: 'test'
+  ...
+# Subtest: V23 header retains all attempt actions, state and case navigation guard
+ok 3 - V23 header retains all attempt actions, state and case navigation guard
+  ---
+  duration_ms: 0.22394
+  type: 'test'
+  ...
+# Subtest: V23 rail owns modes, Focus, Theme and Settings, retaining conditional Deepnote/Inspector
+ok 4 - V23 rail owns modes, Focus, Theme and Settings, retaining conditional Deepnote/Inspector
+  ---
+  duration_ms: 0.921938
+  type: 'test'
+  ...
+# Subtest: V23 Theme uses four named native radios and an exclusive selection
+ok 5 - V23 Theme uses four named native radios and an exclusive selection
+  ---
+  duration_ms: 0.286152
+  type: 'test'
+  ...
+# Subtest: V23 Theme never steals pinned width or mutates saved tool sizing
+ok 6 - V23 Theme never steals pinned width or mutates saved tool sizing
+  ---
+  duration_ms: 0.434791
+  type: 'test'
+  ...
+# Subtest: V23 Theme and Focus restore the pre-focus tool/layout while retaining theme choice
+ok 7 - V23 Theme and Focus restore the pre-focus tool/layout while retaining theme choice
+  ---
+  duration_ms: 0.877833
+  type: 'test'
+  ...
+# Subtest: V23 published files contain no research or notebook archives
+ok 8 - V23 published files contain no research or notebook archives
+  ---
+  duration_ms: 4.157033
+  type: 'test'
+  ...
+# Subtest: Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+ok 9 - Both shipped packs validate, IDs are unique and all 27 v1 IDs remain
+  ---
+  duration_ms: 3.640272
+  type: 'test'
+  ...
+# Subtest: All 13 renderer contracts are represented and execution claims are bounded
+ok 10 - All 13 renderer contracts are represented and execution claims are bounded
+  ---
+  duration_ms: 1.148292
+  type: 'test'
+  ...
+# Subtest: V1 migration preserves every existing field and does not mutate input
+not ok 11 - V1 migration preserves every existing field and does not mutate input
+  ---
+  duration_ms: 2.83749
+  type: 'test'
+  location: '/mnt/data/workspace/CodeDELeet/tests/core.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        focus: true,
+        lastQuestion: 'sql-paid-revenue',
+    +   learning: {
+    +     lastCategoryByLab: {},
+    +     lastLessonByLab: {},
+    +     progress: {}
+    +   },
+        pyodideConsent: true
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    focus: true
+    lastQuestion: 'sql-paid-revenue'
+    pyodideConsent: true
+  actual:
+    focus: true
+    lastQuestion: 'sql-paid-revenue'
+    pyodideConsent: true
+    learning:
+      progress:
+      lastLessonByLab:
+      lastCategoryByLab:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///mnt/data/workspace/CodeDELeet/tests/core.test.mjs:9:703)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+ok 12 - Backup merge keeps newer local additions, imports newer remote drafts, and retains device settings
+  ---
+  duration_ms: 0.940235
+  type: 'test'
+  ...
+# Subtest: Equal timestamp never overwrites current draft
+ok 13 - Equal timestamp never overwrites current draft
+  ---
+  duration_ms: 0.286943
+  type: 'test'
+  ...
+# Subtest: Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+ok 14 - Pack imports protect built-ins, reject collisions, reject implicit deletion, and require version increases
+  ---
+  duration_ms: 1.298153
+  type: 'test'
+  ...
+# Subtest: Pack upgrade does not erase progress or orphan saved additions
+ok 15 - Pack upgrade does not erase progress or orphan saved additions
+  ---
+  duration_ms: 0.317588
+  type: 'test'
+  ...
+# Subtest: Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+ok 16 - Dangerous IDs, non-HTTPS sources, invalid engine and corrupt attempts are rejected
+  ---
+  duration_ms: 0.297348
+  type: 'test'
+  ...
+# Subtest: Unreadable storage is surfaced instead of silently reset
+ok 17 - Unreadable storage is surfaced instead of silently reset
+  ---
+  duration_ms: 0.337948
+  type: 'test'
+  ...
+# Subtest: Specialist imports cannot acquire a misleading execution badge
+ok 18 - Specialist imports cannot acquire a misleading execution badge
+  ---
+  duration_ms: 0.59778
+  type: 'test'
+  ...
+# Subtest: Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+ok 19 - Deepnote only accepts explicit correct-host HTTPS URLs, with stricter embed paths
+  ---
+  duration_ms: 0.384126
+  type: 'test'
+  ...
+# Subtest: Blank or unsafe Deepnote mappings render no live link
+ok 20 - Blank or unsafe Deepnote mappings render no live link
+  ---
+  duration_ms: 0.224211
+  type: 'test'
+  ...
+# Subtest: Layout clamps bounds and HTML escaping covers payloads
+ok 21 - Layout clamps bounds and HTML escaping covers payloads
+  ---
+  duration_ms: 0.177842
+  type: 'test'
+  ...
+# Subtest: Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+ok 22 - Read-only SQL accepts useful queries, rejects writes, multiple statements and external table functions
+  ---
+  duration_ms: 0.736315
+  type: 'test'
+  ...
+# Subtest: Result comparison respects row order and duplicate multiplicity
+ok 23 - Result comparison respects row order and duplicate multiplicity
+  ---
+  duration_ms: 0.185032
+  type: 'test'
+  ...
+# Subtest: Staging commits only the index and preserves untracked notes
+ok 24 - Staging commits only the index and preserves untracked notes
+  ---
+  duration_ms: 2.250325
+  type: 'test'
+  ...
+# Subtest: Commit does not include working changes made after staging
+ok 25 - Commit does not include working changes made after staging
+  ---
+  duration_ms: 0.243068
+  type: 'test'
+  ...
+# Subtest: Divergent merge creates a two-parent commit without rewriting histories
+ok 26 - Divergent merge creates a two-parent commit without rewriting histories
+  ---
+  duration_ms: 0.934566
+  type: 'test'
+  ...
+# Subtest: Fast-forward moves the branch and creates no merge object
+ok 27 - Fast-forward moves the branch and creates no merge object
+  ---
+  duration_ms: 0.378197
+  type: 'test'
+  ...
+# Subtest: Rebase replays linear feature commits with new IDs and original provenance
+ok 28 - Rebase replays linear feature commits with new IDs and original provenance
+  ---
+  duration_ms: 1.447753
+  type: 'test'
+  ...
+# Subtest: Fetch imports remote objects and tracking refs, not local files or branch
+ok 29 - Fetch imports remote objects and tracking refs, not local files or branch
+  ---
+  duration_ms: 0.440939
+  type: 'test'
+  ...
+# Subtest: Pull only fast-forwards; divergence is explicit and atomic
+ok 30 - Pull only fast-forwards; divergence is explicit and atomic
+  ---
+  duration_ms: 0.501869
+  type: 'test'
+  ...
+# Subtest: Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+ok 31 - Conflict remains unmerged until resolved and staged; non-conflicting changes are retained
+  ---
+  duration_ms: 0.500808
+  type: 'test'
+  ...
+# Subtest: Staged conflict markers are rejected by the teaching guard
+ok 32 - Staged conflict markers are rejected by the teaching guard
+  ---
+  duration_ms: 0.40095
+  type: 'test'
+  ...
+# Subtest: reset --soft changes the appropriate layers
+ok 33 - reset --soft changes the appropriate layers
+  ---
+  duration_ms: 0.444725
+  type: 'test'
+  ...
+# Subtest: reset --mixed changes the appropriate layers
+ok 34 - reset --mixed changes the appropriate layers
+  ---
+  duration_ms: 0.204471
+  type: 'test'
+  ...
+# Subtest: reset --hard changes the appropriate layers
+ok 35 - reset --hard changes the appropriate layers
+  ---
+  duration_ms: 0.173565
+  type: 'test'
+  ...
+# Subtest: Restore --staged keeps the working change and ordinary restore resets a tracked working file
+ok 36 - Restore --staged keeps the working change and ordinary restore resets a tracked working file
+  ---
+  duration_ms: 0.242317
+  type: 'test'
+  ...
+# Subtest: Detached work can be rescued with a named branch
+ok 37 - Detached work can be rescued with a named branch
+  ---
+  duration_ms: 0.214917
+  type: 'test'
+  ...
+# Subtest: Revert creates inverse commit rather than deleting the original
+ok 38 - Revert creates inverse commit rather than deleting the original
+  ---
+  duration_ms: 0.137713
+  type: 'test'
+  ...
+# Subtest: Stash has explicit tracked/untracked behavior
+ok 39 - Stash has explicit tracked/untracked behavior
+  ---
+  duration_ms: 0.305129
+  type: 'test'
+  ...
+# Subtest: Unsafe/unsupported commands fail without changing semantic state and have visible errors
+ok 40 - Unsafe/unsupported commands fail without changing semantic state and have visible errors
+  ---
+  duration_ms: 0.677919
+  type: 'test'
+  ...
+# Subtest: Dependency cycle is rejected before simulation
+ok 41 - Dependency cycle is rejected before simulation
+  ---
+  duration_ms: 1.844537
+  type: 'test'
+  ...
+# Subtest: DAG repair removes bypass and failure blocks downstream until a retry
+ok 42 - DAG repair removes bypass and failure blocks downstream until a retry
+  ---
+  duration_ms: 0.920276
+  type: 'test'
+  ...
+# Subtest: Skip propagation and none_failed_min_one_success behave distinctly
+ok 43 - Skip propagation and none_failed_min_one_success behave distinctly
+  ---
+  duration_ms: 0.378317
+  type: 'test'
+  ...
+# Subtest: ADF Failed/Completed conditions are evaluated against upstream status
+ok 44 - ADF Failed/Completed conditions are evaluated against upstream status
+  ---
+  duration_ms: 0.228867
+  type: 'test'
+  ...
+# Subtest: Custom diagram roundtrip preserves retry metadata and edges
+ok 45 - Custom diagram roundtrip preserves retry metadata and edges
+  ---
+  duration_ms: 0.776374
+  type: 'test'
+  ...
+# Subtest: Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+ok 46 - Malformed graph IDs, foreign edges and coordinates are rejected; labels are escaped
+  ---
+  duration_ms: 0.661344
+  type: 'test'
+  ...
+# Subtest: Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+ok 47 - Sales revenue, filters, BLANK and CALCULATE replacement match fixture contracts
+  ---
+  duration_ms: 2.093054
+  type: 'test'
+  ...
+# Subtest: Inactive customer relationship stops country filter propagation
+ok 48 - Inactive customer relationship stops country filter propagation
+  ---
+  duration_ms: 0.206855
+  type: 'test'
+  ...
+# Subtest: DAX unsupported syntax and implicit context transition reject explicitly
+ok 49 - DAX unsupported syntax and implicit context transition reject explicitly
+  ---
+  duration_ms: 0.432757
+  type: 'test'
+  ...
+# Subtest: Model grain and active dimension paths are checked separately
+ok 50 - Model grain and active dimension paths are checked separately
+  ---
+  duration_ms: 0.459047
+  type: 'test'
+  ...
+# Subtest: Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+ok 51 - Configuration case arch-kubernetes: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.531833
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+ok 52 - Configuration case v2-tofu-replacement: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.127928
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+ok 53 - Configuration case v2-k8-selector: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.189599
+  type: 'test'
+  ...
+# Subtest: Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+ok 54 - Configuration case v2-docker-cache: reference satisfies bounded checks, starter has a defect
+  ---
+  duration_ms: 0.252792
+  type: 'test'
+  ...
+# Subtest: 12 unique presets share four labs and three slots
+ok 55 - 12 unique presets share four labs and three slots
+  ---
+  duration_ms: 2.517048
+  type: 'test'
+  ...
+# Subtest: Every preset resolves desktop and phone without mutating presentation
+ok 56 - Every preset resolves desktop and phone without mutating presentation
+  ---
+  duration_ms: 2.216044
+  type: 'test'
+  ...
+# Subtest: Invalid presentation clamps without accepting arbitrary enum values
+ok 57 - Invalid presentation clamps without accepting arbitrary enum values
+  ---
+  duration_ms: 0.26457
+  type: 'test'
+  ...
+# Subtest: Legacy pane sizes migrate only once, not over new preferences
+ok 58 - Legacy pane sizes migrate only once, not over new preferences
+  ---
+  duration_ms: 0.270349
+  type: 'test'
+  ...
+# Subtest: Mode-specific sizes, docking and pins are independent
+ok 59 - Mode-specific sizes, docking and pins are independent
+  ---
+  duration_ms: 0.131313
+  type: 'test'
+  ...
+# Subtest: Focus restores all layout sizes, docking, navigation and original tool state exactly
+ok 60 - Focus restores all layout sizes, docking, navigation and original tool state exactly
+  ---
+  duration_ms: 0.285661
+  type: 'test'
+  ...
+# Subtest: Output dock and tools remain orthogonal
+ok 61 - Output dock and tools remain orthogonal
+  ---
+  duration_ms: 0.181938
+  type: 'test'
+  ...
+# Subtest: Unsafe pin and hidden-context dock fall back without changing preference
+ok 62 - Unsafe pin and hidden-context dock fall back without changing preference
+  ---
+  duration_ms: 0.118114
+  type: 'test'
+  ...
+# Subtest: Stale fingerprint includes evaluated inputs but excludes notes, status and presentation
+ok 63 - Stale fingerprint includes evaluated inputs but excludes notes, status and presentation
+  ---
+  duration_ms: 0.402954
+  type: 'test'
+  ...
+# Subtest: Run status exposes failure count, stale, running, cancellation and runtime failure independently
+ok 64 - Run status exposes failure count, stale, running, cancellation and runtime failure independently
+  ---
+  duration_ms: 0.398266
+  type: 'test'
+  ...
+# Subtest: Actual/expected evidence is rendered only from a returned attempt
+ok 65 - Actual/expected evidence is rendered only from a returned attempt
+  ---
+  duration_ms: 15.488494
+  type: 'test'
+  ...
+# Subtest: All authored cases validate, resolve same-lab refs and use independent task artifacts
+ok 66 - All authored cases validate, resolve same-lab refs and use independent task artifacts
+  ---
+  duration_ms: 0.774631
+  type: 'test'
+  ...
+# Subtest: Case page and task cursors move independently; standalone drafts untouched
+ok 67 - Case page and task cursors move independently; standalone drafts untouched
+  ---
+  duration_ms: 0.569078
+  type: 'test'
+  ...
+# Subtest: Explicit standalone copy checkpoints current case before reuse; restoration is non-destructive
+ok 68 - Explicit standalone copy checkpoints current case before reuse; restoration is non-destructive
+  ---
+  duration_ms: 0.306592
+  type: 'test'
+  ...
+# Subtest: Case import merges newer per-task changes, preserves unknown tasks/checkpoints and local settings
+ok 69 - Case import merges newer per-task changes, preserves unknown tasks/checkpoints and local settings
+  ---
+  duration_ms: 0.908118
+  type: 'test'
+  ...
+# Subtest: Malformed case session and dangling case references fail validation atomically
+ok 70 - Malformed case session and dangling case references fail validation atomically
+  ---
+  duration_ms: 0.380421
+  type: 'test'
+  ...
+# Subtest: V1/V2 store migration is idempotent with V2.2 presentation and case answers
+ok 71 - V1/V2 store migration is idempotent with V2.2 presentation and case answers
+  ---
+  duration_ms: 0.422032
+  type: 'test'
+  ...
+# Subtest: Four palette tokens pass 4.5:1 text and 3:1 focus contrast on panels
+ok 72 - Four palette tokens pass 4.5:1 text and 3:1 focus contrast on panels
+  ---
+  duration_ms: 0.278681
+  type: 'test'
+  ...
+# Subtest: Fluent Soft remains a light palette and terminal is inherited by default
+ok 73 - Fluent Soft remains a light palette and terminal is inherited by default
+  ---
+  duration_ms: 0.122591
+  type: 'test'
+  ...
+# Subtest: Model diagrams have isolated marker IDs and semantic CSS classes for all themes
+ok 74 - Model diagrams have isolated marker IDs and semantic CSS classes for all themes
+  ---
+  duration_ms: 0.585723
+  type: 'test'
+  ...
+# Subtest: Deepnote direct metadata validates explicit safe URLs; blank remains hidden
+ok 75 - Deepnote direct metadata validates explicit safe URLs; blank remains hidden
+  ---
+  duration_ms: 0.416494
+  type: 'test'
+  ...
+# Subtest: Mermaid is pinned to the requested patched baseline
+ok 76 - Mermaid is pinned to the requested patched baseline
+  ---
+  duration_ms: 0.082121
+  type: 'test'
+  ...
+# Subtest: Bash log pipeline preserves original line numbers and ignores case
+ok 77 - Bash log pipeline preserves original line numbers and ignores case
+  ---
+  duration_ms: 2.07058
+  type: 'test'
+  ...
+# Subtest: Bash country aggregation runs through text streams
+ok 78 - Bash country aggregation runs through text streams
+  ---
+  duration_ms: 0.420089
+  type: 'test'
+  ...
+# Subtest: head/tail support explicit files without -n, and zero requested lines
+ok 79 - head/tail support explicit files without -n, and zero requested lines
+  ---
+  duration_ms: 0.242898
+  type: 'test'
+  ...
+# Subtest: A no-match pipeline contains no fake error rows
+ok 80 - A no-match pipeline contains no fake error rows
+  ---
+  duration_ms: 0.171783
+  type: 'test'
+  ...
+# Subtest: PowerShell CSV pipeline retains objects with string properties
+ok 81 - PowerShell CSV pipeline retains objects with string properties
+  ---
+  duration_ms: 3.34634
+  type: 'test'
+  ...
+# Subtest: PowerShell explicit cast performs numeric rather than lexical comparison
+ok 82 - PowerShell explicit cast performs numeric rather than lexical comparison
+  ---
+  duration_ms: 0.333171
+  type: 'test'
+  ...
+# Subtest: PowerShell JSON expansion filters complete objects
+ok 83 - PowerShell JSON expansion filters complete objects
+  ---
+  duration_ms: 0.677167
+  type: 'test'
+  ...
+# Subtest: PowerShell Group-Object retains grouped objects and counts
+ok 84 - PowerShell Group-Object retains grouped objects and counts
+  ---
+  duration_ms: 0.263298
+  type: 'test'
+  ...
+# Subtest: CSV roundtrip handles quoted commas and escaped quotes
+ok 85 - CSV roundtrip handles quoted commas and escaped quotes
+  ---
+  duration_ms: 1.034744
+  type: 'test'
+  ...
+# Subtest: Virtual writes change only the cloned virtual filesystem
+ok 86 - Virtual writes change only the cloned virtual filesystem
+  ---
+  duration_ms: 0.407239
+  type: 'test'
+  ...
+# Subtest: Shells are distinct and unsafe/network/subshell commands fail without file changes
+ok 87 - Shells are distinct and unsafe/network/subshell commands fail without file changes
+  ---
+  duration_ms: 0.501158
+  type: 'test'
+  ...
+# Subtest: Pipeline splitting respects quoted pipe and PowerShell blocks
+ok 88 - Pipeline splitting respects quoted pipe and PowerShell blocks
+  ---
+  duration_ms: 0.354622
+  type: 'test'
+  ...
+1..88
+# tests 88
+# suites 0
+# pass 86
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 165.111876

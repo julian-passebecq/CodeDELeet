@@ -1,67 +1,50 @@
 {
   "schemaVersion": 1,
   "app": "CodeDELeet",
-  "version": "2.2.0",
-  "date": "2026-09-10T19:15:07.036272+00:00",
-  "releaseStatus": "Complete local source/build handoff; real-origin preview promotion gates pending",
-  "inputs": {
-    "source": {
-      "name": "CodeDELeet_V2_Full_Source.zip",
-      "sha256": "dce46d5ebde8c1c8bfbd00a9cb6a7a03f3ec470e634ebde43a983b0b48b8deac",
-      "packageVersion": "2.0.0"
-    },
-    "authority": {
-      "name": "CodeDELeet_V2_2_Pro_Improvement_Handoff.zip",
-      "sha256": "b3c190186e51a6e7636e7e4fa5b2277075cd4cf8e6f4cd3e17af42295153b2a2"
-    }
+  "version": "2.4.0",
+  "capturedUTC": "2026-09-12T21:58:10.507766+00:00",
+  "releaseStatus": "Complete local implementation; external promotion gates blocked or not attempted",
+  "sourceArchive": {
+    "name": "CodeDELeet-2.3-manual-upload-clean(1).zip",
+    "sha256": "879cf30fdd4556fb9ab256b19bf82509bea2ad92ae363f2b63935c9c1226d099"
   },
-  "repositoryRead": false,
-  "repositoryWrite": false,
-  "deployment": false,
+  "declaredUpstreamBase": "a4aad2e4ad5fe3163c5ad725456ea7e84df28964",
+  "upstreamGitObjectIndependentlyVerified": false,
+  "localBaselineCommit": "9b366538014bd0b5d6cf6808ba80373fb4fb9eef",
+  "localBranch": "v2.4-learning-navigation-pro",
+  "remoteOperations": [],
   "exercises": 51,
-  "retainedV1Ids": 27,
+  "renderers": 13,
   "authoredCases": 4,
-  "independentCaseTasks": 12,
+  "caseTasks": 12,
   "layouts": 12,
   "themes": 4,
+  "categories": 20,
+  "seedLessons": 20,
+  "lessonBlockKinds": 14,
   "storageKey": "data-practice-studio.v1",
   "storageSchema": 1,
-  "removedPublicNotebookArchive": true,
-  "buildRejectsPublicNotebooksAndArchives": true,
-  "mermaid": "11.16.1",
-  "newPresentationModules": 18,
-  "testResults": {
-    "nativeFixtures": {
-      "passed": 42,
-      "failed": 0
-    },
-    "exerciseUI": {
-      "passed": 68,
-      "failed": 0
-    },
-    "shellCaseUI": {
-      "passed": 30,
-      "failed": 0
-    },
-    "releaseIntegrity": {
-      "passed": 22,
-      "failed": 0
-    },
-    "node": {
-      "passed": 80,
-      "failed": 0
-    },
-    "networkRuntime": "UNVERIFIED - browser origin navigation blocked",
-    "cleanNpmCi": "BLOCKED - registry DNS"
-  },
+  "testChecksPassed": 440,
+  "testChecksFailed": 0,
+  "blockedCommands": [
+    "served-ui-smoke",
+    "served-v22-shell",
+    "served-v23-compact",
+    "served-v24-acceptance",
+    "real-runtime-workers-mermaid",
+    "clean-install",
+    "offline-install",
+    "dependency-audit"
+  ],
   "build": {
-    "assetCount": 62,
-    "bytes": 1167622,
-    "treeSha256": "30072e42733b86eb11051ebc81fef3b096f11b584c71504a7ab65a191435f973",
-    "metadata": "../evidence/v22/build-files.json"
+    "count": 77,
+    "bytes": 1449116,
+    "sha256": "50b4017108f133943275622437f752b1493861ae900954b7aca7602b04f8496c",
+    "inventory": "../evidence/v24/build-files.json"
   },
-  "evidence": "../evidence/v22/test-results.json",
-  "audit": "V2_2_AUDIT.md",
-  "knownLimitations": "KNOWN_LIMITATIONS.md",
-  "coordinatorHandoff": "NEXT_AI_HANDOFF.md"
+  "evidence": "../evidence/v24/FINAL_TEST_RUN.json",
+  "implementationReport": "V24_IMPLEMENTATION_REPORT.md",
+  "testReport": "V24_TEST_REPORT.md",
+  "singleSourceZip": "CodeDELeet_V2_4_Complete.zip",
+  "privateReferencesIncluded": false
 }

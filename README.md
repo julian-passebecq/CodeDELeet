@@ -1,27 +1,41 @@
-# CodeDELeet V2.3
+# CodeDELeet V2.4
 
-A local-first data-engineering interview workstation. Four labs, twelve compositional layout presets, 51 preserved exercises, four authored case studies, and bounded specialist teaching engines. No credentials, backend execution service, or production cloud connection.
+A local-first data-engineering interview application with two app modes: Practice
+and Learn. Four labs share the same compact shell, responsive navigator, right
+rail and four existing themes. No backend runner, credentials or production cloud
+connection is added.
 
-![Compact Code Solve - actual built application](evidence/v23/screenshots/01-1600-code-solve.png)
+![Practice Code home - actual built application](evidence/v24/screenshots/practice-code-home.png)
 
-## Compact-shell update
+## Learning and navigation
 
-V2.3 collapses the previous two desktop chrome rows into one 52px header. Four
-neutral lab icons replace routine wordmark/version branding. Bookmark, timer,
-previous/next, execution boundary and the primary action remain visible. The right
-rail owns layout modes 1/2/3, Focus and the new four-choice Theme panel.
+Each global lab icon opens a home, with exactly five primary categories. Category
+pages show progress, an explicit next exercise where available, grouped discovery,
+filters and related authored cases. Contextual navigation shows the current
+category and nearby subgroup, not the whole exercise bank by default. Search,
+bookmarks, review and unfinished queues remain available.
 
-Measured workstation height increases by **82.5px at 1600x900**, **81.25px at
-1366x768**, **80px at 1024x768**, and **44px at 390x844** using the supplied V2.2
-baseline and the same viewports/DPR. Normal text sizes and graph fixtures are not
-reduced. See [full measured boxes](evidence/v23/V23_LAYOUT_METRICS.json).
+Learn contains 20 validated seed lessons: one per category, across SQL/Python/Spark,
+modeling/DAX/BI, pipeline design and systems/cloud reasoning. Lessons combine
+original diagrams, code, tables, worked examples, decisions, pitfalls, self-checks,
+takeaways and honest links to existing Practice exercises. No dedicated Practice
+exercise exists for BI serving yet; the category says so and offers its lesson
+rather than inventing an exercise or changing an existing ID.
 
-No learning engine, content bank, editor implementation, worker or runtime version
-is replaced. The following V2.2 architecture and learning contracts are retained.
+![Original SQL lesson flow - actual built application](evidence/v24/screenshots/learn-sql-diagram.png)
 
-## Retained workstation
+Practice completion and Learn completion are independent. Backups include both,
+with timestamp-based merge and preservation of old backups, unknown safe future
+lesson IDs and independent case answers. Lesson notes do not write into exercise
+notes. UI themes remain the existing Sage Light, Fluent Light, Fluent Soft and
+Slate Dark choices.
 
-The shared shell has a compact lab navigator, per-lab quick filters, three presets per lab, a 48px tool rail, temporary Focus, four themes, and independently docked output. Layout changes retain the actual CodeMirror document and undo history. Output remains independent of Notes, Explanation and References; stale attempts are visibly marked after inputs change.
+## Retained Practice workstation
+
+All 51 existing exercises, four authored cases, 13 renderer contracts and twelve
+layout presets remain. The desktop retains the single 52px header and 48px tool
+rail. Header attempt controls, editor identity/undo, Focus restore, docked output,
+graph editing, Git/terminal state and case isolation are regression-tested.
 
 | Lab | Preset 1 | Preset 2 | Preset 3 |
 |---|---|---|---|
@@ -30,44 +44,56 @@ The shared shell has a compact lab navigator, per-lab quick filters, three prese
 | Pipeline | Pipeline Designer | Run Investigator | Case Study |
 | Systems / Cloud | Workbench | Compare & Diagnose | Case Study |
 
-Choosing a Case Study **preset** does not start an authored case. Open an authored case explicitly from the navigator. Its exhibit pages and task navigation are independent. Case answers never silently overwrite standalone answers; explicit copying creates a recoverable checkpoint.
+A Case Study **preset** does not start an authored case. A case is opened explicitly
+from Case studies. Its task answers and exhibit cursor remain independent of
+standalone answers. Returning from Learn can resume the current in-session case.
 
-## Run and build
+## Run
+
+The delivery includes a complete prebuilt `dist/`:
+
+```sh
+node scripts/serve.mjs dist
+```
+
+To rebuild, install the pinned dependency and run the check/build pipeline:
 
 ```sh
 npm ci --ignore-scripts
 npm run check
-npm run build
-node scripts/serve.mjs dist
-```
-
-The prebuilt `dist/` needs only static file hosting. Build configuration remains `npm run build`, publish `dist`. No deploy was performed. Keep production untouched until the coordinator completes the promotion gate.
-
-## Test
-
-```sh
 npm test
-python tests/fixture_check.py
-python tests/ui_smoke.py
-python tests/v22_ui.py
-python tests/v23_ui.py
-python tests/v23_layout.py
-python -m unittest discover -s tests -p test_hosted_verifier.py
-# Start the static server in another terminal before these:
-python scripts/validate_release.py
-python tests/network_runtime_smoke.py
 ```
 
-Install `requirements-dev.txt` and Playwright Chromium for browser tests. The deterministic UI harness loads the actual compiled modules, bundled editor, CSS and fixture data into Chromium; it substitutes file transport and browser storage. It does **not** substitute SQL/Python execution. The separate network test requires a real navigable HTTP origin and external runtime downloads.
+`npm test` builds and validates the 20-lesson catalog, then runs all unit tests.
+See [start here](00_START_HERE.md) for the full browser, fixture, clean-rebuild and
+runtime commands. Static hosting remains `dist/`; no push, preview or deployment
+was performed during this pass.
 
 ## Execution boundaries
 
-SQL uses the real DuckDB-Wasm adapter. Python/basic pandas uses the real Pyodide worker. Both load only on explicit use. PySpark is guided review, not an in-browser Spark cluster. DAX, DAG, Git, Bash/PowerShell and infrastructure checks are explicitly limited teaching implementations or supplied evidence. Mermaid is pinned to 11.16.1, loaded on demand; offline SVG canvases remain available.
+SQL uses the unchanged DuckDB-Wasm adapter; Python/basic pandas uses the unchanged
+Pyodide worker. Both download only after explicit use/consent. PySpark lessons are
+conceptual and its Practice path remains guided review, not a browser Spark
+cluster. DAX, DAG, Git, Bash/PowerShell and infrastructure checks remain bounded
+teaching implementations. Mermaid remains pinned to 11.16.1 and loads on demand;
+lesson diagrams use local SVG and do not require Mermaid or a CDN.
 
-Deepnote is links-only, with safe explicit URL validation and optional public preview metadata. No private notebook archive is shipped publicly. App previews are not editable notebooks.
+Deepnote remains links-only with explicit safe URL validation. No private notebook
+archive or handoff reference artwork is shipped. Lessons link to official further
+reading and avoid claiming a live connection to a cloud product.
 
-## Documentation and evidence
+## Evidence and provenance
 
-[Start here](00_START_HERE.md) · [V2.3 implementation](docs/V23_IMPLEMENTATION_REPORT.md) · [V2.3 test report](docs/V23_TEST_REPORT.md) · [Known limitations](docs/KNOWN_LIMITATIONS.md) · [Coordinator handoff](docs/NEXT_AI_HANDOFF.md) · [Architecture](docs/V2_2_ARCHITECTURE.md) · [Screenshot gallery](evidence/v23/gallery.html)
+[Implementation](docs/V24_IMPLEMENTATION_REPORT.md) |
+[Test results and blocked gates](docs/V24_TEST_REPORT.md) |
+[Routing/state contract](docs/V24_STATE_AND_ROUTING.md) |
+[Original browser screenshots](evidence/v24/gallery.html) |
+[Measured layout JSON](evidence/v24/V24_LAYOUT_METRICS.json) |
+[Next integration gate](docs/NEXT_AI_HANDOFF.md)
 
-V2 and V2.2 reports under `docs/` and `evidence/v22/` are retained historical evidence, not current V2.3 test or deployment claims. Use `docs/V23_TEST_REPORT.md` and `evidence/v23/` for this pass. Synthetic fixtures and original teaching content remain in the built-in bank. Application code is MIT; see [third-party notices](THIRD_PARTY_NOTICES.md) and [security boundaries](SECURITY.md).
+The supplied ZIP declares upstream base `v2.3-manual-upload-clean` at
+`a4aad2e4ad5fe3163c5ad725456ea7e84df28964`. It did not contain Git history, so that
+upstream object is not independently verified. A local baseline was committed
+before edits, and implementation used local branch `v2.4-learning-navigation-pro`.
+Earlier V2/V2.2/V2.3 documents are historical; the V2.4 report is authoritative for
+this delivery. Application code is MIT; see [third-party notices](THIRD_PARTY_NOTICES.md).

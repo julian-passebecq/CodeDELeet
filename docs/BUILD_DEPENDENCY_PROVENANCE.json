@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "release": "2.2.0",
-  "recordedAtUTC": "2026-09-10T19:15:07.036272+00:00",
+  "release": "2.4.0",
+  "recordedUTC": "2026-09-12T21:58:10.507766+00:00",
   "buildToolchain": {
     "node": "v22.16.0",
+    "npm": "10.9.2",
     "typescript": "Version 5.8.3",
     "compilerSource": "preinstalled global compiler; exact lockfile version",
     "python": "3.13.5",
-    "pandas": "2.2.3",
     "playwright": "1.57.0",
-    "chromium": "144.0.7559.96",
-    "sqlite": "3.46.1",
-    "browserNavigation": "blocked by environment policy",
-    "cleanNpmCi": "BLOCKED: EAI_AGAIN resolving registry.npmjs.org",
-    "dependencyAudit": "NOT RUN; coordinator gate"
+    "pandas": "2.2.3",
+    "chromium": "Chromium 144.0.7559.96 built on Debian GNU/Linux 13 (trixie)",
+    "cleanInstall": "BLOCKED: registry DNS; offline cache miss",
+    "dependencyAudit": "BLOCKED: attempted high-threshold audit endpoint DNS failure",
+    "browserOriginNavigation": "BLOCKED_BY_ADMINISTRATOR"
   },
-  "packageLockSha256": "af9fe1a3780ac3a629d08668697ca19fcd6df5ac201c6e9098fa7b516a38137e",
+  "packageLockSha256": "f810d78d115f0f06c539482c20db9b4eebedd1a327b0506253bf0080d75dec22",
   "typescriptLockEntry": {
     "version": "5.8.3",
     "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz",
@@ -30,19 +30,10 @@
       "node": ">=14.17"
     }
   },
-  "lockEntryOrigin": "Inherited exact TypeScript 5.8.3 metadata/integrity from uploaded V2 source; root release version updated to 2.2.0. Not re-fetched from registry in this pass.",
-  "cleanInstallEvidence": "../evidence/v22/npm-ci.log",
-  "buildCommand": "npm run build",
-  "buildResult": "PASS with installed exact-version compiler",
-  "runtimeDependencies": {
-    "codemirror": "5.58.3 bundled from supplied source; LICENSE preserved",
-    "mermaid": "11.16.1 pinned CDN URL; actual CDN rendering UNVERIFIED",
-    "duckdbWasm": "existing explicit browser loader retained; cold start UNVERIFIED",
-    "pyodide": "existing worker loader retained; cold start UNVERIFIED"
-  },
-  "requirementsDev": {
-    "playwright": "1.57.0",
-    "pandas": "2.2.3"
-  },
-  "repositoryOrDeploymentAttempted": false
+  "lockEntryOrigin": "Unchanged compiler metadata from supplied V2.3 source; root package version updated to 2.4.0. No new runtime library or package dependency.",
+  "build": "PASS",
+  "cleanRebuild": "116 files byte-identical",
+  "runtimeDependencies": "Unchanged loaders/pins; workers/CDN real-origin checks unverified",
+  "evidence": "../evidence/v24/FINAL_TEST_RUN.json",
+  "remoteOperations": []
 }

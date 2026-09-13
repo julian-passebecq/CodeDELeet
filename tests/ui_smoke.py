@@ -76,7 +76,7 @@ with sync_playwright() as p:
         page.locator('[data-action="focus"]').click();assert page.locator('#app').get_attribute('data-focus')=='true';page.locator('[data-action="focus"]').click();no_overflow(page)
     check('Keyboard split resize, drawer collapse and focus mode work',layout)
     def filters():
-        go(page,'sql-paid-revenue');page.locator('#difficulty').select_option('Medium');titles=page.locator('[data-question]').all_text_contents();assert titles and all('Medium' in t for t in titles)
+        go(page,'sql-paid-revenue');page.locator('#navigator-filters summary').click();page.locator('#difficulty').select_option('Medium');titles=page.locator('[data-question]').all_text_contents();assert titles and all('Medium' in t for t in titles)
         first=page.locator('[data-question]').first;first.click();assert page.locator('#difficulty').input_value()=='Medium'
         page.locator('#difficulty').select_option('All levels');page.locator('#search').fill('does-not-exist');assert page.locator('[data-question]').count()==0;page.locator('#search').fill('')
     check('Library filtering survives selecting an exercise',filters)

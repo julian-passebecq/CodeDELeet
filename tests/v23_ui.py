@@ -15,7 +15,7 @@ BYID={q['id']:q for q in QS}
 CASES=json.loads((ROOT/'dist/cases/index.json').read_text())['cases']
 LABS={'code':'sql-paid-revenue','model':'bi-star-schema','pipeline':'dag-data-quality','architecture':'arch-fabric'}
 THEMES=['sage-light','fluent-light','fluent-soft','slate-dark']
-report={'version':'2.3.0','transport':os.getenv('UI_MODE','built-file harness'),'checks':[],'pageErrors':[]}
+report={'version':'2.4.0','transport':os.getenv('UI_MODE','built-file harness'),'checks':[],'pageErrors':[]}
 
 def check(name,fn):
     before=len(report['pageErrors'])
@@ -92,7 +92,7 @@ try:
             b=page.locator(f'.workspace-nav [data-workspace="{lab}"]')
             assert b.get_attribute('aria-label') and b.get_attribute('title')
             box=visible_inside(page,f'.workspace-nav [data-workspace="{lab}"]');assert box['width']>=40 and box['height']>=40
-            b.click();page.wait_for_function('(lab)=>document.querySelector("#workstation").dataset.lab===lab',arg=lab)
+            b.click();page.wait_for_function('(lab)=>document.querySelector("[data-lab-home]")?.dataset.labHome===lab',arg=lab);assert page.locator('[data-category-card]').count()==5;assert page.locator('[data-action=run]').count()==0
             assert page.locator(f'.workspace-nav [data-workspace="{lab}"]').get_attribute('aria-pressed')=='true'
             assert page.locator('.workspace-nav [aria-pressed="true"]').count()==1
             assert page.locator(f'.workspace-nav [data-workspace="{lab}"]').evaluate('(el)=>getComputedStyle(el).borderColor!="rgba(0, 0, 0, 0)"')
@@ -199,7 +199,7 @@ try:
         page.locator('.navigator-toggle').focus()
         for lab in LABS:
             page.keyboard.press('Tab');assert page.evaluate('document.activeElement.dataset.workspace')==lab
-        page.keyboard.press('Enter');assert page.locator('#workstation').get_attribute('data-lab')=='architecture'
+        page.keyboard.press('Enter');assert page.locator('[data-lab-home]').get_attribute('data-lab-home')=='architecture';assert page.locator('[data-category-card]').count()==5
         assert page.evaluate('document.activeElement.dataset.workspace')=='architecture'
         button=page.locator('button[data-tool="Theme"]');button.focus();page.keyboard.press('Enter')
         assert page.evaluate('document.activeElement.name')=='app-theme'
@@ -213,7 +213,7 @@ try:
             outline=page.evaluate('({width:getComputedStyle(document.activeElement).outlineWidth,style:getComputedStyle(document.activeElement).outlineStyle})')
             assert outline['style']=='solid' and float(outline['width'].rstrip('px'))>=2,outline
         theme(page,'sage-light');close_tool(page)
-        page.locator('button[data-mode="inspect"]').focus();page.keyboard.press('Enter');assert page.evaluate('document.activeElement.dataset.mode')=='inspect'
+        go(page,'arch-fabric');page.locator('button[data-mode="inspect"]').focus();page.keyboard.press('Enter');assert page.evaluate('document.activeElement.dataset.mode')=='inspect'
     check('V23 keyboard: lab tab order, activation, native theme arrows, Escape return and visible focus in all themes',keyboard)
 
     def shortcuts():
@@ -227,7 +227,7 @@ try:
 
     def link_mapping():
         go(page,'sql-paid-revenue');assert page.locator('button[data-tool="Deepnote"]').count()==0
-        page.locator('[data-action="settings"]').click();assert 'CodeDELeet V2.3.0' in page.locator('#modal').inner_text()
+        page.locator('[data-action="settings"]').click();assert 'CodeDELeet V2.4.0' in page.locator('#modal').inner_text()
         mapping={'schemaVersion':1,'links':{'sql-paid-revenue':[{'type':'exercise','label':'User-configured notebook','url':'https://deepnote.com/app/example/project-example'}]}}
         page.locator('#map-import').set_input_files({'name':'links.json','mimeType':'application/json','buffer':json.dumps(mapping).encode()})
         page.locator('#modal').wait_for(state='hidden');tool(page,'Deepnote')
@@ -270,9 +270,12 @@ try:
         assert m.locator('.terminal-console').evaluate('(el)=>getComputedStyle(el).backgroundColor')=='rgb(243, 245, 248)'
         m.locator('.navigator-toggle').click();assert m.locator('.navigator-toggle').get_attribute('aria-expanded')=='true'
         for lab in LABS:
+            if m.locator('.navigator-toggle').get_attribute('aria-expanded')!='true':m.locator('.navigator-toggle').click()
             btn=m.locator(f'.library-labs [data-workspace="{lab}"]');assert btn.is_visible();btn.click()
-            assert m.locator('#workstation').get_attribute('data-lab')==lab
-        m.locator('#exercise-list button[data-question]').first.click()
+            assert m.locator('[data-lab-home]').get_attribute('data-lab-home')==lab
+            assert m.locator('[data-category-card]').count()==5
+            assert m.locator('.navigator-toggle').get_attribute('aria-expanded')=='false'
+        m.locator('#discovery-content [data-question]').first.click()
         assert m.locator('.navigator-toggle').get_attribute('aria-expanded')=='false'
         assert not m.locator('body').evaluate('(el)=>el.classList.contains("library-open")')
         m.locator('.navigator-toggle').click();assert m.locator('.navigator-toggle').get_attribute('aria-expanded')=='true'

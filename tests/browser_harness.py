@@ -8,32 +8,31 @@ import base64, json, re, os, itertools, posixpath
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/'dist'
 COUNT=itertools.count()
-CACHE={}
 IMPORT_RE=r'''(from\s+)["'](\.\.?/[^"']+)["']'''
-def rewrite(code,name):
-    return re.sub(IMPORT_RE,lambda m:m[1]+json.dumps(module_url(posixpath.normpath(posixpath.join(posixpath.dirname(name),m[2])))),code)
-def module_url(name):
-    name=posixpath.normpath(name)
-    if name in CACHE:return CACHE[name]
-    code=rewrite((DIST/'app'/name).read_text(),name)
-    url='data:text/javascript;base64,'+base64.b64encode(code.encode()).decode()
-    CACHE[name]=url
-    return url
+def import_map(prefix):
+    # One URL per compiled module. Recursive data-URL embedding duplicates shared
+    # dependencies exponentially; an import map preserves the real module graph.
+    imports={}
+    for file in (DIST/'app').rglob('*.js'):
+        name=file.relative_to(DIST/'app').as_posix()
+        code=re.sub(IMPORT_RE,lambda m:m[1]+json.dumps(prefix+posixpath.normpath(posixpath.join(posixpath.dirname(name),m[2]))),file.read_text())
+        imports[prefix+name]='data:text/javascript;base64,'+base64.b64encode(code.encode()).decode()
+    return {'imports':imports}
 
 def open_app(page,exercise='sql-paid-revenue',store=None,route=None):
     if os.getenv('UI_MODE')=='http':
         if store is not None:page.add_init_script('localStorage.setItem("data-practice-studio.v1",'+json.dumps(json.dumps(store))+');')
         page.goto(os.getenv('BASE_URL','http://127.0.0.1:5173')+'/#'+(route if route is not None else 'exercise='+exercise),wait_until='domcontentloaded')
-        page.locator('#question-body').wait_for(state='attached')
+        page.locator('#question-body, #discovery-content').first.wait_for(state='attached')
         # HTTP lazily loads the bundled editor; do not mistake shell DOM for editor readiness.
         if page.locator('#editor-host').count():
             page.locator('#editor-host .CodeMirror').wait_for(state='visible', timeout=15000)
         return
     css='\n'.join((DIST/file).read_text() for file in ['styles.css','vendor/codemirror/lib/codemirror.css','vendor/codemirror/addon/dialog/dialog.css','shell.css'])
-    page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2.3 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
+    page.set_content('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CodeDELeet V2.4 - Interview Workstation</title><style>'+css+'</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><dialog id="modal"></dialog></body></html>')
     scripts=['lib/codemirror.js','addon/mode/simple.js','mode/sql/sql.js','mode/python/python.js','mode/javascript/javascript.js','mode/yaml/yaml.js','mode/shell/shell.js','mode/powershell/powershell.js','mode/dockerfile/dockerfile.js','mode/clike/clike.js','mode/properties/properties.js','addon/edit/matchbrackets.js','addon/edit/closebrackets.js','addon/comment/comment.js','addon/search/searchcursor.js','addon/search/search.js','addon/dialog/dialog.js','studio-modes.js']
     for path in scripts:page.add_script_tag(content=(DIST/'vendor/codemirror'/path).read_text())
-    packs={str(f.relative_to(DIST)):json.loads(f.read_text()) for folder in ['packs','cases'] for f in (DIST/folder).glob('*.json')}
+    packs={str(f.relative_to(DIST)):json.loads(f.read_text()) for folder in ['packs','cases','lessons'] for f in (DIST/folder).glob('*.json')}
     values={} if store is None else {'data-practice-studio.v1':json.dumps(store)}
     page.evaluate(r'''({packs,values,id})=>{
       window.__storage=values;
@@ -45,10 +44,10 @@ def open_app(page,exercise='sql-paid-revenue',store=None,route=None):
       HTMLAnchorElement.prototype.click=function(){if(this.download){window.__downloads.push({name:this.download,url:this.href});return;}originalClick.call(this)};
       location.hash=id;
     }''',{'packs':packs,'values':values,'id':route if route is not None else 'exercise='+exercise})
-    code=rewrite((DIST/'app/app.js').read_text(),'app.js')+'\n// Fresh harness boot '+str(next(COUNT))
-    url='data:text/javascript;base64,'+base64.b64encode(code.encode()).decode()
-    page.evaluate('(url)=>import(url)',url)
-    page.locator('#question-body').wait_for(state='attached',timeout=5000)
+    prefix='codedeleet-harness-'+str(next(COUNT))+'/'
+    page.add_script_tag(type='importmap',content=json.dumps(import_map(prefix)))
+    page.evaluate('(entry)=>import(entry)',prefix+'app.js')
+    page.locator('#question-body, #discovery-content').first.wait_for(state='attached',timeout=5000)
     page.wait_for_timeout(120)
 
 if __name__=='__main__':

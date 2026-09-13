@@ -14,7 +14,7 @@ test('V23 header contains four neutral labeled lab switches, not a brand or mode
     assert.equal((html.match(/data-workspace=/g)||[]).length,4);
     for (const label of ['Code Lab','Model / BI Lab','Pipeline Lab','Systems / Cloud Lab']) assert.ok(html.includes(`aria-label="${label}"`));
     assert.ok(!html.includes('CodeDELeet'));
-    for (const root of ['public','dist']) assert.match(fs.readFileSync(root+'/index.html','utf8'), /<title>CodeDELeet V2\.3 - Interview Workstation<\/title>/);
+    for (const root of ['public','dist']) assert.match(fs.readFileSync(root+'/index.html','utf8'), /<title>CodeDELeet V2\.4 - Interview Workstation<\/title>/);
     assert.ok(!html.includes('<select'));
     assert.ok(html.includes('&lt;Latest &quot;order&quot;&gt;'));
     assert.ok(html.includes('title="&lt;Latest &quot;order&quot;&gt;"'));

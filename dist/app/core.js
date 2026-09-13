@@ -1,3 +1,4 @@
+import { normalizeLearning, mergeLearning } from './lessons/progress.js';
 import { mergeSessions, validateSessions } from './case-study/controller.js';
 export const WORKSPACES = { code: { title: 'Code Lab', short: 'Code', subtitle: 'SQL, Python & PySpark', icon: 'code' }, model: { title: 'Model / BI Lab', short: 'Model', subtitle: 'Grain, filters & measures', icon: 'model' }, pipeline: { title: 'Pipeline Lab', short: 'Pipeline', subtitle: 'DAGs, quality & orchestration', icon: 'pipeline' }, architecture: { title: 'Systems / Cloud Lab', short: 'Systems', subtitle: 'Performance, infrastructure & Git', icon: 'architecture' } };
 export const RENDERERS = ['sql-editor', 'code-editor', 'pyspark-editor', 'semantic-model', 'dag-editor', 'pipeline-investigation', 'architecture-editor', 'performance-investigation', 'config-editor', 'terminal', 'git-visual', 'multi-choice-reasoning', 'concept-case'];
@@ -147,10 +148,27 @@ export function validateStore(value) {
     assert(Array.isArray(s.customPacks) && s.customPacks.length <= 50, 'Invalid packs.');
     s.customPacks.forEach(validatePack);
     assert(s.settings && typeof s.settings === 'object' && typeof s.settings.focus === 'boolean', 'Invalid settings.');
+    normalizeLearning(s.settings.learning);
+    if (s.settings.practiceNavigation !== undefined) {
+        const m = s.settings.practiceNavigation;
+        assert(m && typeof m === 'object' && !Array.isArray(m), 'Invalid Practice navigation.');
+        for (const key of ['lastExerciseByLab', 'lastCategoryByLab']) {
+            const values = m[key];
+            if (values === undefined)
+                continue;
+            assert(values && typeof values === 'object' && !Array.isArray(values) && Object.keys(values).length <= 4, 'Invalid navigation memory.');
+            for (const [lab, id] of Object.entries(values))
+                assert(Object.hasOwn(WORKSPACES, lab) && safeId(id), 'Invalid navigation entry.');
+        }
+    }
     validateSessions(s.caseSessions, drafts => { validateStore({ schemaVersion: 1, drafts, customPacks: [], settings: { focus: false } }); });
-    return clone(s);
+    const clean = clone(s);
+    if (clean.settings.practiceNavigation)
+        clean.settings.practiceNavigation.lastExerciseByLab ??= {};
+    return clean;
 }
-export function migrateStore(s) { const v = validateStore(s); v.v2 ??= { version: 2, migratedAt: new Date().toISOString() }; return v; }
+export function migrateStore(s) { const v = validateStore(s); if (v.settings.learning !== undefined)
+    v.settings.learning = normalizeLearning(v.settings.learning); v.v2 ??= { version: 2, migratedAt: new Date().toISOString() }; return v; }
 export function loadStore(storage = localStorage) { const text = storage.getItem(STORAGE_KEY); return migrateStore(text ? JSON.parse(text) : emptyStore()); }
 export function saveStore(s, storage = localStorage) { storage.setItem(STORAGE_KEY, JSON.stringify(s)); }
 export function markDraft(s, id, patch) { s.drafts[id] = { ...s.drafts[id], ...patch, updatedAt: new Date().toISOString() }; }
@@ -163,7 +181,7 @@ export function mergeStores(current, incoming, builtins) { const other = validat
     const old = result.drafts[id];
     if (!old || Date.parse(d.updatedAt ?? '1970-01-01') > Date.parse(old.updatedAt ?? '1970-01-01'))
         result.drafts[id] = clone(d);
-} result.caseSessions = mergeSessions(result.caseSessions, other.caseSessions); return migrateStore(result); }
+} result.settings.learning = mergeLearning(result.settings.learning, other.settings.learning); result.caseSessions = mergeSessions(result.caseSessions, other.caseSessions); return migrateStore(result); }
 export function formatNumber(v) { return v === null || v === undefined ? 'BLANK' : typeof v === 'number' ? new Intl.NumberFormat('en', { maximumFractionDigits: 4 }).format(v) : String(v); }
 export function newId(prefix = 'node') { const b = new Uint8Array(10); crypto.getRandomValues(b); return prefix + '-' + Array.from(b, x => x.toString(16).padStart(2, '0')).join(''); }
 export function questionMode(q) { return q.executionMode === 'execute' ? (q.engine === 'sql' ? 'REAL EXECUTION - DuckDB-Wasm' : 'REAL EXECUTION - Pyodide') : q.renderer === 'terminal' ? 'VIRTUAL TERMINAL' : q.renderer === 'git-visual' ? 'SIMULATION - Git state' : q.executionMode === 'simulate' ? 'SIMULATION' : q.executionMode === 'analyze' ? 'ANALYZE - fixture checks' : 'REVIEW - no vendor engine'; }

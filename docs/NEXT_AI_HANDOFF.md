@@ -1,20 +1,28 @@
-# Coordinator handoff - CodeDELeet V2.3 compact shell
+# Coordinator handoff - CodeDELeet V2.4
 
-## Baseline and ownership
+The completed source tree and one complete source ZIP are the implementation,
+not a patch or instructions-only package. Start at [00_START_HERE](../00_START_HERE.md)
+and [V24_TEST_REPORT](V24_TEST_REPORT.md). The local branch is
+`v2.4-learning-navigation-pro`; the supplied ZIP declares upstream
+`a4aad2e4ad5fe3163c5ad725456ea7e84df28964`, without a Git object database to verify it.
+[Source preservation](../evidence/v24/SOURCE_PRESERVATION.json) records exact bytes.
+No remote read, push, merge, PR or deployment was performed.
 
-Use the full source ZIP as the candidate on `v2.3-compact-shell-pro`. This pass
-started from the supplied Git archive at `4212550ca4260390b5a756d81882c3a75a5f912b`.
-Input hash and byte-identical retained learning/runtime files are recorded in
-[V23_BASELINE_PROVENANCE.json](V23_BASELINE_PROVENANCE.json). No GitHub/Netlify
-read, write, branch creation, merge or deployment was performed in this pass.
-Reconcile any newer main-branch commits before integration; never force-push them away.
+## Integration boundaries
 
-Extract source contents at the branch root. `src/` and `public/` are sources;
-`public/app/` and `dist/` are generated. Preserve the existing static Netlify config,
-licenses, locked runtime versions and links-only Deepnote policy. Do not copy the
-private offline research handoff into the repository or build.
+Preserve `src/`, `public/`, the generated `public/app/` and `dist/`, the existing
+static configuration and bundled licenses. No serverless runtime was added.
+The private handoff/reference folder is not part of the candidate. Do not add it.
+Do not use historical V2.2/V2.3 summaries to infer this candidate's current status.
+The authoritative run manifest is `evidence/v24/FINAL_TEST_RUN.json` and the current
+build inventory is `evidence/v24/build-files.json`.
 
-## Reproduce the gates
+Keep all 51 exercise IDs, 13 renderers, four authored cases, isolated case-task
+artifacts, 12 presets and four themes. New lab icons always open homes. The global
+Practice/Learn switch is not a layout selector. BI serving has no dedicated Practice
+exercise. Do not fill that gap by renaming or silently moving an existing ID.
+
+## Reproduce local validation
 
 ```sh
 npm ci --ignore-scripts
@@ -23,19 +31,19 @@ npm run check
 npm test
 python -m pip install -r requirements-dev.txt
 python -m playwright install --with-deps chromium
-python -m unittest discover -s tests -p test_hosted_verifier.py
+python -m unittest discover -s tests -p test_hosted_verifier.py -v
 python tests/fixture_check.py
 python tests/ui_smoke.py
 python tests/v22_ui.py
 python tests/v23_ui.py
 python tests/v23_layout.py
+python tests/v24_acceptance.py
+python scripts/verify_rebuild.py
 ```
 
-Run browser suites serially on a stable compiled build. Do not rebuild modules
-while the built-file harness is open. The before/after measurement baseline is
-included under `evidence/v23/baseline-layout/`. To repeat baseline measurement on
-another browser, supply its recorded baseline via `V23_BASELINE_METRICS` and use
-the same viewports, device scale factor 1, default work mode and closed output.
+Run browser suites serially. Do not change/rebuild compiled modules mid-suite.
+V2.3 layout comparisons use the included historical baseline metrics; V2.4's
+new six-width measurements and screenshots are separate.
 
 Start `node scripts/serve.mjs dist` in another terminal, then run:
 
@@ -44,48 +52,35 @@ python scripts/validate_release.py
 UI_MODE=http python tests/ui_smoke.py
 UI_MODE=http python tests/v22_ui.py
 UI_MODE=http python tests/v23_ui.py
+UI_MODE=http python tests/v24_acceptance.py
 python tests/network_runtime_smoke.py
 ```
 
-Set BASE_URL to an isolated Netlify preview for hosted runs and execute
-`python scripts/verify_hosted.py`. In PowerShell use `$env:UI_MODE='http'` and
-`$env:BASE_URL='...'`. The existing CI runtime/preview jobs and production-audit
-workflow are retained, with V2.3 checks added. This delivery edits the YAML locally;
-it does not claim those workflows have executed for this candidate.
+PowerShell uses `$env:UI_MODE='http'`. Real runtime smoke includes all retained
+SQL/Python reference runs, cancellation/restart, timeout, origin persistence and
+three Mermaid forms. No simulator may replace those gates. Hosted byte/header
+verification uses `scripts/verify_hosted.py` only after a separately authorized
+preview exists; no preview or production deployment was requested in this pass.
 
-## Explicit remaining gates
+## Remaining external gates
 
-The implementation environment cannot resolve registry.npmjs.org and blocks
-Chromium URL navigation (including localhost). Local build used the already
-installed exact TypeScript 5.8.3. A prior V2.2 successful deployment is historical
-proof only. Obtain clean install, current dependency audit, served-origin UI,
-15 real runtime checks and Netlify byte/header checks before promotion.
+The completed local pass does not clear registry, browser-origin or external-CDN
+restrictions. Repeat clean install, npm audit, served-origin UI and real runtime
+checks on this exact candidate in an allowed environment before promotion. Any
+future authorized preview must be verified against its exact commit and build
+bytes. A passing prior deployment is not evidence for V2.4.
 
-Only the removed mode-dropdown locator in network_runtime_smoke.py was changed
-to the authoritative mode rail button. Runtime workloads, all 15 assertions,
-external versions, cancellation/restart and timeout requirements are retained.
-Engine/worker source files are byte-identical to the supplied release.
-
-## UI and personal-work checks
-
-Desktop has one 52px header; keep bookmark/timer/prev/next/action/result visible.
-Four neutral lab icons need labels, exclusive active state and keyboard focus.
-Mode 1/2/3 and Focus are in the rail only. Theme opens a transient non-pinnable
-rail panel; other tool widths and pin preferences must not be overwritten.
-Inspect Pipeline and Systems at 1366x768 and all four themes. At 1024, overlays
-must not cover the primary action. At 390, keep Context/Workspace/Output/Tools,
-the drawer's four labs, saved notes and the inherited light terminal.
-
-Export real progress from the existing origin before preview migration. Use
-Settings > Merge backup, verify standalone and case answers separately and keep
-existing recovery snapshots. Case page and task navigation are independent.
-Automated tests use disposable browser state, not the user's live data.
+Export actual user progress from its original origin before integration. Test
+V2.3-to-V2.4 and V2.4 round trips with standalone drafts, case sessions, lesson
+completion/section/notes and custom packs. The automated tests use disposable
+state, never the user's live browser data. Unknown safe lesson IDs must survive
+merge; equal timestamps retain local data.
 
 ## Packaging
 
-After successful local checks, run `python scripts/package_release.py --out
-/path/to/output`. The packager rejects private research, archives/notebooks,
-fonts, symlinks and environment files, verifies recorded build bytes, and emits
-source/build/evidence ZIPs plus hashes. It packages recorded evidence; it is not a
-test runner or deployment command. Read [V23_TEST_REPORT.md](V23_TEST_REPORT.md)
-and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md) before interpreting any PASS.
+`scripts/package_release.py --out /outside/the/repository` emits one complete
+`CodeDELeet_V2_4_Complete.zip`, with source, build and evidence inside it, plus a
+small verification JSON and checksum file. It verifies the current tested build
+inventory and refuses private folders, archives/notebooks, fonts, environment
+files, symlinks and stale/failed local test summaries. Packaging does not run tests,
+contact a repository or deploy anything. Blocked external gates remain explicit.
